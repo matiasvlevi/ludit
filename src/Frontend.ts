@@ -23,7 +23,7 @@ export default class Frontend {
 
 	constructor(options:argv) {
 		const tokens = Tokenizer.process(
-			options.argument
+			options.argument || 'A'
 		);
 		this.expression = options.argument;
 		this.options = options.queries;

@@ -1,24 +1,23 @@
 # ludit
 
-A simple cli truth table generator
+A simple cli truth table generator for boolean expressions
 
-### 
-
-This branch is the same as `origin/eval` except it has my own implementation of a parser, tokenizer and processor.
-The other one uses JS eval, and creates a function from what you inputed, which is pretty hackish.
-
-this branch is going to have the same options as the `origin/eval` branch
-
-### Build this branch
+### Install
 
 ```
-git clone https://github.com/matiasvlevi/ludit.git
-npm ci
-npm run build
+npm i -g ludit
 ```
 
-run
+### Usage
+
+Show help menu
 
 ```
-npm start "A * B"
+ludit -h
+```
+
+Write boolean equations
+
+```
+ludit "A * 'B + 'A * B"
 ```
