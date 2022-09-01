@@ -1,16 +1,20 @@
 {
-  "name": "parser",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "ludit",
+  "version": "0.0.3",
+  "description": "A cli tool for generating boolean equation truth tables",
+  "main": "./bin/index.js",
   "scripts": {
     "build": "tsc -p .",
     "start": "node ./bin/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["logic", "gates", "table", "boolean", "algebra"],
+  "author": "Matias Vazquez-Levi",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^18.7.14"
-  }
+  },
+  "bin": {
+	"ludit": "./bin/index.js"
+  },
+  "preferGlobal": "true"
 }

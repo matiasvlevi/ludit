@@ -1,9 +1,10 @@
+#!/usr/bin/env node
+
+import { Options } from './options'
 import Frontend from './Frontend'
 
-const frontend = new Frontend(process.argv[2]);
+const frontend = new Frontend(
+	Options.parse(process.argv)
+);
 
-if (process.argv[3] !== undefined) {
-	frontend.runSingle(process.argv[3]);
-} else {
-	frontend.run();
-}
+frontend.main();
