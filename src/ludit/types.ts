@@ -4,6 +4,16 @@ export type syntax = {
 	priority: number;
 }
 
+export type functionSyntax = {
+	type: string;
+	priority: number;
+}
+
+export type keyword = {
+	type: string,
+	priority: number
+}
+
 export type operation = {
 	type: string;
 	priority: number;

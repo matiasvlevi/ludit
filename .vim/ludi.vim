@@ -12,6 +12,10 @@ syn match Repeat "!"
 syn match Repeat "'"
 syn match String "-.*$"
 
+
+syn match Repeat "\<def\>"
+syn match Function /\w\+\s*(/me=e-1,he=e-1 
+
 syn keyword ludiTodo contained AND OR XOR XNOR NOR NAND NOT BUFFER
 syn match ludiComment "#.*$" contains=ludiTodo
 highlight link ludiTodo Repeat

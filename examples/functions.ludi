@@ -1,0 +1,16 @@
+
+
+
+# define a function
+def xor = (A * 'B) + ('A * B)
+
+xor 00 # print single instance
+
+xor 01 # Print single instance
+
+xor 10 # Print single instace
+
+xor 11 # Print single instance
+
+# Generate full table (no args)
+xor

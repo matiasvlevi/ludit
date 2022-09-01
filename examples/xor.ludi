@@ -9,4 +9,11 @@
 - XNOR GATE
 '((A * 'B) + ('A * B))
 
+# and Function
+def and(A, B) = A * B
 
+# print single input case
+and(0, 0)
+
+# print truth table
+and()
