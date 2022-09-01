@@ -21,3 +21,9 @@ Write boolean equations
 ```
 ludit "A * 'B + 'A * B"
 ```
+
+You can also run files with `-f`
+
+```
+ludit -f ./examples/xor.ludi
+```
