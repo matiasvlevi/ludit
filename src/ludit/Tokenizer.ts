@@ -28,6 +28,11 @@ export default class Tokenizer {
 			priority: 2,
 			op: (a: boolean, b: boolean) => (a && b)
 		},
+		'!': {
+			type: 'operator',
+			priority: 3,
+			op: (a: boolean, b: boolean) => (!b)
+		},
 		'\'': {
 			type: 'operator',
 			priority: 3,
@@ -81,7 +86,7 @@ export default class Tokenizer {
 					scope++;
 	
 				if (!Tokenizer.isBrackets(char)) {
-					if (char === '\'') {
+					if (char === '!' || char === '\'') {
 						tokens.push(new Token(
 							'.', 'variable', -1
 						));
@@ -90,7 +95,7 @@ export default class Tokenizer {
 					tokens.push(new Token(
 						char,
 						Tokenizer.OPERATORS[char].type,
-						Tokenizer.OPERATORS[char].priority + 4 * scope
+						Tokenizer.OPERATORS[char].priority + 12 * scope
 					));
 				}
 

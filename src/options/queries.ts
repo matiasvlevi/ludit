@@ -45,6 +45,14 @@ export const queries: Map<optionConfig> = {
 		helpmsg: 'select a specific set of inputs to calculate',
 		example: '--select 101',
 		requireParam: true
+	},
+	file: {
+		action:(frontend: Frontend, param: string) => {
+			frontend.fromFile(param);
+		},
+		helpmsg: 'read expression from a source file',
+		example: '--file formula.ludi',
+		requireParam: true
 	}
 };
 

@@ -1,0 +1,12 @@
+# MIT Licence 2022
+# Ludit file v0.0.3 
+# 
+# Author: Matias Vazquez-Levi 
+
+- AND GATE
+A * B
+
+- NAND GATE
+'(A * B)
+
+

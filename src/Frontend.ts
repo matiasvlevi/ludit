@@ -21,7 +21,7 @@ export default class Frontend {
 	options: any[];
 	expression: string;
 
-	constructor(options:argv) {
+	constructor(options: argv) {
 		const tokens = Tokenizer.process(
 			options.argument || 'A'
 		);
@@ -29,6 +29,36 @@ export default class Frontend {
 		this.options = options.queries;
 		this.profile = Profiler.getOrder(tokens);
 		this.tree = Parser.makeTree(tokens);
+	}
+
+	static findWithProp(arr: option[], type:string) {
+		for (let i = 0; i < arr.length; i++) {
+			if (arr[i].type === type) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	fromFile(filename: string) {
+		
+		let file = fs.readFileSync(filename, 'utf-8').split('\n')
+			.filter(l => l.length > 0)	   // Ignore blank lines
+		
+		// Remove file option so it does not run recursively
+		this.options.splice(Frontend.findWithProp(this.options, 'file'), 1);
+
+		for (let i = 0; i < file.length; i++) {
+			let line = Parser.fileAddOns(file[i]);
+			if (!line) continue;
+
+			const tokens = Tokenizer.process(line);
+			this.expression = line;
+			this.profile = Profiler.getOrder(tokens);
+			this.tree = Parser.makeTree(tokens);
+			this.main();
+		}
+		
 	}
 
 	static replaceAll(content: string, char:string, rep:string) {

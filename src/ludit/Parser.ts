@@ -4,6 +4,19 @@ import Token from './Token'
 export default class Parser {
 	constructor() {};
 
+	static fileAddOns(line: string): string | undefined {
+		if (line.includes('#')) {
+			line = line.slice(0, line.indexOf('#'))
+			if (line.length === 0) return;
+		}
+		if (line[0] === '-') {
+			let title = line.slice(1, line.length)
+			console.log(`\x1b[36m${title}\x1b[0m`);
+			return;
+		}
+		return line;
+	}
+
 	static getPriorityOperator(tokens: any[]) { // Specify token array type
 		let highest: number = 0;
 		let highestIndex = -1;
