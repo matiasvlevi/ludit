@@ -1,11 +1,11 @@
-import fs from 'node:fs'
+import { writeFileSync } from 'node:fs'
 import { option, argv } from './options'
 
 import { Map } from './ludit/types'
 import TreeNode from './ludit/TreeNode'
+import Heap from './ludit/Heap'
 
-
-import util from 'util'
+import Preparser from './Preparser'
 
 import {
 	Tokenizer,
@@ -20,15 +20,20 @@ export default class Frontend {
 	tree: TreeNode;
 	options: any[];
 	expression: string;
+	heap: Heap;
+	path: string | undefined;
 
 	constructor(options: argv) {
-		const tokens = Tokenizer.process(
+		
+		this.heap = new Heap();
+		const { tokens } = Tokenizer.process(
+			this.heap,
 			options.argument || 'A'
 		);
+		this.profile = Profiler.process(tokens);
 		this.expression = options.argument;
 		this.options = options.queries;
-		this.profile = Profiler.getOrder(tokens);
-		this.tree = Parser.makeTree(tokens);
+		this.tree = Parser.makeTree(this.heap, tokens);
 	}
 
 	static findWithProp(arr: option[], type:string) {
@@ -41,22 +46,32 @@ export default class Frontend {
 	}
 
 	fromFile(filename: string) {
-		
-		let file = fs.readFileSync(filename, 'utf-8').split('\n')
-			.filter(l => l.length > 0)	   // Ignore blank lines
-		
+		// Load file	
+		let file = Preparser.loadFile(filename); 
+
+		this.path = Preparser.getPath(filename);
+
 		// Remove file option so it does not run recursively
 		this.options.splice(Frontend.findWithProp(this.options, 'file'), 1);
+		
+		file = Preparser.include(file, this.path)
 
 		for (let i = 0; i < file.length; i++) {
-			let line = Parser.fileAddOns(file[i]);
-			if (!line) continue;
+			// Parse commments & prints
+			let line = Preparser.filter(file[i]); 
+			if (!line) continue; // Skip if empty line
+	
+			// Create tokens, profile and determine if line is a definition
+			const { tokens, profile, isDef } = Tokenizer.process(this.heap, line);
 
-			const tokens = Tokenizer.process(line);
-			this.expression = line;
-			this.profile = Profiler.getOrder(tokens);
-			this.tree = Parser.makeTree(tokens);
-			this.main();
+			this.profile = profile; // Save profile (Variables used in line or definition)
+			this.expression = line; // Save raw line
+
+			// Create computation tree
+			this.tree = Parser.makeTree(this.heap, tokens);
+
+			// Dont compute and print if is a definition
+			if (!isDef) this.main();
 		}
 		
 	}
@@ -118,7 +133,7 @@ export default class Frontend {
 		}
 		process.stdout.write(csv);
 		if (filename !== undefined)
-			fs.writeFileSync(filename, csv, 'utf-8');
+			writeFileSync(filename, csv, 'utf-8');
 	}
 
 	main() {

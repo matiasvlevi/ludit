@@ -1,7 +1,15 @@
 import { syntax, functionSyntax, keyword, operation, Map } from './types'
 
+import Heap from './Heap'
+import Profiler from './Profiler'
 import TreeNode from './TreeNode'
 import Token from './Token'
+
+type TokenizerReturn = {
+	tokens: (Token|TreeNode)[];
+	profile: string;
+	isDef: boolean;
+}
 
 export default class Tokenizer {
 	constructor() {};
@@ -15,8 +23,8 @@ export default class Tokenizer {
 
 	static FUNCTION:Map<functionSyntax> = {
 		'=': {
-			type:'assign',
-			priority: -1
+			type:'operator',
+			priority: 0.5
 		}
 	}
 
@@ -132,17 +140,18 @@ export default class Tokenizer {
 		return char === ')';
 	} 
 
-	static isDef(tokens: Token[]) {
-		console.log('isDef: ',tokens)
+	static isDef(tokens: (Token|TreeNode)[]) {
 		if (tokens.length === 0) return false;
 		return (tokens[tokens.length-1].type === 'function');
 	}
 
-	static process(expression: string): Token[] {
-		let tokens:any[] = [];	   // Specify this type 
+	static process(heap: Heap, expression: string): TokenizerReturn {
+		let tokens:(Token | TreeNode)[] = [];	   // Specify this type 
+		let profile: string[] = [];
+		let lineDef: string | undefined;	
 
 		let exp = expression.split('');
-
+			
 		let scope = 0;
 		for (let i = 0; i < exp.length; i++) {
 			let char = exp[i];
@@ -170,6 +179,7 @@ export default class Tokenizer {
 					scope--;
 
 			} else if (Tokenizer.isVariable(char)) {
+				if (!profile.includes(char)) profile.push(char)
 				tokens.push(new Token(
 					char,
 					'variable',
@@ -188,9 +198,13 @@ export default class Tokenizer {
 						i+=3;
 					}
 
-				} else if (word) {
-					let functionName = word;
-					i+=word.length;
+				} else if (word) {	
+					if (Tokenizer.isDef(tokens)) lineDef = word;
+					else {
+						profile = Profiler.removeDoubles(
+							profile.concat((heap.getProfile(word) || '').split('')).join('')
+						).split('');
+					}
 					tokens.push(new Token(
 						word,
 						Tokenizer.isDef(tokens) ?
@@ -198,6 +212,8 @@ export default class Tokenizer {
 							'functionCall',
 						-1
 					));
+					
+					i+=word.length;
 				} 
 			} else if (Tokenizer.isAssign(char)) {
 				tokens.push(new Token(
@@ -213,7 +229,10 @@ export default class Tokenizer {
 				))
 			}
 		}
+		if (lineDef) {
+			heap.setProfile(lineDef, Profiler.clean(profile));
+		}
 
-		return tokens;
+		return { tokens, isDef: (lineDef!==undefined), profile: Profiler.clean(profile) };
 	};	
 };

@@ -50,15 +50,19 @@ export default class TreeNode {
 			(this.right instanceof Token || this.right?.isCalculated())
 		) {
 			this.result = 
-				Tokenizer.OPERATORS[this.value.literal].op(
-				(this.left instanceof Token) ?
-					input[profile.indexOf(this.left?.literal)] : 
-					this.left?.result || false,
+				Tokenizer.OPERATORS[this.value.literal].op( // TODO: Clean this shit up
+					(this.left instanceof Token) ?
+						((this.left.type !== 'constant') ?
+						 input[profile.indexOf(this.left?.literal)] :
+						 !!+this.left.literal): 
+						this.left?.result || false,
 
-				(this.right instanceof Token) ?
-					input[profile.indexOf(this.right?.literal)] :
-					this.right?.result || false
-			);
+					(this.right instanceof Token) ?
+						((this.right.type !== 'constant') ?
+						 input[profile.indexOf(this.right?.literal)] :
+						 !!+this.right.literal):
+						this.right?.result || false
+				);
 		}
 		return this.result || false;
 	}

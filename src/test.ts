@@ -1,11 +1,12 @@
 import util from 'util'
 
 import {
+	Heap,
 	Tokenizer
 } from './ludit'
 
-let tokens = Tokenizer.process("def hello = A * B ");
+const heap = new Heap
 
-console.log(util.inspect(tokens, {depth: null, colors:true}))
-tokens = Tokenizer.process("hello 1 0")
+let tokens = Tokenizer.process(heap, "def hello = A * B ");
+
 console.log(util.inspect(tokens, {depth: null, colors:true}))

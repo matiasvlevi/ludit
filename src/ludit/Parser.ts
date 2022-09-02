@@ -1,21 +1,10 @@
+import Heap from './Heap'
+import Tokenizer from './Tokenizer'
 import TreeNode from './TreeNode'
 import Token from './Token'
 
 export default class Parser {
 	constructor() {};
-
-	static fileAddOns(line: string): string | undefined {
-		if (line.includes('#')) {
-			line = line.slice(0, line.indexOf('#'))
-			if (line.length === 0) return;
-		}
-		if (line[0] === '-') {
-			let title = line.slice(1, line.length)
-			console.log(`\x1b[36m${title}\x1b[0m`);
-			return;
-		}
-		return line;
-	}
 
 	static getPriorityOperator(tokens: any[]) { // Specify token array type
 		let highest: number = 0;
@@ -34,21 +23,52 @@ export default class Parser {
 		return highestIndex;
 	}
 
-	static makeTree(tokens: any[]): TreeNode {
+	static makeTree(heap: Heap, tokens: any[]): TreeNode {
 	
 		// Get index of the operator to parse
 		let highest = Parser.getPriorityOperator(tokens);
 
-		// If variable is alone in operation (ex: "A"), multiply with itself
-		// to output the value. This is kinda hackish
-		if (highest === -1) return new TreeNode(
-			new Token('*', 'operator', 1),
-			new Token(tokens[0].literal, 'variable', -1),
-			new Token(tokens[0].literal, 'variable', -1)
-		);
-
+		// If variable is alone in operation (ex: "A" or a declared value ex: "xor"),
+		// add the value with 0 to emulate it being alone 
+		if (highest === -1) {	
+			if (tokens[0]) {
+				if (tokens[0].type === 'functionCall') {
+					return new TreeNode(
+						new Token('+', 'operator', 1),
+						new Token('0', 'constant', -1),
+						heap.getTree(tokens[0].literal)
+					);
+				} else if (tokens[0].type === 'variable') {
+					return new TreeNode(
+						new Token('+', 'operator', 1),
+						new Token('0', 'constant', -1),
+						tokens[0]
+					);
+				}
+			} else {
+				// Handle empty line
+			}	
+		}
+		
 		// Initialise iteration node
 		let node = new TreeNode(tokens[highest]);
+		if (Tokenizer.isAssign(tokens[highest].literal)) {
+			let j = highest-1;
+			while(tokens[j].type !== 'functionName') j++;
+			let functionName = tokens[j].literal;
+
+			j = highest+1;
+			while(tokens[j].type !== 'variable') j++;
+			let functionDef = tokens[j];
+
+			// TODO: Assignement error handling
+			//
+			//
+
+			heap.setTree(functionName, functionDef);	
+
+			return functionDef;
+		}
 
 		let j: number; // parameter look ahead index
 		
@@ -56,11 +76,18 @@ export default class Parser {
 		let left;
 		let leftIndex = -1;
 		if (node.left === undefined) { 
-			
+				
 			j = highest; 
-			do { j-- } while (tokens[j].type !== 'variable');
+			do { j-- } while (
+				tokens[j].type !== 'variable' &&
+				tokens[j].type !== 'functionCall'
+			);
 
-			left = tokens[j];
+			if (tokens[j].type === 'functionCall') {
+				left = heap.getTree(tokens[j].literal);
+			} else {
+				left = tokens[j];
+			}
 			leftIndex = j;
 		}
 
@@ -70,9 +97,16 @@ export default class Parser {
 		if (node.right === undefined) {
 			j = highest;
 
-			do { j++ } while (tokens[j].type !== 'variable') 
-			
-			right = tokens[j];
+			do { j++ } while (
+				tokens[j].type !== 'variable' && 
+				tokens[j].type !== 'functionCall'
+			) 
+
+			if (tokens[j].type === 'functionCall') {
+				right = heap.getTree(tokens[j].literal);
+			} else {
+				right = tokens[j];
+			}
 			rightIndex = j;
 		}
 
@@ -92,7 +126,7 @@ export default class Parser {
 			return node;
 		} else {
 			// continue recursively
-			return Parser.makeTree(tokens);
+			return Parser.makeTree(heap, tokens);
 		}
 	}
 };
