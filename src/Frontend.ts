@@ -28,12 +28,21 @@ export default class Frontend {
 		this.heap = new Heap();
 		const { tokens } = Tokenizer.process(
 			this.heap,
-			options.argument || 'A'
+			options.argument || 'A',
+			{ 
+				line: 0,
+				char: 0,
+				text: options.argument
+			}
 		);
-		this.profile = Profiler.process(tokens);
+		this.profile = Profiler.process(tokens, );
 		this.expression = options.argument;
 		this.options = options.queries;
-		this.tree = Parser.makeTree(this.heap, tokens);
+		this.tree = Parser.makeTree(this.heap, tokens, {
+			line: 0,
+			char: 0,
+			text: this.expression
+		});
 	}
 
 	static findWithProp(arr: option[], type:string) {
@@ -48,29 +57,42 @@ export default class Frontend {
 	fromFile(filename: string) {
 		// Load file	
 		let file = Preparser.loadFile(filename); 
+		let fileLineNb = file.length;
+		let includeLineNb = 0;
 
 		this.path = Preparser.getPath(filename);
 
 		// Remove file option so it does not run recursively
-		this.options.splice(Frontend.findWithProp(this.options, 'file'), 1);
-		
-		file = Preparser.include(file, this.path)
-		console.log('final', file)
-		
-
+		this.options.splice(Frontend.findWithProp(this.options, 'file'), 1);	
+	
+		// Handle included files
+		if (Preparser.includesAnInclude(file)) {
+			file = Preparser.include(file, this.path)
+			includeLineNb = file.length - fileLineNb;
+		}
+	
 		for (let i = 0; i < file.length; i++) {
+			let currentLine = i+1 - includeLineNb;
 			// Parse commments & prints
 			let line = Preparser.filter(file[i]); 
 			if (!line) continue; // Skip if empty line
 	
 			// Create tokens, profile and determine if line is a definition
-			const { tokens, profile, isDef } = Tokenizer.process(this.heap, line);			
+			const { tokens, profile, isDef } = Tokenizer.process(
+				this.heap,
+				line,
+				{ line: currentLine, char: -1, text: file[i]}
+			);
 
 			this.profile = profile; // Save profile (Variables used in line or definition)
 			this.expression = line; // Save raw line
 
 			// Create computation tree
-			this.tree = Parser.makeTree(this.heap, tokens);
+			this.tree = Parser.makeTree(this.heap, tokens, {
+				line: currentLine,
+				char: -1,
+				text: file[i]
+			});
 
 			// Dont compute and print if is a definition
 			if (!isDef) this.main();

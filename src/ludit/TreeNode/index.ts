@@ -8,11 +8,13 @@ export default class TreeNode {
 	type: string;
 	priority: number;
 	result: boolean | undefined;
+	char: number;
 
 	constructor(
 		value: Token,
+		char: number,
 		left?: TreeNode | Token | undefined,
-		right?: TreeNode | Token | undefined
+		right?: TreeNode | Token | undefined,
 	) {
 		this.type = 'variable';
 		this.priority = -1;
@@ -20,11 +22,13 @@ export default class TreeNode {
 		this.left = left;
 		this.right = right;
 		this.result = undefined;
+		this.char = char
 	}
 
 	copy(): TreeNode {
 		return new TreeNode(
 			this.value,
+			this.char,
 			this.left?.copy(),
 			this.right?.copy()
 		);

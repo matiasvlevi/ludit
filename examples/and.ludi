@@ -1,6 +1,3 @@
-# MIT Licence 2022
-# Ludit file v0.0.3 
-# 
-# Author: Matias Vazquez-Levi 
+# AND file
 
-def hello = A * B * C
+def and = (A  * B)

@@ -1,7 +1,15 @@
-include "./basic"
-include "./basicA"
-include "../and"
-include "../not"
+include "./foo"
+include "../xor"
 
-- Hello world
-A * B
+- XOR 
+xor 
+
+- XNOR
+'xor
+
+- FOO (from include)
+foo
+
+- BAR (from include's include)
+bar
+

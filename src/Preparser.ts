@@ -1,9 +1,13 @@
 import fs from 'node:fs'
+
+
+import { ErrorHandler, error } from './ludit/ErrorHandler'
+
 import { Map } from './ludit/types'
 
 type preParserKeyword = {
 	type: string,
-	action: (line: string) => string[]
+	action: (line: string, e:error) => string[]
 }
 
 export default class Preparser {
@@ -12,8 +16,8 @@ export default class Preparser {
 	static KEYWORD: Map<preParserKeyword> = {
 		'include': {
 			type: 'include',
-			action: (path: string): string[] => {
-				return Preparser.loadFile(path);
+			action: (path: string, e: error): string[] => {
+				return Preparser.loadFile(path, e);
 			}
 		}
 	}
@@ -53,33 +57,35 @@ export default class Preparser {
 		j:number = 0
 	): string[] {
 		let includes:string[] = [];
-		console.log(file)
 		let length = file.length-1;
+
 		for (let i = length; i >= 0; i--) {
 
-			let include = Preparser.checkInclude(path, file[i]);
+			let include = Preparser.checkInclude(
+				path,
+				file[i],
+				{ line: i+1, char: 9, text: file[i]}
+			);
 			if (include.length !== 0) {
 
 				file.splice(i, 1); // Remove include
-				
 
-				console.log('file', file);
-
-				console.log('include', include)
+				// Look for includes in included file
+				if (Preparser.includesAnInclude(include)) {
+					let nested =  Preparser.include([...include], path, j+1);
+					include = nested
+				}
 
 				includes = include.concat(file);
 
 				file = includes;
 				i = file.length-1;	
-				
-				console.log('newfile',i,  file)
 			}
 		}
 		return includes;
 	}
 
 	static includesAnInclude(file: string[]): boolean {
-	
 		for (let i = 0 ; i < file.length; i++) {
 			if (file[i].includes('include')) {
 				return true
@@ -89,26 +95,39 @@ export default class Preparser {
 
 	}
 
-	static checkInclude(path:string, line: string): string[] {
-		let words = line.split(' ');
+	static checkInclude(
+		path:string,
+		line: string,
+		errorInfo:error
+	): string[] {
 
+		let words = line.split(' ');
+		if (words[0].includes('#')) return []; // ignore comments
 		if (Preparser.KEYWORD[words[0]] !== undefined) {
 			let includepath = 
 				Preparser.evalPath(Preparser.parseQuotes(words[1]), path)
 				
-			return Preparser.KEYWORD[words[0]].action(`${includepath}.ludi`);
+			return Preparser.KEYWORD[words[0]].action(
+				`${includepath}.ludi`,
+				errorInfo	
+			);
 		}
 
 		return [];
 	}
 
 	static evalPath(file:string, path:string) {
-		console.log(file, path)
 		if (file[0] !== '.') {
 			if (file[0] === '/') {	
 				// Global path
 				return `${file}`	
-			} else {
+			} else { 
+				if (
+					process.env.LUDIT_PATH === undefined ||
+					!fs.existsSync(`${process.env.LUDIT_PATH}/`)
+				) {
+					ErrorHandler.envError('LUDIT_PATH');
+				}	
 				// Lib path
 				return `${process.env.LUDIT_PATH}/${file}`
 			}
@@ -122,7 +141,6 @@ export default class Preparser {
 				mfile = mfile.replace('../', '');
 				count++;
 			} 
-			console.log(count, mfile);
 			return `${Preparser.resolve(path, count)}${mfile}`
 		} else {
 			file = file.replace('.', path)
@@ -130,9 +148,14 @@ export default class Preparser {
 		return file;
 	}
 
-	static loadFile(path: string) {
+	static loadFile(path: string, e:error | undefined = undefined) {
+		if (!fs.existsSync(path)) {
+			ErrorHandler.includeNotFound(path, e);
+
+			return [];
+		}
+
 		return fs.readFileSync(path, 'utf-8').split('\n')
-			.filter(l => l.length > 0)	   // Ignore blank lines	
 	}
 
 	static comments(line: string): string | undefined {

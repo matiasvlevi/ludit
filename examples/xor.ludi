@@ -3,13 +3,10 @@
 #
 # Author: Matias Vazquez-Levi 
 
-include "./functions"
+def xor = (A * 'B) + ('A * B)
+
+def xnor = 'xor
 
 
-xor
 
-'xor
-
-
-xor * C
 

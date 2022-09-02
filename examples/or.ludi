@@ -3,8 +3,6 @@
 # 
 # Author: Matias Vazquez-Levi 
 
-- OR GATE
-A + B   
+def or = A + B   
 
-- NOR GATE
-'(A + B)
+def nor = 'or

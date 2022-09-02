@@ -3,9 +3,7 @@
 # 
 # Author: Matias Vazquez-Levi 
 
-- BUFFER
-A
+def buffer = A
 
-- NOT GATE
-!A
+def not = !A
 

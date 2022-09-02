@@ -1,0 +1,2 @@
+include "./bar"
+def foo = A * (B + !C) + D

@@ -1,3 +1,6 @@
+import { ErrorHandler, error } from './ErrorHandler'
+
+// Ludi core
 import Heap from './Heap'
 import Tokenizer from './Tokenizer'
 import TreeNode from './TreeNode'
@@ -23,7 +26,7 @@ export default class Parser {
 		return highestIndex;
 	}
 
-	static makeTree(heap: Heap, tokens: any[]): TreeNode {
+	static makeTree(heap: Heap, tokens: any[], e:error): TreeNode {
 	
 		// Get index of the operator to parse
 		let highest = Parser.getPriorityOperator(tokens);
@@ -34,14 +37,16 @@ export default class Parser {
 			if (tokens[0]) {
 				if (tokens[0].type === 'functionCall') {
 					return new TreeNode(
-						new Token('+', 'operator', 1),
-						new Token('0', 'constant', -1),
+						new Token('+', 'operator', 1, 0),
+						0,
+						new Token('0', 'constant', -1, 0),
 						heap.getTree(tokens[0].literal)
 					);
 				} else if (tokens[0].type === 'variable') {
 					return new TreeNode(
-						new Token('+', 'operator', 1),
-						new Token('0', 'constant', -1),
+						new Token('+', 'operator', 1, 0),
+						0,
+						new Token('0', 'constant', -1, 0),
 						tokens[0]
 					);
 				}
@@ -51,7 +56,16 @@ export default class Parser {
 		}
 		
 		// Initialise iteration node
-		let node = new TreeNode(tokens[highest]);
+		if (tokens[highest] === undefined) {
+
+			if (tokens[tokens.length-1] !== undefined)
+				e.char = tokens[tokens.length-1].char;
+			
+			ErrorHandler.assignmentError(e);
+		}
+				
+
+		let node = new TreeNode(tokens[highest], tokens[highest].char);
 		if (Tokenizer.isAssign(tokens[highest].literal)) {
 			let j = highest-1;
 			while(tokens[j].type !== 'functionName') j++;
@@ -78,7 +92,16 @@ export default class Parser {
 		if (node.left === undefined) { 
 				
 			j = highest; 
-			do { j-- } while (
+			do { 
+				j--
+				if (j < 0) {
+					e.char = tokens[highest].char;
+					ErrorHandler.missingVariable(
+						'Missing operator value',
+						e
+					);
+				}
+			} while (
 				tokens[j].type !== 'variable' &&
 				tokens[j].type !== 'functionCall'
 			);
@@ -97,7 +120,16 @@ export default class Parser {
 		if (node.right === undefined) {
 			j = highest;
 
-			do { j++ } while (
+			do { 
+				j++
+				if (j >= tokens.length) {
+					e.char = tokens[tokens.length-1].char;
+					ErrorHandler.missingVariable(
+						'Missing operator value',
+						e
+					);
+				}
+			} while (
 				tokens[j].type !== 'variable' && 
 				tokens[j].type !== 'functionCall'
 			) 
@@ -126,7 +158,7 @@ export default class Parser {
 			return node;
 		} else {
 			// continue recursively
-			return Parser.makeTree(heap, tokens);
+			return Parser.makeTree(heap, tokens, e);
 		}
 	}
 };

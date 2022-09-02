@@ -1,5 +1,7 @@
 import { syntax, functionSyntax, keyword, operation, Map } from './types'
 
+import { ErrorHandler, error } from './ErrorHandler'
+
 import Heap from './Heap'
 import Profiler from './Profiler'
 import TreeNode from './TreeNode'
@@ -145,8 +147,13 @@ export default class Tokenizer {
 		return (tokens[tokens.length-1].type === 'function');
 	}
 
-	static process(heap: Heap, expression: string): TokenizerReturn {
-		let tokens:(Token | TreeNode)[] = [];	   // Specify this type 
+	static process(
+		heap: Heap,
+		expression: string,
+		e: error	
+	): TokenizerReturn {
+
+		let tokens:(Token | TreeNode)[] = [];	    
 		let profile: string[] = [];
 		let lineDef: string | undefined;	
 
@@ -164,14 +171,15 @@ export default class Tokenizer {
 				if (!Tokenizer.isBrackets(char)) {
 					if (char === '!' || char === '\'') {
 						tokens.push(new Token(
-							'.', 'variable', -1
+							'.', 'variable', -1, i
 						));
 					}
 
 					tokens.push(new Token(
 						char,
 						Tokenizer.OPERATORS[char].type,
-						Tokenizer.OPERATORS[char].priority + 12 * scope
+						Tokenizer.OPERATORS[char].priority + 12 * scope,
+						i
 					));
 				}
 
@@ -183,7 +191,7 @@ export default class Tokenizer {
 				tokens.push(new Token(
 					char,
 					'variable',
-					-1
+					-1, i
 				))
 			} else if (Tokenizer.isLowerCase(char)) { // KEYWORD DETECTION 
 				let word = Tokenizer.isKeyword(exp, i);
@@ -193,7 +201,7 @@ export default class Tokenizer {
 						tokens.push(new Token(
 							[...exp].splice(i, 3).join(''), 
 							keyword.type,
-							-1
+							-1, i
 						));
 						i+=3;
 					}
@@ -201,8 +209,11 @@ export default class Tokenizer {
 				} else if (word) {	
 					if (Tokenizer.isDef(tokens)) lineDef = word;
 					else {
+						e.char = i;
 						profile = Profiler.removeDoubles(
-							profile.concat((heap.getProfile(word) || '').split('')).join('')
+							profile.concat(
+								(heap.getProfile(word, e) || '').split('')
+							).join('')
 						).split('');
 					}
 					tokens.push(new Token(
@@ -210,7 +221,7 @@ export default class Tokenizer {
 						Tokenizer.isDef(tokens) ?
 							'functionName':
 							'functionCall',
-						-1
+						-1, i
 					));
 					
 					i+=word.length;
@@ -219,13 +230,14 @@ export default class Tokenizer {
 				tokens.push(new Token(
 					char,
 					Tokenizer.FUNCTION[char].type,
-					Tokenizer.FUNCTION[char].priority
+					Tokenizer.FUNCTION[char].priority,
+					i
 				))
 			} else if (Tokenizer.isBool(char)) {
 				tokens.push(new Token(
 					char,
 					`bool`,
-					-1
+					-1, i
 				))
 			}
 		}

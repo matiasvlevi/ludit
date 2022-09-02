@@ -1,3 +1,4 @@
+import { ErrorHandler, error } from './ErrorHandler'
 import { Map } from './types'
 import TreeNode from './TreeNode'
 
@@ -35,11 +36,19 @@ export default class Heap {
 		};
 	}
 
-	getProfile(key: string): string | undefined {
+	getProfile(key: string, e:error = {line:0, char:-1, text:''}): string | undefined {
+		if (this.data[key] === undefined) {
+			// Handle not defined
+			ErrorHandler.functionNotDef(e);
+		}
 		return this.data[key].profile
 	}
 
-	getTree(key: string): TreeNode | undefined {
+	getTree(key: string, e: error= {line:0, char:-1, text:''}): TreeNode | undefined {
+		if (this.data[key] === undefined) {
+			// Handle not defined
+			ErrorHandler.functionNotDef(e);
+		}
 		return this.data[key].tree;
 	}
 } 
