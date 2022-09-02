@@ -30,10 +30,12 @@ export default class Frontend {
 			this.heap,
 			options.argument || 'A'
 		);
+		console.log(tokens)
 		this.profile = Profiler.process(tokens);
 		this.expression = options.argument;
 		this.options = options.queries;
 		this.tree = Parser.makeTree(this.heap, tokens);
+		console.log(this.tree)
 	}
 
 	static findWithProp(arr: option[], type:string) {

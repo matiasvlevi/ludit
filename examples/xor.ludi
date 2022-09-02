@@ -3,9 +3,13 @@
 #
 # Author: Matias Vazquez-Levi 
 
-- XOR GATE
-(A * 'B) + ('A * B)
+include "./functions"
 
-- XNOR GATE
-'((A * 'B) + ('A * B))
+
+xor
+
+'xor
+
+
+xor * C
 
