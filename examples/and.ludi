@@ -2,6 +2,7 @@
 # Ludit file v0.0.3 
 # 
 # Author: Matias Vazquez-Levi 
+include "./functions"
 
 - AND GATE
 A * B
@@ -9,4 +10,5 @@ A * B
 - NAND GATE
 '(A * B)
 
-
+- AND FROM INCLUDE
+and

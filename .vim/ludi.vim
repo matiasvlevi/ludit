@@ -14,6 +14,7 @@ syn match String "-.*$"
 
 syn match String "\".*\""
 
+syn match Function "\l"
 syn match Repeat "\<include\>"
 syn match Repeat "\<def\>"
 syn match Function /\w\+\s*=/me=e-1,he=e-1 
