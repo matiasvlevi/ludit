@@ -4,14 +4,14 @@ Ludi is a language meant to express and compute boolean algebra expressions in t
 
 ## Table of contents
 
-* [Operators]()
-* [Expressions]()
-* [Functions]()
-* * [Defining]()
-* * [Calling]()
-* [Includes]()
-* [Helpful Syntax]()
-* [Syntax Highlighting]()
+* [Operators](#Operators)
+* [Expressions](#Expressions)
+* [Functions](#Functions)
+* * [Defining](#Defining-Functions)
+* * [Calling](#Calling-Functions)
+* [Includes](#Includes)
+* [Helpful Syntax](#Helpful-Syntax)
+* [Syntax Highlighting](#Use-proper-syntax-highlighting)
 
 <br/>
 
