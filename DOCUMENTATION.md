@@ -2,6 +2,18 @@
 
 Ludi is a language meant to express and compute boolean algebra expressions in the CLI.
 
+## Table of contents
+
+* [Operators]()
+* [Expressions]()
+* [Functions]()
+* * [Defining]()
+* * [Calling]()
+* [Includes]()
+* [Helpful Syntax]()
+* [Syntax Highlighting]()
+
+<br/>
 
 ## Operators
 
@@ -105,6 +117,23 @@ Or use a library
 
 ```
 include "std"
+```
+
+<br/>
+
+## Helpful Syntax
+
+You can write comments by prefixing `#`
+
+```ludi
+# Ludi is dope as hell yow
+```
+
+You can print text by prefixing it with `-`
+This is useful to add titles to tables or calculations
+
+```ludi
+- Hello world
 ```
 
 <br/>
