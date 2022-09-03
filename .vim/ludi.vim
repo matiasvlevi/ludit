@@ -11,8 +11,10 @@ syn match Float "+"
 syn match Repeat "!"
 syn match Repeat "'"
 syn match String "-.*$"
-
 syn match String "\".*\""
+
+syn match Number "0"
+syn match Number "1"
 
 syn match Function "\l"
 syn match Repeat "\<include\>"

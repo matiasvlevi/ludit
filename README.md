@@ -27,3 +27,11 @@ You can also run files with `-f`
 ```
 ludit -f ./examples/project/main.ludi
 ```
+
+[Read the language documentation](https://github.com/matiasvlevi/ludit/blob/parser/DOCUMENTATION.md)
+
+Syntax highlighting file for vim is provided under
+
+```
+.vim/ludi.vim
+```
