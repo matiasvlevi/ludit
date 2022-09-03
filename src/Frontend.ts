@@ -193,12 +193,9 @@ export default class Frontend {
 		let result = [];
 		for (let y = 0; y < Math.pow(2, n); y++) {
 			let combo = [];
-			for (let x = 0; x < n; x++) {
-				if ((y >> x) & 1)
-					combo.push(1);
-				else
-					combo.push(0);
-			}	
+			for (let x = 0; x < n; x++) 
+				combo.push((y >> x) & 1);
+					
 			result.push(combo.reverse());
 		}
 		return result;

@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./assets/logo.png" alt="Ludit" height="100"/>
+    <img src="https://i.ibb.co/Fg3d0dr/logo.png" alt="Ludit" height="100"/>
 </p>
 
 <h3 align="center">Boolean Algebra in the CLI</h4>

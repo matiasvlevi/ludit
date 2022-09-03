@@ -1,6 +1,6 @@
 {
   "name": "ludit",
-  "version": "0.0.3",
+  "version": "0.1.2b",
   "description": "A cli tool for generating boolean equation truth tables",
   "main": "./bin/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   ],
   "author": "Matias Vazquez-Levi",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@types/node": "^18.7.14"
   },
   "bin": {
