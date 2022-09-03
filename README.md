@@ -12,7 +12,7 @@
     
 <br/><br/><br/>
     
-Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra expressions in the CLI.
+Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.
 
 > Project is under development
 
