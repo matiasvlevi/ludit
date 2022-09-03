@@ -1,13 +1,10 @@
-# ludit
-
-
 <p align="center">
-    <img src="./assets/logo.png" alt="Ludit" height="200"/>
+    <img src="./assets/logo.png" alt="Ludit" height="100"/>
 </p>
 
 <h3 align="center">Boolean Algebra in the CLI</h4>
     
-<br/>
+<br/><br/>
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra expressions in the CLI.
 
