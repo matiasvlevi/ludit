@@ -100,6 +100,7 @@ bar(A, B, C, D)
 
 Ludi allows you to include files
 
+This is designed for Linux, windows support will come shortly
 
 You can include files with a local path
 
