@@ -14,6 +14,8 @@
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra expressions in the CLI.
 
+> Project is under development
+
 ### Install
 
 ```
