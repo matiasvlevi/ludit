@@ -4,7 +4,13 @@
 
 <h3 align="center">Boolean Algebra in the CLI</h4>
     
-<br/><br/>
+<p align="center">
+  <a href="https://github.com/matiasvlevi/ludit/blob/parser/README.md">Install</a> •
+  <a href="https://github.com/matiasvlevi/ludit/blob/parser/DOCUMENTATION.md">Documentation</a> •
+  <a href="https://github.com/matiasvlevi/ludit/blob/parser/LICENCE">License</a>
+</p>
+    
+<br/><br/><br/>
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra expressions in the CLI.
 
