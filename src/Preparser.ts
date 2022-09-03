@@ -170,7 +170,6 @@ export default class Preparser {
 
 			return [];
 		}
-		console.log(path)
 		return fs.readFileSync(path, 'utf-8').split('\n')
 	}
 

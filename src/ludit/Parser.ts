@@ -69,6 +69,7 @@ export default class Parser {
 		let highest = Parser.getPriorityOperator(tokens);
 		// If variable is alone in operation (ex: "A" or a declared value ex: "xor"),
 		// add the value with 0 to emulate it being alone 
+		//
 		if (highest === -1) {	
 			if (tokens[0]) {
 				if (tokens[0].type === 'functionCall') {
@@ -90,13 +91,12 @@ export default class Parser {
 				// Handle empty line
 			}	
 		}
-		
 		// Initialise iteration node
 		if (tokens[highest] === undefined) {
-
-			if (tokens[tokens.length-1] !== undefined)
-				e.char = tokens[tokens.length-1].char;
 			
+			if (tokens[tokens.length-1] !== undefined) {
+				e.char = tokens[tokens.length-1].char;
+			}
 			ErrorHandler.assignmentError(e);
 		}
 				
@@ -159,7 +159,7 @@ export default class Parser {
 			let functionName = tokens[j].literal;
 
 			j = highest+1;
-			while(tokens[j].type !== 'variable') j++;
+			while(tokens[j].type !== 'variable' && tokens[j].type !== 'constant') j++;
 			let functionDef = tokens[j];
 
 			// TODO: Assignement error handling

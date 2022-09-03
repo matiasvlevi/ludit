@@ -160,7 +160,18 @@ export default class Tokenizer {
 
 	static isSpecificCall(exp: string[], i:number, word:string) {
 		if (exp[i+word.length] === undefined) return false;
-		return exp[i+word.length] === '(';
+
+		let j = i+word.length;
+		while (
+			exp[j] === '(' ||
+			exp[j] === ' '
+	    ) {
+			// if arguments are provided, function is a specific call
+			if (Tokenizer.isVariable(exp[j])) return true;
+			j++
+		}
+		// If not, function is not a specific call
+		return false;
 	}
 
 	static process(
