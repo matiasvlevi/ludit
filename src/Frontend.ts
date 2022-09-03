@@ -1,6 +1,8 @@
 import { writeFileSync } from 'node:fs'
 import { option, argv } from './options'
 
+import util from 'util'
+
 import { Map } from './ludit/types'
 import TreeNode from './ludit/TreeNode'
 import Heap from './ludit/Heap'
@@ -26,7 +28,7 @@ export default class Frontend {
 	constructor(options: argv) {
 		
 		this.heap = new Heap();
-		const { tokens } = Tokenizer.process(
+		const { tokens, profile } = Tokenizer.process(
 			this.heap,
 			options.argument || 'A',
 			{ 
@@ -35,10 +37,10 @@ export default class Frontend {
 				text: options.argument
 			}
 		);
-		this.profile = Profiler.process(tokens, );
+		this.profile = Profiler.process(tokens);
 		this.expression = options.argument;
 		this.options = options.queries;
-		this.tree = Parser.makeTree(this.heap, tokens, {
+		this.tree = Parser.makeTree(this.heap, tokens, profile, {
 			line: 0,
 			char: 0,
 			text: this.expression
@@ -88,7 +90,7 @@ export default class Frontend {
 			this.expression = line; // Save raw line
 
 			// Create computation tree
-			this.tree = Parser.makeTree(this.heap, tokens, {
+			this.tree = Parser.makeTree(this.heap, tokens, profile, {
 				line: currentLine,
 				char: -1,
 				text: file[i]
@@ -126,8 +128,20 @@ export default class Frontend {
 		)} = \x1b[33m${output}\x1b[0m`);
 	}
 
+	printSingle() {
+		console.log(
+			`${this.expression} = `+
+			`\x1b[33m${+Processor.calculate(this.tree, this.profile, [])}\x1b[0m`
+		);
+	}
+
 	// Calculate a truth table 
 	run() {
+		if (this.profile.length === 0) {
+			this.printSingle();
+			return;
+		};
+
 		const cases = Frontend.binaryCases(this.profile.length);
 		let output:Map<number>[] = [];
 		

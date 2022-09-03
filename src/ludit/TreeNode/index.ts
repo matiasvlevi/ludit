@@ -1,5 +1,6 @@
 import Tokenizer from '../Tokenizer'
 import Token from '../Token'
+import { Map } from '../types'
 
 export default class TreeNode {
 	value: Token;
@@ -69,6 +70,11 @@ export default class TreeNode {
 				);
 		}
 		return this.result || false;
+	}
+
+	setScope(args: Map<string>, profile:string) {
+		this.left?.setScope(args, profile);
+		this.right?.setScope(args, profile);
 	}
 } 
 

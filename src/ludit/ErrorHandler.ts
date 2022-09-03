@@ -1,6 +1,7 @@
 const COLOR = '\x1b[91m';
 const RESET = '\x1b[0m';
-const DARK = '\x1b[90m'
+const DARK = '\x1b[90m';
+
 export type error = {
 	line: number;
 	char: number;
@@ -67,6 +68,14 @@ export class ErrorHandler {
 		ErrorHandler.error(
 			`${varname} environement variable not set`
 		);
+	}
+
+	static badArgumentSpecification(argCount:number, expected: number, e: error) {
+		if (expected > argCount) {
+			ErrorHandler.error(`Missing arguments, expected ${expected} arguments.`, e);
+		} else if (expected < argCount) {
+			ErrorHandler.error(`Too many arguments, expected ${expected} arguments.`, e);
+		}
 	}
 
 	static includeNotFound(

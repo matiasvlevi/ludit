@@ -1,3 +1,4 @@
+import util from 'util'
 import { ErrorHandler, error } from './ErrorHandler'
 
 // Ludi core
@@ -5,6 +6,8 @@ import Heap from './Heap'
 import Tokenizer from './Tokenizer'
 import TreeNode from './TreeNode'
 import Token from './Token'
+
+import { Map } from './types'
 
 export default class Parser {
 	constructor() {};
@@ -15,7 +18,10 @@ export default class Parser {
 
 		// Find highest priority operator
 		for (let i = 0; i < tokens.length; i++) {
-			if (tokens[i].type === 'operator') {
+			if (
+				tokens[i].type === 'operator' ||
+			    tokens[i].type === 'functionCall'
+			) {
 				if (tokens[i].priority > highest)  {
 					highest = tokens[i].priority;
 					highestIndex = i;
@@ -26,11 +32,41 @@ export default class Parser {
 		return highestIndex;
 	}
 
-	static makeTree(heap: Heap, tokens: any[], e:error): TreeNode {
-	
+	static setFunctionScope(
+		_tree: TreeNode,
+		args: Map<string>,
+		profile: string
+	) {
+		let tree = _tree.copy();
+		tree.setScope(args, profile);
+		return tree;
+	}
+
+	static getArgs(tokens: any[],profile: string, j:number) {
+		let args:Map<string> = { '.': '0' };
+		let i = j;
+		let k = 0;
+		while(tokens[i].type !== 'argClose') {
+			if (
+				tokens[i].type === 'argument' ||
+				tokens[i].type === 'constant'
+			) {
+				args[profile[k]] = (tokens[i].literal);
+				k++;
+			}
+			i++;
+		}	
+		return args;
+	}
+
+	static makeTree(
+		heap: Heap,
+		tokens: any[],
+		profile:string,
+		e:error
+	): TreeNode {
 		// Get index of the operator to parse
 		let highest = Parser.getPriorityOperator(tokens);
-
 		// If variable is alone in operation (ex: "A" or a declared value ex: "xor"),
 		// add the value with 0 to emulate it being alone 
 		if (highest === -1) {	
@@ -66,6 +102,57 @@ export default class Parser {
 				
 
 		let node = new TreeNode(tokens[highest], tokens[highest].char);
+		
+		if (tokens[highest].type === 'functionCall') {
+			if (
+				tokens[highest+1] !== undefined &&
+				tokens[highest+1].type === 'argOpen'
+			) {
+			
+				let rawTree = heap.getTree(tokens[highest].literal);
+				if (rawTree === undefined) {
+					// Function not def
+				} else {
+					let expectedArgs:string = heap.getProfile(tokens[highest].literal) || profile;
+					let tree = Parser.setFunctionScope(
+						rawTree,
+						Parser.getArgs(tokens, expectedArgs, highest),
+						expectedArgs
+					)
+					let argCount = 0;
+					let j = highest+1;
+					while (
+						j < tokens.length && 
+						(tokens[j].type === 'argument' ||
+						tokens[j].type === 'constant' ||
+						tokens[j].type === 'argOpen' ||
+						tokens[j].type === 'argClose')
+					) {
+						if (
+							tokens[j].type === 'argument' ||
+							tokens[j].type === 'constant'
+						) { 
+							argCount++
+							e.char = tokens[j].char;
+						};
+
+
+						tokens.splice(j, 1);
+					}
+					if (argCount !== expectedArgs.length) {
+						ErrorHandler.badArgumentSpecification(
+							argCount,
+							expectedArgs.length,
+							e
+						);
+					} 
+	
+					tokens.splice(highest, 1, tree);
+					return Parser.makeTree(heap, tokens, profile, e);
+				}
+			}
+		}
+
 		if (Tokenizer.isAssign(tokens[highest].literal)) {
 			let j = highest-1;
 			while(tokens[j].type !== 'functionName') j++;
@@ -103,10 +190,12 @@ export default class Parser {
 				}
 			} while (
 				tokens[j].type !== 'variable' &&
+				tokens[j].type !== 'constant' &&
 				tokens[j].type !== 'functionCall'
 			);
 
 			if (tokens[j].type === 'functionCall') {
+				// Integral function call
 				left = heap.getTree(tokens[j].literal);
 			} else {
 				left = tokens[j];
@@ -131,10 +220,12 @@ export default class Parser {
 				}
 			} while (
 				tokens[j].type !== 'variable' && 
+				tokens[j].type !== 'constant' &&
 				tokens[j].type !== 'functionCall'
 			) 
 
 			if (tokens[j].type === 'functionCall') {
+				// Integral function call
 				right = heap.getTree(tokens[j].literal);
 			} else {
 				right = tokens[j];
@@ -152,13 +243,15 @@ export default class Parser {
 		tokens.splice(rightIndex-1, 1);
 		tokens.splice(highest-1, 1, node);
 
+		//console.log(util.inspect(node, false, null, true));
+
 		// If only token left is Calculation,
 		// return the root node
 		if (tokens.length <=1) {
 			return node;
 		} else {
 			// continue recursively
-			return Parser.makeTree(heap, tokens, e);
+			return Parser.makeTree(heap, tokens, profile, e);
 		}
 	}
 };

@@ -1,3 +1,6 @@
+import Tokenizer from '../Tokenizer'
+import { Map } from '../types'
+
 export default class Token {
 	literal: string;
 	type: string;
@@ -23,5 +26,13 @@ export default class Token {
 			this.priority,
 			this.char
 		);
+	}
+
+	setScope(args: Map<string>, profile:string) {	
+		this.literal = args[this.literal];
+		
+		if (Tokenizer.isConstant(this.literal)) {
+			this.type = 'constant'
+		}
 	}
 };

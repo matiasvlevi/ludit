@@ -53,26 +53,33 @@ export default class Preparser {
 
 	static include(
 		file: string[],
-		path:string,
+		mainpath:string,
 		j:number = 0
 	): string[] {
 		let includes:string[] = [];
 		let length = file.length-1;
-
+		
 		for (let i = length; i >= 0; i--) {
 
-			let include = Preparser.checkInclude(
+			// Reset main path for each main include
+			let path = mainpath;
+
+			let { include, newPath } = Preparser.checkInclude(
 				path,
 				file[i],
 				{ line: i+1, char: 9, text: file[i]}
 			);
+			
 			if (include.length !== 0) {
+				// If file was included, set path to the new included file
+				path = newPath;
 
-				file.splice(i, 1); // Remove include
+				// Remove include keyword
+				file.splice(i, 1); 
 
 				// Look for includes in included file
 				if (Preparser.includesAnInclude(include)) {
-					let nested =  Preparser.include([...include], path, j+1);
+					let nested =  Preparser.include([...include], path, j+1);	
 					include = nested
 				}
 
@@ -87,7 +94,11 @@ export default class Preparser {
 
 	static includesAnInclude(file: string[]): boolean {
 		for (let i = 0 ; i < file.length; i++) {
-			if (file[i].includes('include')) {
+			if (
+				file[i].includes('include') &&
+				!(file[i].includes('#') ||
+				file[i].includes('-'))
+			) {
 				return true
 			}
 		}	
@@ -99,21 +110,26 @@ export default class Preparser {
 		path:string,
 		line: string,
 		errorInfo:error
-	): string[] {
+	): any {
 
 		let words = line.split(' ');
-		if (words[0].includes('#')) return []; // ignore comments
+		if (words[0].includes('#')) return { include:[], newPath:path }; // ignore comments
 		if (Preparser.KEYWORD[words[0]] !== undefined) {
 			let includepath = 
 				Preparser.evalPath(Preparser.parseQuotes(words[1]), path)
-				
-			return Preparser.KEYWORD[words[0]].action(
-				`${includepath}.ludi`,
-				errorInfo	
-			);
+
+			path = Preparser.getPath(includepath);	
+			
+			return { 
+				include: Preparser.KEYWORD[words[0]].action(
+					`${includepath}.ludi`,
+					errorInfo	
+				),
+				newPath: path
+			}
 		}
 
-		return [];
+		return { include: [], newPath:path };
 	}
 
 	static evalPath(file:string, path:string) {
@@ -154,7 +170,7 @@ export default class Preparser {
 
 			return [];
 		}
-
+		console.log(path)
 		return fs.readFileSync(path, 'utf-8').split('\n')
 	}
 
