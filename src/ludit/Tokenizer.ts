@@ -74,17 +74,18 @@ export default class Tokenizer {
 			op: (a: boolean, b: boolean) => (!b)
 		}
 	}
-
-	static getAlpha() {
+	// 48 57
+	static getASCII(min: number, max: number) {
 		let alpha = '';
-		for (let i = 65; i < 91; i++)
+		for (let i = min; i < max; i++)
 			alpha += String.fromCharCode(i);
 
 		return alpha;
 	}
 
-	static ALPHA = Tokenizer.getAlpha();
+	static ALPHA = Tokenizer.getASCII(65, 91);
 	static ALPHA_L = Tokenizer.ALPHA.toLocaleLowerCase();
+	static NUMERAL = Tokenizer.getASCII(48, 57);
 	static BOOL = '01';
 	static WHITESPACE = ' ';
 
@@ -99,6 +100,10 @@ export default class Tokenizer {
 		);
 	}
 
+	static isNumeral(char: string) {
+		return Tokenizer.NUMERAL.includes(char);
+	}
+
 	static isAssign(char: string) {
 		return '=' === char;
 	}
@@ -111,25 +116,13 @@ export default class Tokenizer {
 		let keyword = '';
 		let j = i;
 		while(
-			Tokenizer.isLowerCase(exp[j]) &&
-			exp.length > j
+			(Tokenizer.isLowerCase(exp[j]) ||
+			Tokenizer.isNumeral(exp[j])) &&
+			exp.length > j 
 		) {
 			keyword += exp[j];
 			j++;
 		}
-		return keyword;
-	}
-
-	static getDefName(exp:string[], i:number) {
-		let keyword = '';
-		let j = i;
-		while(
-			Tokenizer.isLowerCase(exp[j]) &&
-			exp.length > j
-		) {
-			keyword += exp[j];
-			j++;
-		}	
 		return keyword;
 	}
 
@@ -166,12 +159,15 @@ export default class Tokenizer {
 			exp[j] === '(' ||
 			exp[j] === ' '
 	    ) {
-			// if arguments are provided, function is a specific call
-			if (Tokenizer.isVariable(exp[j])) return true;
 			j++
+			// if arguments are provided, function is a specific call
+			if (	
+				Tokenizer.isVariable(exp[j]) ||
+				Tokenizer.isConstant(exp[j])
+			) return true;
 		}
 		// If not, function is not a specific call
-		return false;
+		return true;
 	}
 
 	static process(
@@ -185,7 +181,7 @@ export default class Tokenizer {
 		let lineDef: string | undefined;	
 
 		let exp = expression.split('');
-		
+			
 		let scope = 0;
 		
 		let inArgs = false;

@@ -57,6 +57,13 @@ export class ErrorHandler {
 		);
 	}
 
+	static expectedClosing(e:error) {
+		ErrorHandler.error(
+			`Expected closing brackets`,
+			e
+		);
+	}
+
 	static missingVariable(msg: string, e: error) {
 		ErrorHandler.error(
 			msg,

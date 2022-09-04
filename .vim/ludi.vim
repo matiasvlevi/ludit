@@ -19,7 +19,7 @@ syn match Number "1"
 syn match Function "\l"
 syn match Repeat "\<include\>"
 syn match Repeat "\<def\>"
-syn match Function /\w\+\s*=/me=e-1,he=e-1 
+syn match Function /\w\+\s*\(=\|(\)/me=e-1,he=e-1 
 
 syn keyword ludiTodo contained AND OR XOR XNOR NOR NAND NOT BUFFER
 syn match ludiComment "#.*$" contains=ludiTodo

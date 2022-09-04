@@ -42,11 +42,12 @@ export default class Parser {
 		return tree;
 	}
 
-	static getArgs(tokens: any[],profile: string, j:number) {
+	static getArgs(tokens: any[],profile: string, j:number, e:error) {
 		let args:Map<string> = { '.': '0' };
 		let i = j;
 		let k = 0;
 		while(tokens[i].type !== 'argClose') {
+
 			if (
 				tokens[i].type === 'argument' ||
 				tokens[i].type === 'constant'
@@ -55,6 +56,11 @@ export default class Parser {
 				k++;
 			}
 			i++;
+
+			if (tokens[i] === undefined) {
+				e.char = tokens[i-1].char;
+				ErrorHandler.expectedClosing(e);
+			}
 		}	
 		return args;
 	}
@@ -108,7 +114,6 @@ export default class Parser {
 				tokens[highest+1] !== undefined &&
 				tokens[highest+1].type === 'argOpen'
 			) {
-			
 				let rawTree = heap.getTree(tokens[highest].literal);
 				if (rawTree === undefined) {
 					// Function not def
@@ -116,7 +121,7 @@ export default class Parser {
 					let expectedArgs:string = heap.getProfile(tokens[highest].literal) || profile;
 					let tree = Parser.setFunctionScope(
 						rawTree,
-						Parser.getArgs(tokens, expectedArgs, highest),
+						Parser.getArgs(tokens, expectedArgs, highest, e),
 						expectedArgs
 					)
 					let argCount = 0;
@@ -135,7 +140,6 @@ export default class Parser {
 							argCount++
 							e.char = tokens[j].char;
 						};
-
 
 						tokens.splice(j, 1);
 					}
