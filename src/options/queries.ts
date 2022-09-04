@@ -22,7 +22,7 @@ export const queries: Map<optionConfig> = {
 					console.log(`\t${queries[key].helpmsg}`);
 
 				if (queries[key].example !== undefined) 
-					console.log(`\t\x1b[90mex: ludit "A*B+C" ${queries[key].example}\x1b[0m`)
+					console.log(`\t\x1b[90mex: ludit ${queries[key].example}\x1b[0m`)
 
 				console.log('');
 			}
@@ -35,7 +35,7 @@ export const queries: Map<optionConfig> = {
 			frontend.save(param);
 		},
 		helpmsg: 'save the truth table as a .csv file',
-		example: '--csv sheet.csv',
+		example: '"A * B + C" --csv sheet.csv',
 		requireParam: false
 	},
 	select: {
@@ -43,7 +43,7 @@ export const queries: Map<optionConfig> = {
 				frontend.runSingle(param);			
 		},
 		helpmsg: 'select a specific set of inputs to calculate',
-		example: '--select 101',
+		example: '"A * B + C" --select 101',
 		requireParam: true
 	},
 	file: {

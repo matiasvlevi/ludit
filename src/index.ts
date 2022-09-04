@@ -7,4 +7,3 @@ const frontend = new Frontend(
 	Options.parse(process.argv)
 );
 
-frontend.main();

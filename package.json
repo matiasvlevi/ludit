@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p .",
     "start": "node ./bin/index.js",
-	"test": "node ./bin/test/test.js"
+    "test": "node ./bin/test/test.js"
   },
   "keywords": [
     "logic",

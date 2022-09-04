@@ -2,7 +2,7 @@ import { Map } from '../ludit/types'
 import { queries, optionAction, optionConfig } from './queries'
 
 export type option = {
-	action?: optionAction;
+	action: optionAction;
 	param?: string;
 	requireParam: boolean;
 	type: string;
@@ -10,7 +10,7 @@ export type option = {
 
 export type argv = {
 	argument: string;
-	queries: option[];
+	queries: Map<option>;
 };
 
 export class Options {
@@ -34,31 +34,31 @@ export class Options {
 	static parse(argv: string[]) {
 		let data:argv = {
 			argument: '',
-			queries: []
+			queries: {}
 		};
 		for (let i = 0; i < argv.length; i++) {
 			if (argv[i][0] === '-') {
 				if (argv[i][1] === '-') {
 					let opt = argv[i].slice(2, argv[i].length);
 					if (Options.isOption(opt)) {
-						data.queries.push({
+						data.queries[opt] = {
 							action: Options.queries[opt].action,
 							param: Options.noParam(argv, i) ? argv[i+1]:undefined,
 							type: 'option',
 							requireParam: Options.queries[opt].requireParam
-						});
+						};
 						if (Options.noParam(argv, i)) argv.splice(i+1, 1);
 					}
 				} else {
 					let opt = 
 						Options.getOptionFromAbreviation(argv[i][1]);
 					if (opt !== undefined) {
-						data.queries.push({
+						data.queries[opt] = {
 							action: Options.queries[opt].action,
 							param: Options.noParam(argv, i) ? argv[i+1]:undefined,
 							type: 'option',
 							requireParam: Options.queries[opt].requireParam
-						})
+						}
 						if (Options.noParam(argv, i)) argv.splice(i+1, 1);
 					}	
 				}

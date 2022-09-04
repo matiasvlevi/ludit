@@ -1,12 +1,15 @@
 import { writeFileSync } from 'node:fs'
 import { option, argv } from './options'
 
+import { queries as QUERIES } from './options/queries'
+
 import util from 'util'
 
 import { Map } from './ludit/types'
 import TreeNode from './ludit/TreeNode'
 import Heap from './ludit/Heap'
 
+import Token from './ludit/Token'
 import Preparser from './Preparser'
 
 import {
@@ -20,7 +23,7 @@ export default class Frontend {
 	
 	profile: string;
 	tree: TreeNode;
-	options: any[];
+	options: Map<option>;
 	expression: string;
 	heap: Heap;
 	path: string | undefined;
@@ -28,26 +31,58 @@ export default class Frontend {
 	constructor(options: argv) {
 		
 		this.heap = new Heap();
-		const { tokens, profile } = Tokenizer.process(
-			this.heap,
-			options.argument || 'A',
-			{ 
-				line: 0,
-				char: 0,
-				text: options.argument
-			}
-		);
-		this.profile = Profiler.process(tokens);
+		this.tree = new TreeNode(
+			new Token('','',-1,-1),
+			-1,
+			new Token('','',-1,-1),
+			new Token('','',-1,-1)
+		)
+
+		this.profile = '';
 		this.expression = options.argument;
-		this.options = options.queries;
-		this.tree = Parser.makeTree(this.heap, tokens, profile, {
-			line: 0,
-			char: 0,
-			text: this.expression
-		});
+		this.options = options.queries;	
+
+		// Run inline if no file was specified
+		if (!this.options['file']) {
+			// Show help if no options specified
+			if (this.expression.length <= 0) {
+				this.options['help'] = {
+					requireParam: false,
+					action: QUERIES.help.action,
+					type: 'option', param: '' 
+				};
+				this.main();
+				return;
+			};
+
+			this.inline(options);
+		
+		} else this.main();
 	}
 
-	static findWithProp(arr: option[], type:string) {
+	inline(options: argv) {
+		let err = { 
+			line: 0,
+			char: 0,
+			text: this.expression 
+		};
+		const { tokens, profile } = Tokenizer.process(
+			this.heap,
+			this.expression || 'A', err
+		);
+
+		this.profile = Profiler.process(tokens);
+	
+		this.tree = Parser.makeTree(
+			this.heap, tokens,
+			profile, err
+		);
+
+		this.main();
+	}
+
+	static findWithProp(queries: Map<option>, type:string) {
+		let arr = Object.values(queries);
 		for (let i = 0; i < arr.length; i++) {
 			if (arr[i].type === type) {
 				return i;
@@ -65,7 +100,7 @@ export default class Frontend {
 		this.path = Preparser.getPath(filename);
 
 		// Remove file option so it does not run recursively
-		this.options.splice(Frontend.findWithProp(this.options, 'file'), 1);	
+		delete this.options['file'];	
 	
 		// Handle included files
 		if (Preparser.includesAnInclude(file)) {
@@ -137,6 +172,7 @@ export default class Frontend {
 
 	// Calculate a truth table 
 	run() {
+		// Run specific function call
 		if (this.profile.length === 0) {
 			this.printSingle();
 			return;
@@ -175,16 +211,20 @@ export default class Frontend {
 	}
 
 	main() {
-		if (this.options.length === 0) this.run();
-		for (let option of this.options) {
+		if (Object.keys(this.options).length === 0) this.run();
+		for (let query in this.options) {
 			if (
-				option.requireParam && 
-				option.param === undefined
+				this.options[query].requireParam && 
+				this.options[query].param === undefined
 			) continue; 
-			option.action(
-				this,
-				option.param	
-			);
+			if (
+				this.options[query].param !== undefined
+			) {
+				this.options[query].action(
+					this,
+					this.options[query].param || ''	
+				);
+			}
 		}
 	}
 
