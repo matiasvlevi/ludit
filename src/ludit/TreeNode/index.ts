@@ -58,23 +58,31 @@ export default class TreeNode {
 				Tokenizer.OPERATORS[this.value.literal].op( // TODO: Clean this shit up
 					(this.left instanceof Token) ?
 						((this.left.type !== 'constant') ?
-						 input[profile.indexOf(this.left?.literal)] :
-						 !!+this.left.literal): 
+							 input[profile.indexOf(this.left?.literal)] :
+							!!+this.left.literal): 
 						this.left?.result || false,
 
 					(this.right instanceof Token) ?
 						((this.right.type !== 'constant') ?
-						 input[profile.indexOf(this.right?.literal)] :
-						 !!+this.right.literal):
+							input[profile.indexOf(this.right?.literal)] :
+							!!+this.right.literal):
 						this.right?.result || false
 				);
 		}
 		return this.result || false;
 	}
 
-	setScope(args: Map<string>, profile:string) {
-		this.left?.setScope(args, profile);
-		this.right?.setScope(args, profile);
+	setScope(args: Map<Token|TreeNode>, profile:string) {
+
+		if (this.left instanceof TreeNode) this.left?.setScope(args, profile);
+		else {
+			this.left = args[this.left?.literal || '.']
+		}
+
+		if (this.right instanceof TreeNode) this.right?.setScope(args, profile);
+		else {
+			this.right = args[this.right?.literal || '.']
+		}
 	}
 } 
 

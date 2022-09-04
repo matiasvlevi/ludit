@@ -137,6 +137,7 @@ export default class Frontend {
 		
 	}
 
+	// REMOVE THIS
 	static replaceAll(content: string, char:string, rep:string) {
 		while(content.includes(char)) {
 			content = content.replace(char, rep);

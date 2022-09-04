@@ -34,7 +34,7 @@ export default class Parser {
 
 	static setFunctionScope(
 		_tree: TreeNode,
-		args: Map<string>,
+		args: Map<Token|TreeNode>,
 		profile: string
 	) {
 		let tree = _tree.copy();
@@ -42,8 +42,13 @@ export default class Parser {
 		return tree;
 	}
 
-	static getArgs(tokens: any[],profile: string, j:number, e:error) {
-		let args:Map<string> = { '.': '0' };
+	static getArgs(
+		tokens: (Token|TreeNode)[],
+		profile: string,
+		j:number,
+		e:error
+	) {
+		let args:Map<Token|TreeNode> = { '.': new Token('.','variable',-1, j) };
 		let i = j;
 		let k = 0;
 		while(tokens[i].type !== 'argClose') {
@@ -52,7 +57,7 @@ export default class Parser {
 				tokens[i].type === 'argument' ||
 				tokens[i].type === 'constant'
 			) {
-				args[profile[k]] = (tokens[i].literal);
+				args[profile[k]] = (tokens[i]);
 				k++;
 			}
 			i++;
@@ -83,7 +88,7 @@ export default class Parser {
 						new Token('+', 'operator', 1, 0),
 						0,
 						new Token('0', 'constant', -1, 0),
-						heap.getTree(tokens[0].literal)
+						heap.getTree(tokens[0].literal) 
 					);
 				} else if (tokens[0].type === 'variable') {
 					return new TreeNode(
@@ -99,9 +104,10 @@ export default class Parser {
 		}
 		// Initialise iteration node
 		if (tokens[highest] === undefined) {
-			
 			if (tokens[tokens.length-1] !== undefined) {
 				e.char = tokens[tokens.length-1].char;
+			} else {
+				e.char = 0
 			}
 			ErrorHandler.assignmentError(e);
 		}
@@ -118,12 +124,20 @@ export default class Parser {
 				if (rawTree === undefined) {
 					// Function not def
 				} else {
-					let expectedArgs:string = heap.getProfile(tokens[highest].literal) || profile;
+					let expectedArgs:string = heap.getProfile(
+						tokens[highest].literal
+					) || profile;
+
 					let tree = Parser.setFunctionScope(
 						rawTree,
-						Parser.getArgs(tokens, expectedArgs, highest, e),
+						Parser.getArgs(
+							tokens,
+							expectedArgs,
+							highest, e
+						),
 						expectedArgs
-					)
+					);
+
 					let argCount = 0;
 					let j = highest+1;
 					while (
@@ -158,21 +172,36 @@ export default class Parser {
 		}
 
 		if (Tokenizer.isAssign(tokens[highest].literal)) {
-			let j = highest-1;
-			while(tokens[j].type !== 'functionName') j++;
+			let j = highest;
+			e.char = tokens[highest].char;
+			
+			do {
+				j--;
+				if (j < 0 || tokens[j]===undefined) {
+					ErrorHandler.missingVariable(
+						'Missing definition to assign a value to', e
+					);
+				}
+			} while(tokens[j].type !== 'functionName')
+
 			let functionName = tokens[j].literal;
 
-			j = highest+1;
-			while(tokens[j].type !== 'variable' && tokens[j].type !== 'constant') j++;
-			let functionDef = tokens[j];
+			j = highest;
+			do {
+				j++;
+				if (j >= tokens.length) {
+					ErrorHandler.missingVariable(
+						'Missing assignment value', e
+					);
+				}
+			} while(
+				tokens[j].type !== 'variable' &&
+				tokens[j].type !== 'constant'
+			) 
 
-			// TODO: Assignement error handling
-			//
-			//
+			heap.setTree(functionName, tokens[j]);	
 
-			heap.setTree(functionName, functionDef);	
-
-			return functionDef;
+			return tokens[j];
 		}
 
 		let j: number; // parameter look ahead index

@@ -57,6 +57,13 @@ export class ErrorHandler {
 		);
 	}
 
+	static expectedOpening(e:error) {
+		ErrorHandler.error(
+			`Expected opening brackets`,
+			e
+		);
+	}
+
 	static expectedClosing(e:error) {
 		ErrorHandler.error(
 			`Expected closing brackets`,
@@ -79,10 +86,23 @@ export class ErrorHandler {
 
 	static badArgumentSpecification(argCount:number, expected: number, e: error) {
 		if (expected > argCount) {
-			ErrorHandler.error(`Missing arguments, expected ${expected} arguments.`, e);
+			ErrorHandler.error(
+				`Missing arguments, expected ${expected} arguments.`,
+				e
+			);
 		} else if (expected < argCount) {
-			ErrorHandler.error(`Too many arguments, expected ${expected} arguments.`, e);
+			ErrorHandler.error(
+				`Too many arguments, expected ${expected} arguments.`,
+				e
+			);
 		}
+	}
+
+	static unexpectedIdentifier(e: error) {
+		ErrorHandler.error(
+			`Unexpected identifier '${e.text[e.char]}' found`,
+			e
+		);
 	}
 
 	static includeNotFound(
