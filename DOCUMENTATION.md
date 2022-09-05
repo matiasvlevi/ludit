@@ -32,13 +32,13 @@ Ludi is a language meant to express and compute boolean algebra expressions in t
 
 Expressions will print to the console as a boolean truth table.
 
-```ludi
+```py
 A * B
 ```
 
 Expressions containing only constants will print as a single calculation
 
-```ludi
+```py
 1 * 1
 ```
 
@@ -52,7 +52,7 @@ Expressions containing only constants will print as a single calculation
 
 Ludi allows for function definitions
 
-```ludi
+```py
 def foo = A * B + C
 ```
 
@@ -66,20 +66,20 @@ There are two way of calling functions. There are **Integral** and **Concrete** 
 
 **Integral** calls will print a truth table to the console
 
-```ludi
+```ruby
 foo
 ```
 
 You can also use different variables in the call, even if the function was defined with `A B C`.
 
-```ludi
+```py
 foo(D, E, F)
 ```
 
 
 **Concrete** calls contain constants, and will print as a single calculation
 
-```ludi
+```py
 foo(1, 0, 1)
 ```
 
@@ -88,7 +88,7 @@ foo(1, 0, 1)
 
 Nothing prevents you from using the functions in other functions
 
-```ludi
+```py
 def bar = foo(A, B, C) * !(A + D)
 
 bar(A, B, C, D)
@@ -96,7 +96,7 @@ bar(A, B, C, D)
 
 and in calls
 
-```ludi
+```py
 def baz = A + B
 
 foo(baz(E, F) * A, B, C)
@@ -111,19 +111,19 @@ Ludi allows you to include files
 
 You can include files with a local path
 
-```ludi
+```ruby
 include "./bar"
 ```
 
 A global path
 
-```
+```ruby
 include "/home/vlev/myfile"
 ```
 
 Or use a library
 
-```
+```ruby
 include "std"
 ```
 
@@ -133,14 +133,14 @@ include "std"
 
 You can write comments by prefixing `#`
 
-```ludi
+```py
 # Ludi is dope as hell yow
 ```
 
 You can print text by prefixing it with `-`
 This is useful to add titles to tables or calculations
 
-```ludi
+```go
 - Hello world
 ```
 
