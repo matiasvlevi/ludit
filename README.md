@@ -16,7 +16,35 @@ Ludit is an interpreter for Ludi, a language meant to express and compute boolea
 
 > Project is under development
 
-### Install
+<br/>
+
+<table align="center">
+<tr>
+<td> Ludi Code </td> <td> Output </td>
+</tr>
+<tr>
+<td>
+
+```python
+def and = A * B
+def or  = A + B
+
+or(and(A, !B), C)
+```
+
+</td>
+<td>
+<p align="center">
+    <img src="https://i.ibb.co/PC04bm8/ludi-table.png" alt="ludi table" height="255"/>
+</p>
+</td>
+</tr>
+</table>
+
+
+
+
+# Install
 
 ```
 npm i -g ludit
