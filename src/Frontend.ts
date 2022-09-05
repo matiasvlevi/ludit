@@ -1,21 +1,19 @@
+import Utils from './ludit/Utils'
 import { writeFileSync } from 'node:fs'
 import { option, argv } from './options'
-
 import { queries as QUERIES } from './options/queries'
 
 import { Map } from './ludit/types'
 import TreeNode from './ludit/TreeNode'
-import Heap from './ludit/Heap'
-
 import Token from './ludit/Token'
-import Preparser from './Preparser'
 
 import {
 	Tokenizer,
+	Preparser,
 	Parser,
-	Profiler,
-	Processor
-} from './ludit'
+	Processor,
+	Heap
+} from './ludit/Core'
 
 export default class Frontend {
 	
@@ -25,9 +23,10 @@ export default class Frontend {
 	expression: string;
 	heap: Heap;
 	path: string | undefined;
+	noprint: boolean;
 
-	constructor(options: argv) {
-		
+	constructor(options: argv, noRun:boolean = false) {
+		this.noprint = false;
 		this.heap = new Heap();
 		this.tree = new TreeNode(
 			new Token('','',-1,-1),
@@ -41,6 +40,7 @@ export default class Frontend {
 		this.options = options.queries;	
 
 		// Run inline if no file was specified
+		if (noRun) return;
 		if (!this.options['file']) {
 			// Show help if no options specified
 			if (this.expression.length <= 0) {
@@ -69,7 +69,7 @@ export default class Frontend {
 			this.expression || 'A', err
 		);
 
-		this.profile = Profiler.process(tokens);
+		this.profile = profile;
 	
 		this.tree = Parser.makeTree(
 			this.heap, tokens,
@@ -77,16 +77,6 @@ export default class Frontend {
 		);
 
 		this.main();
-	}
-
-	static findWithProp(queries: Map<option>, type:string) {
-		let arr = Object.values(queries);
-		for (let i = 0; i < arr.length; i++) {
-			if (arr[i].type === type) {
-				return i;
-			}
-		}
-		return -1;
 	}
 
 	fromFile(filename: string) {
@@ -135,19 +125,15 @@ export default class Frontend {
 		
 	}
 
-	// REMOVE THIS
-	static replaceAll(content: string, char:string, rep:string) {
-		while(content.includes(char)) {
-			content = content.replace(char, rep);
-		}
-		return content;
-	}
-
 	static applyValues(expression: string, values: string, profile: string) {
 		for (let i = 0; i < profile.length; i++) {
-			expression = Frontend.replaceAll(expression, profile[i], values[i])	
+			expression = Utils.replaceAll(expression, profile[i], values[i])	
 		}
 		return expression;
+	}
+
+	setNoPrint(state: boolean) {
+		this.noprint = state;
 	}
 
 	// Calculate a single case
@@ -155,7 +141,7 @@ export default class Frontend {
 		const input = _input.split('').map(x => +x);
 		const output = +Processor.calculate(this.tree, this.profile, input);
 
-		console.log(`${Frontend.applyValues(
+		if (!this.noprint) console.log(`${Frontend.applyValues(
 			this.expression,
 			_input,
 			this.profile
@@ -163,7 +149,7 @@ export default class Frontend {
 	}
 
 	printSingle() {
-		console.log(
+		if (!this.noprint) console.log(
 			`${this.expression} = `+
 			`\x1b[33m${+Processor.calculate(this.tree, this.profile, [])}\x1b[0m`
 		);
@@ -177,7 +163,7 @@ export default class Frontend {
 			return;
 		};
 
-		const cases = Frontend.binaryCases(this.profile.length);
+		const cases = Utils.binaryCases(this.profile.length);
 		let output:Map<number>[] = [];
 		
 		for (let i = 0; i < cases.length; i++) {
@@ -190,12 +176,12 @@ export default class Frontend {
 			output.push(row);
 		}
 
-		console.table(output);
+		if (!this.noprint) console.table(output);
 		return output;
 	}
 
 	save(filename: string) {
-		const cases = Frontend.binaryCases(this.profile.length);
+		const cases = Utils.binaryCases(this.profile.length);
 		let csv =`${this.profile.split('').join(',')},Out\n`;
 		for (let i = 0; i < cases.length; i++) {
 			for (let j = 0; j < this.profile.length; j++) {
@@ -204,13 +190,13 @@ export default class Frontend {
 			csv += +Processor.calculate(this.tree, this.profile, cases[i]);
 			csv += '\n';
 		}
-		process.stdout.write(csv);
+		if (!this.noprint) process.stdout.write(csv);
 		if (filename !== undefined)
 			writeFileSync(filename, csv, 'utf-8');
 	}
 
 	main() {
-		if (Object.keys(this.options).length === 0) this.run();
+		if (Object.keys(this.options).length === 0) return this.run();
 		for (let query in this.options) {
 			if (
 				this.options[query].requireParam && 
@@ -225,19 +211,6 @@ export default class Frontend {
 				);
 			}
 		}
-	}
-
-	// Generate binary incrementation based on a length
-	static binaryCases(n: number) {
-		let result = [];
-		for (let y = 0; y < Math.pow(2, n); y++) {
-			let combo = [];
-			for (let x = 0; x < n; x++) 
-				combo.push((y >> x) & 1);
-					
-			result.push(combo.reverse());
-		}
-		return result;
 	}
 }
 

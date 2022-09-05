@@ -2,11 +2,12 @@
   "name": "ludit",
   "version": "0.2.3b",
   "description": "Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.",
-  "main": "./bin/index.js",
+  "main": "./bin/api.js",
   "scripts": {
-    "build": "tsc -p .",
-    "start": "node ./bin/index.js",
-    "test": "node ./bin/test/test.js"
+    "build": "tsc -p ./src",
+    "build-test": "tsc -p ./tsconfig.unit.json",
+    "test": "mocha ./test/bin/test --reporter ./test/bin/test/reporter.js",
+    "start": "node ./bin/index.js"
   },
   "keywords": [
     "logic",
@@ -15,14 +16,18 @@
     "boolean",
     "algebra"
   ],
-  "repository":{ 
-	  "url":"https://github.com/matiasvlevi/ludit.git",
-	  "type":"git"
+  "repository": {
+    "url": "https://github.com/matiasvlevi/ludit.git",
+    "type": "git"
   },
   "author": "Matias Vazquez-Levi",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.7.14"
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.14",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0"
   },
   "bin": {
     "ludit": "./bin/index.js"

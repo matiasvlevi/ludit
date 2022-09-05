@@ -26,6 +26,11 @@ export default class TreeNode {
 		this.char = char
 	}
 
+  /**
+  * create a copy of the TreeNode
+  *
+  *   @returns an identical copy of the TreeNode 
+  */
 	copy(): TreeNode {
 		return new TreeNode(
 			this.value,
@@ -35,10 +40,22 @@ export default class TreeNode {
 		);
 	}
 
-	isCalculated() {
+  /**
+  * Detect wheter or not the TreeNode has already been computed
+  *
+  *   @returns wheter or not the TreeNode was computed
+  */
+	isCalculated():boolean {
 		return this.result !== undefined;
 	}
 
+  /**
+  * calculate the TreeNode values
+  *
+  *   @param input - an array of input bits
+  *   @param profile - the expression's profile
+  *
+  */
 	calculate(input: boolean[], profile: string): boolean {
 		if (this.left instanceof TreeNode) {
 			if (!(this.left?.isCalculated()))
@@ -72,14 +89,26 @@ export default class TreeNode {
 		return this.result || false;
 	}
 
+  /**
+  * sets the arguments of a function into the scope
+  *
+  *   @param args - The tokens stored in an object
+  *   @param profile - The profile of the function
+  */
 	setScope(args: Map<Token|TreeNode>, profile:string) {
+
+    // If is TreeNode, recurse
 		if (this.left instanceof TreeNode) this.left?.setScope(args, profile);
 		else {
+      // Replace left side with given argument token
 			this.left = args[this.left?.literal || '.']
 		}
 
+
+    // If is TreeNode, recurse
 		if (this.right instanceof TreeNode) this.right?.setScope(args, profile);
 		else {
+      // Replace right side with given argument token
 			this.right = args[this.right?.literal || '.']
 		}
 	}

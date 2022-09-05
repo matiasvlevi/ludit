@@ -39,7 +39,7 @@ export const queries: Map<optionConfig> = {
 	},
 	select: {
 		action:(frontend: Frontend, param: string) => {
-				frontend.runSingle(param);			
+			frontend.runSingle(param);			
 		},
 		helpmsg: 'select a specific set of inputs to calculate',
 		example: '"A * B + C" --select 101',

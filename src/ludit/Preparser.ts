@@ -1,9 +1,7 @@
 import fs from 'node:fs'
 
-
-import { ErrorHandler, error } from './ludit/ErrorHandler'
-
-import { Map } from './ludit/types'
+import { ErrorHandler, error } from './ErrorHandler'
+import { Map } from './types'
 
 type preParserKeyword = {
 	type: string,
@@ -21,7 +19,6 @@ export default class Preparser {
 			}
 		}
 	}
-
 
 	static makeBackPath(back: number) {
 		let path = '';
@@ -41,7 +38,7 @@ export default class Preparser {
 	}
 
 	static getPath(fullpath:string) {
-		// linux
+		// linux only
 		let spath = fullpath.split('/')
 		spath.pop();
 		return spath.join('/')
