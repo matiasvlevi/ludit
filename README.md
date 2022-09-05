@@ -48,7 +48,7 @@ or(and(A, !B), C)
 npm i -g ludit
 ```
 
-##### Install the standart lib (Optional)
+##### Install the standard lib (Optional)
 
 Run `./install.sh` as root
 
