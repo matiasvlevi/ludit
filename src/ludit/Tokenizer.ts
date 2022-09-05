@@ -202,7 +202,8 @@ export default class Tokenizer {
 	):number {
 		// Skip function call if exists
 		let keyword = Tokenizer.getKeyword(exp, j);
-		if (keyword.length > 0) {
+
+		if (keyword.length > 0 && exp[j+keyword.length] === '(') {
 			let k = j+keyword.length;
 
 			while(exp[k] !== ')' ) {
