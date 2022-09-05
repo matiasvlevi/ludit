@@ -10,17 +10,15 @@
   <a href="https://github.com/matiasvlevi/ludit/blob/parser/LICENCE">License</a>
 </p>
     
-<br/><br/><br/>
+<br/><br/>
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.
-
-> Project is under development
 
 <br/>
 
 <table align="center">
 <tr>
-<td> Ludi Code </td> <td> Output </td>
+<td align="center"> Ludi Code </td> <td align="center"> Output </td>
 </tr>
 <tr>
 <td>
