@@ -1,6 +1,6 @@
 {
   "name": "ludit",
-  "version": "0.1.3",
+  "version": "0.2.3",
   "description": "Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.",
   "main": "./bin/index.js",
   "scripts": {

@@ -97,9 +97,9 @@ bar(A, B, C, D)
 and in calls
 
 ```ludi
-def baz = E * F
+def baz = A + B
 
-foo(baz * A, B, C)
+foo(baz(E, F) * A, B, C)
 ```
 
 <br/>
