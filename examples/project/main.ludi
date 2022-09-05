@@ -1,15 +1,10 @@
-#include "gates/xor"
-#include "./foo"
+include "./foo"
 
-- XOR 
-xor 
+- call with bar and foo, with multiple arguments 
+bar(A, foo(B, C, D), A)
 
-- XNOR
-'xor
-
-- FOO (from include)
+- foo (from include)
 foo
 
-- BAR (from include's include)
+- bar (from include's include)
 bar
-

@@ -1,1 +1,1 @@
-def bar = 'A + B * ('C + D)
+def bar = 'A * ('C + D)
