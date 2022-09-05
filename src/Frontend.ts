@@ -3,8 +3,6 @@ import { option, argv } from './options'
 
 import { queries as QUERIES } from './options/queries'
 
-import util from 'util'
-
 import { Map } from './ludit/types'
 import TreeNode from './ludit/TreeNode'
 import Heap from './ludit/Heap'

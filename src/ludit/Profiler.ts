@@ -1,6 +1,4 @@
 import { Map } from './types'
-import Token from './Token'
-import TreeNode from './TreeNode'
 
 export default class Profiler {
 	constructor() {}

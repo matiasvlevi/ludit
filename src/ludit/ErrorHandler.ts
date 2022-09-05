@@ -34,7 +34,7 @@ export class ErrorHandler {
 			)
 		}
 
-		//console.trace();
+		console.trace();
 		process.exit();
 	}
 

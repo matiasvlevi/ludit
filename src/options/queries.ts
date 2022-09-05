@@ -1,6 +1,5 @@
 import Frontend from '../Frontend'
 import { Map } from '../ludit/types'
-import TreeNode from '../ludit/TreeNode'
 
 export type optionAction = (frontend:Frontend, param: string) => void;
 

@@ -3,10 +3,7 @@ const Unit = new UnitTester();
 
 import {
 	Heap,
-	Tokenizer,
-	Parser,
-	Profiler,
-	Processor
+	Tokenizer
 } from '../ludit'
 
 

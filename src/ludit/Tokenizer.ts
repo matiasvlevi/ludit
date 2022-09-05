@@ -14,7 +14,7 @@ type TokenizerReturn = {
 	isDef: boolean;
 }
 
-type CallReturn = {
+type handleCallReturn = {
 	defaultParams: boolean,
 	newLocation: number,
 	argProfile: string[]
@@ -196,6 +196,27 @@ export default class Tokenizer {
 		return false;
 	}
 
+	private static skipFieldCall(
+		exp: string[],
+		j: number
+	):number {
+		// Skip function call if exists
+		let keyword = Tokenizer.getKeyword(exp, j);
+		if (keyword.length > 0) {
+			let k = j+keyword.length;
+
+			while(exp[k] !== ')' ) {
+				k++
+				if (k >= exp.length) break;
+				let m = Tokenizer.skipFieldCall(exp, k);
+				if (m !== j) k = m;
+			};
+			k++;
+
+			return k;
+		}
+		return j;	
+	}
 
 	/**
 	*	Tokenizes function calls and their arguments
@@ -206,7 +227,6 @@ export default class Tokenizer {
 	*	@param word - the called function's name
 	*	@param i - the current location in the expression
 	*	@param e - The error data in case on gets thrown
-	*
 	*   @returns 
 	*/
 	private static handleCall(
@@ -216,8 +236,8 @@ export default class Tokenizer {
 		word: string,
 		profile: string[],
 		i: number,
-		e: error,
-	) {
+		e: error
+	): handleCallReturn {
 		let start = i+word.length+1;
 		let j = start;
 
@@ -243,6 +263,7 @@ export default class Tokenizer {
 				exp[k] !== ')'
 			) {
 				k++;
+
 				// If encounters a closing bracket,
 				// and no opening was provided, throw an error
 				if (exp[k] === ')') {
@@ -258,7 +279,6 @@ export default class Tokenizer {
 				argProfile:[]
 			}
 		}
-
 		// Iterate through every expected argument field
 		for (let a = 0; a < expectedArgs.length; a++) {
 			// Find where argument field closes
@@ -268,6 +288,9 @@ export default class Tokenizer {
 				exp[j] !== ')')
 			) {
 				j++;
+				// Skip function call if exists
+				j = Tokenizer.skipFieldCall(exp, j);
+
 			}
 
 			// Get argument field expression

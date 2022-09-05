@@ -1,5 +1,4 @@
 import TreeNode from './TreeNode'
-import Tokenizer from './Tokenizer'
 
 export default class Processor {
 	constructor() {}

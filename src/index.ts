@@ -3,7 +3,7 @@
 import { Options } from './options'
 import Frontend from './Frontend'
 
-const frontend = new Frontend(
+new Frontend(
 	Options.parse(process.argv)
 );
 
