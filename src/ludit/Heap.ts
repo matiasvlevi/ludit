@@ -12,12 +12,20 @@ type HeapSlot = {
 export default class Heap {
 
 	data: Map<HeapSlot>
+	error: error | undefined;
+	errorCall: (((e:error) => void)|undefined);
 
 	constructor() {
 		this.data = {};
+		this.error = undefined;
+		this.errorCall = undefined;
 	}
 
 	static emptyTree = new TreeNode(new Token('','',-1,-1), -1);
+
+	hasError() {
+		return this.error !== undefined
+	}
 
 	initSlot(key: string) {
 		if (!this.data[key]) this.data[key] = { tree: undefined, profile: undefined};
@@ -43,7 +51,7 @@ export default class Heap {
 	getProfile(key: string, e:error = {line:0, char:-1, text:''}): string {
 		if (this.data[key] === undefined) {
 			// Handle not defined
-			ErrorHandler.functionNotDef(e);
+			ErrorHandler.functionNotDef(this, e);
 		} else {
 			return this.data[key].profile || '';
 		}
@@ -53,7 +61,7 @@ export default class Heap {
 	getTree(key: string, e: error= {line:0, char:-1, text:''}): TreeNode {
 		if (this.data[key] === undefined) {
 			// Handle not defined
-			ErrorHandler.functionNotDef(e);
+			ErrorHandler.functionNotDef(this, e);
 		} else {
 			return this.data[key].tree || Heap.emptyTree;
 		}

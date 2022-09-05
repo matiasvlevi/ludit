@@ -1,3 +1,6 @@
+import Utils from './Utils'
+import Heap from './Heap'
+
 const COLOR = '\x1b[91m';
 const RESET = '\x1b[0m';
 const DARK = '\x1b[90m';
@@ -6,18 +9,35 @@ export type error = {
 	line: number;
 	char: number;
 	text: string;
+	msg?: string; 
 }
 
 export class ErrorHandler {
 	constructor() {}
 
-	static whitespace(str: string) {
-		return new Array(str.length).fill(' ').join('');
-	}
-
-	static error(msg: string, e:error | undefined = undefined) {
+  /**
+  * generic error message
+  *
+  *   @param msg - The error message
+  *   @param e - The error data
+  *   @param heap - The heap object
+  */ 
+	static error(
+		msg: string,
+		e:(error|undefined) = undefined,
+		heap:(Heap|undefined) = undefined
+	) {
 
 		let coord = ``;
+		
+		if (heap) {
+			if (heap.errorCall !== undefined) {
+				if (e) e.msg = msg;
+				heap.error = e;
+				heap.errorCall(e || {text: '', line:0, char:0});	
+			} 
+			process.exit();
+		}
 
 		if (e) coord = `at ${e.line}:${e.char} `;
 
@@ -29,7 +49,7 @@ export class ErrorHandler {
 			console.log('');
 			console.log(`   ${DARK}${e.line}${RESET} ${e.text}`);
 			console.log(
-				`   ${ErrorHandler.whitespace(`${e.line}`)}`+
+				`   ${Utils.whitespace(`${e.line}`.length)}`+
 				`${ErrorHandler.arrow(e.char)}`
 			)
 		}
@@ -43,38 +63,38 @@ export class ErrorHandler {
 		return `${COLOR}${space}^${RESET}`;
 	}
 
-	static assignmentError(e: error) {
+	static assignmentError(heap:Heap, e: error) {
 		ErrorHandler.error(
 			'Expected assignment operator',
-			e
+			e, heap
 		);
 	}
 
-	static functionNotDef(e: error) {
+	static functionNotDef(heap: Heap, e: error) {
 		ErrorHandler.error(
 			'function is not defined',
-			e
+			e, heap
 		);
 	}
 
-	static expectedOpening(e:error) {
+	static expectedOpening(heap: Heap, e:error) {
 		ErrorHandler.error(
 			`Expected opening brackets`,
-			e
+			e, heap
 		);
 	}
 
-	static expectedClosing(e:error) {
+	static expectedClosing(heap: Heap, e:error) {
 		ErrorHandler.error(
 			`Expected closing brackets`,
-			e
+			e, heap
 		);
 	}
 
-	static missingVariable(msg: string, e: error) {
+	static missingVariable(msg: string, heap: Heap, e: error) {
 		ErrorHandler.error(
 			msg,
-			e
+			e, heap
 		);
 	}
 
@@ -84,24 +104,24 @@ export class ErrorHandler {
 		);
 	}
 
-	static badArgumentSpecification(argCount:number, expected: number, e: error) {
+	static badArgumentSpecification(argCount:number, expected: number, heap: Heap, e: error) {
 		if (expected > argCount) {
 			ErrorHandler.error(
 				`Missing arguments, expected ${expected} arguments.`,
-				e
+				e, heap
 			);
 		} else if (expected < argCount) {
 			ErrorHandler.error(
 				`Too many arguments, expected ${expected} arguments.`,
-				e
+				e, heap
 			);
 		}
 	}
 
-	static unexpectedIdentifier(e: error) {
+	static unexpectedIdentifier(heap: Heap, e: error) {
 		ErrorHandler.error(
 			`Unexpected identifier '${e.text[e.char]}' found`,
-			e
+			e, heap
 		);
 	}
 
@@ -110,8 +130,7 @@ export class ErrorHandler {
 		e: error | undefined 
 	) {
 		ErrorHandler.error(
-			`include file not found ${includeName}`,
-			e
+			`include file not found ${includeName}`, e
 		)
 	}
 }

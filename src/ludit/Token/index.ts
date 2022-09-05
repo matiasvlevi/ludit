@@ -1,5 +1,3 @@
-import Tokenizer from '../Tokenizer'
-import { Map } from '../types'
 
 export default class Token {
 	literal: string;
@@ -19,6 +17,11 @@ export default class Token {
 		this.char = char;
 	}
 
+  /**
+  * copy a token
+  *
+  *   @returns an identical copy of the token
+  */
 	copy() {
 		return new Token(
 			this.literal,
@@ -28,15 +31,15 @@ export default class Token {
 		);
 	}
 
+  /**
+  * calculate a singular token
+  *
+  *   @param input - an array of input bits 
+  *   @param profile - the expression's profile
+  * 
+  *   @returns the input value 
+  */
 	calculate(input: boolean[], profile:string) {
 		return input[0];
-	}
-
-	setScope(args: Map<string>, profile:string) {	
-		this.literal = args[this.literal];
-		
-		if (Tokenizer.isConstant(this.literal)) {
-			this.type = 'constant'
-		}
-	}
+	} 
 };

@@ -1,3 +1,5 @@
 src/
 examples/
-assets/
+test/
+tsconfig.unit.json
+
