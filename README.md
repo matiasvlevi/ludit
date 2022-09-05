@@ -10,13 +10,39 @@
   <a href="https://github.com/matiasvlevi/ludit/blob/parser/LICENCE">License</a>
 </p>
     
-<br/><br/><br/>
+<br/><br/>
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.
 
-> Project is under development
+<br/>
 
-### Install
+<table align="center">
+<tr>
+<td align="center"> Ludi Code </td> <td align="center"> Output </td>
+</tr>
+<tr>
+<td>
+
+```python
+def and = A * B
+def or  = A + B
+
+or(and(A, !B), C)
+```
+
+</td>
+<td>
+
+<img src="https://i.ibb.co/Fsx3bNd/ludi-table2.png" alt="luditable" height="210"/>
+
+</td>
+</tr>
+</table>
+
+
+
+
+# Install
 
 ```
 npm i -g ludit
