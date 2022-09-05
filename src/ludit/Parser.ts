@@ -60,8 +60,14 @@ export default class Parser {
 				args[profile[k]] = (tokens[i]);
 				k++;
 			}
-			i++;
+		
+			if (k >= profile.length) {
+				e.char = tokens[i-1].char;
+				ErrorHandler.badArgumentSpecification(k, profile.length,e)
+			}
 
+			i++;
+			
 			if (tokens[i] === undefined) {
 				e.char = tokens[i-1].char;
 				ErrorHandler.expectedClosing(e);
@@ -78,26 +84,15 @@ export default class Parser {
 	): TreeNode {
 		// Get index of the operator to parse
 		let highest = Parser.getPriorityOperator(tokens);
-		// If variable is alone in operation (ex: "A" or a declared value ex: "xor"),
-		// add the value with 0 to emulate it being alone 
-		//
+		
+		// If variable is alone in operation (ex: "A" or a declared value ex: "xor")
+		// return function tree or token
 		if (highest === -1) {	
 			if (tokens[0]) {
 				if (tokens[0].type === 'functionCall') {
-					return new TreeNode(
-						new Token('+', 'operator', 1, 0),
-						0,
-						new Token('0', 'constant', -1, 0),
-						heap.getTree(tokens[0].literal) 
-					);
-				} else if (tokens[0].type === 'variable') {
-					return new TreeNode(
-						new Token('+', 'operator', 1, 0),
-						0,
-						new Token('0', 'constant', -1, 0),
-						tokens[0]
-					);
-				}
+					return heap.getTree(tokens[0].literal);
+				} else if (tokens[0].type === 'variable') 
+					 return tokens[0];		
 			} else {
 				// Handle empty line
 			}	
@@ -247,8 +242,7 @@ export default class Parser {
 				if (j >= tokens.length) {
 					e.char = tokens[tokens.length-1].char;
 					ErrorHandler.missingVariable(
-						'Missing operator value',
-						e
+						'Missing operator value', e
 					);
 				}
 			} while (

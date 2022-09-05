@@ -28,6 +28,10 @@ export default class Token {
 		);
 	}
 
+	calculate(input: boolean[], profile:string) {
+		return input[0];
+	}
+
 	setScope(args: Map<string>, profile:string) {	
 		this.literal = args[this.literal];
 		

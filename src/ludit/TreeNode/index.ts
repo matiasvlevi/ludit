@@ -73,7 +73,6 @@ export default class TreeNode {
 	}
 
 	setScope(args: Map<Token|TreeNode>, profile:string) {
-
 		if (this.left instanceof TreeNode) this.left?.setScope(args, profile);
 		else {
 			this.left = args[this.left?.literal || '.']

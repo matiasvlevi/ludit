@@ -62,7 +62,7 @@ The definition won't print to the console, but the call will.
 
 ### Calling Functions
 
-There are two way of calling functions. There are **Integral** and **Specific** function calls 
+There are two way of calling functions. There are **Integral** and **Concrete** function calls 
 
 **Integral** calls will print a truth table to the console
 
@@ -70,14 +70,14 @@ There are two way of calling functions. There are **Integral** and **Specific** 
 foo
 ```
 
-You can also use different variables in the call, even if it was defined with `A B C`.
+You can also use different variables in the call, even if the function was defined with `A B C`.
 
 ```ludi
 foo(D, E, F)
 ```
 
 
-**Specific** calls contain constants, and will print as a single calculation
+**Concrete** calls contain constants, and will print as a single calculation
 
 ```ludi
 foo(1, 0, 1)
@@ -92,6 +92,14 @@ Nothing prevents you from using the functions in other functions
 def bar = foo(A, B, C) * !(A + D)
 
 bar(A, B, C, D)
+```
+
+and in calls
+
+```ludi
+def baz = E * F
+
+foo(baz * A, B, C)
 ```
 
 <br/>

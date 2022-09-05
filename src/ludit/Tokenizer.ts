@@ -83,18 +83,18 @@ export default class Tokenizer {
 	}
 
 	// REMOVE THIS, METHOD IS TEMPORARY
-	static replaceAll(content: string, char:string, rep:string) {
+	private static replaceAll(content: string, char:string, rep:string) {
 		while(content.includes(char)) {
 			content = content.replace(char, rep);
 		}
 		return content;
 	}
 
-	static removeWhiteSpace(content: string) {
+	private static removeWhiteSpace(content: string) {
 		return Tokenizer.replaceAll(content, ' ', '');
 	}
 
-	static getASCII(min: number, max: number) {
+	private static getASCII(min: number, max: number) {
 		let alpha = '';
 		for (let i = min; i < max; i++)
 			alpha += String.fromCharCode(i);
@@ -108,22 +108,22 @@ export default class Tokenizer {
 	static BOOL = '01';
 	static WHITESPACE = ' ';
 
-	static isVariable(char:string) {
+	private static isVariable(char:string) {
 		return Tokenizer.ALPHA.includes(char);	
 	}
 	
-	static isOperator(char:string) {
+	private static isOperator(char:string) {
 		return Tokenizer.OPERATORS[char] !== undefined
 	}
 
-	static isReserved(char:string) {
+	private static isReserved(char:string) {
 		return (
 			Tokenizer.isOperator(char) ||
 			Tokenizer.SYNTAX[char] !== undefined
 		);
 	}	
 
-	static isNumeral(char: string) {
+	private static isNumeral(char: string) {
 		return Tokenizer.NUMERAL.includes(char);
 	}
 
@@ -131,11 +131,11 @@ export default class Tokenizer {
 		return '=' === char;
 	}
 
-	static isBrackets(char:string) {
+	private static isBrackets(char:string) {
 		return Tokenizer.SYNTAX[char] !== undefined;
 	}
 
-	static getKeyword(exp:string[], i:number) {
+	private static getKeyword(exp:string[], i:number) {
 		let keyword = '';
 		let j = i;
 		while(
@@ -143,6 +143,9 @@ export default class Tokenizer {
 			Tokenizer.isNumeral(exp[j])) &&
 			exp.length > j 
 		) {
+			if (
+				Tokenizer.isReserved(exp[j])
+			) break;
 			keyword += exp[j];
 			j++;
 		}
@@ -153,29 +156,30 @@ export default class Tokenizer {
 		return Tokenizer.CONSTANT[char] !== undefined;
 	}
 
-	static isWhiteSpace(char: string) {
+	private static isWhiteSpace(char: string) {
 		return Tokenizer.WHITESPACE.includes(char)
 	}
 
-	static isLowerCase(char: string) {
+	private static isLowerCase(char: string) {
 		return Tokenizer.ALPHA_L.includes(char);
 	}
 
-	static newScope(char: string) {
+	private static newScope(char: string) {
 		return char === '(';
 	} 
 	
-	static endScope(char: string) {
+	private static endScope(char: string) {
 		return char === ')';
 	} 
 
-	static isDef(tokens: (Token|TreeNode)[]) {
+	private static isDef(tokens: (Token|TreeNode)[]) {
 		if (tokens.length === 0) return false;
 		return (tokens[tokens.length-1].type === 'function');
 	}
 
-	static isSpecificCall(exp: string[], i:number, word:string) {
+	private static isSpecificCall(exp: string[], i:number, word:string) {
 		if (exp[i+word.length] === undefined) return false;
+		if (exp[i+word.length] === ' ') return false;
 
 		let j = i+word.length;
 		while (
@@ -183,10 +187,9 @@ export default class Tokenizer {
 			exp[j] === ' '
 	    ) {
 			j++
-			// if arguments are provided, function is a specific call
-			if (	
-				Tokenizer.isVariable(exp[j]) ||
-				Tokenizer.isConstant(exp[j])
+			// if closing found, function is specific
+			if (
+				exp[j] !== ')'
 			) return true;
 		}
 		// If not, function is not a specific call
@@ -206,17 +209,19 @@ export default class Tokenizer {
 	*
 	*   @returns 
 	*/
-	static handleCall(
+	private static handleCall(
 		heap: Heap,
 		tokens: (Token|TreeNode)[],
 		exp: string[],
 		word: string,
 		profile: string[],
 		i: number,
-		e: error
+		e: error,
 	) {
 		let start = i+word.length+1;
 		let j = start;
+
+		e.char = j;
 		let expectedArgs = heap.getProfile(word, e) || '';
 
 		// If opening bracket exists, add a token
@@ -256,7 +261,6 @@ export default class Tokenizer {
 
 		// Iterate through every expected argument field
 		for (let a = 0; a < expectedArgs.length; a++) {
-
 			// Find where argument field closes
 			while(
 				j < exp.length &&
@@ -267,12 +271,12 @@ export default class Tokenizer {
 			}
 
 			// Get argument field expression
-			let argExpression = Tokenizer.removeWhiteSpace(
-				exp.join('').slice(start, j)
-			);
+			let argExpression = exp.join('').slice(start, j)
 
 			// If is constant, push a single Token
-			if (Tokenizer.isConstant(argExpression)) {
+			if (Tokenizer.isConstant(
+				Tokenizer.removeWhiteSpace(argExpression)
+			)) {
 				tokens.push(new Token(
 					argExpression,
 					'constant',
@@ -288,12 +292,19 @@ export default class Tokenizer {
 
 			// Create tokens for the argument field	
 			let arg = Tokenizer.process(heap, argExpression, e, start);
+		
+			if (arg.tokens.length === 0) {
+				ErrorHandler.badArgumentSpecification(
+					a, expectedArgs.length, e
+				);
+			}
+			e.char = j-1;
 
 			// Add argument field's profile to the line's profile
 			profile = Profiler.removeDoubles(
 				profile.concat(arg.profile.split('')).join('')
 			).split('');
-				
+	
 			// Create a tree with the new tokens
 			let argTree = Parser.makeTree(heap, arg.tokens, arg.profile, e);
 
@@ -307,6 +318,24 @@ export default class Tokenizer {
 			// Increment j, and start at j for next argument
 			j++;
 			start = j;
+		}
+	
+		// Find other surplus arguments
+		let k = j-1;
+		while(exp[k] !== ')') {
+			// Too many args
+			if (Tokenizer.isVariable(exp[k])) {
+				e.char = k;
+				ErrorHandler.badArgumentSpecification(
+					expectedArgs.length+1, expectedArgs.length, e
+				);
+			}
+			// No closing bracket
+			if (k >= exp.length) {
+				e.char = k-1;
+				ErrorHandler.expectedClosing(e);
+			}
+			k++;
 		}
 
 		j--;
@@ -337,7 +366,7 @@ export default class Tokenizer {
 	*
 	*	@returns The expression Tokens, profile, and wheter or not it contains a function definition
 	*/
-	static process(
+	public static process(
 		heap: Heap,
 		expression: string,
 		e: error,
@@ -411,7 +440,6 @@ export default class Tokenizer {
 					}
 				} else if (word) {	
 					// Not a special keyword, but word is defined?
-
 					if (Tokenizer.isDef(tokens)) {
 						// If Function is definition
 						lineDef = word
@@ -422,7 +450,6 @@ export default class Tokenizer {
 						));
 					} else {
 						// If Function is called
-
 						// Push the function's name as a token
 						tokens.push(new Token(
 							word,
@@ -440,7 +467,6 @@ export default class Tokenizer {
 							heap, tokens, exp,
 							word, profile, i, e
 						);
-
 						// If not using the default parameters,
 						// set the new profile, and change location to after the function
 						if (!defaultParams) {
@@ -483,7 +509,6 @@ export default class Tokenizer {
 			} else {
 				e.char = i+startAt
 				ErrorHandler.unexpectedIdentifier(e);
-				console.log('Unexpected!!!')
 			}
 		}
 
@@ -492,7 +517,6 @@ export default class Tokenizer {
 		if (lineDef) {
 			heap.setProfile(lineDef, Profiler.clean(profile));
 		}
-
 		return { 
 			tokens,
 			isDef: (lineDef !== undefined),

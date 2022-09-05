@@ -1,5 +1,7 @@
 import { ErrorHandler, error } from './ErrorHandler'
 import { Map } from './types'
+
+import Token from './Token'
 import TreeNode from './TreeNode'
 
 type HeapSlot = {
@@ -14,7 +16,9 @@ export default class Heap {
 	constructor() {
 		this.data = {};
 	}
-	
+
+	static emptyTree = new TreeNode(new Token('','',-1,-1), -1);
+
 	initSlot(key: string) {
 		if (!this.data[key]) this.data[key] = { tree: undefined, profile: undefined};
 	}
@@ -36,19 +40,23 @@ export default class Heap {
 		};
 	}
 
-	getProfile(key: string, e:error = {line:0, char:-1, text:''}): string | undefined {
+	getProfile(key: string, e:error = {line:0, char:-1, text:''}): string {
 		if (this.data[key] === undefined) {
 			// Handle not defined
 			ErrorHandler.functionNotDef(e);
+		} else {
+			return this.data[key].profile || '';
 		}
-		return this.data[key].profile
+		return '';
 	}
 
-	getTree(key: string, e: error= {line:0, char:-1, text:''}): TreeNode | undefined {
+	getTree(key: string, e: error= {line:0, char:-1, text:''}): TreeNode {
 		if (this.data[key] === undefined) {
 			// Handle not defined
 			ErrorHandler.functionNotDef(e);
+		} else {
+			return this.data[key].tree || Heap.emptyTree;
 		}
-		return this.data[key].tree;
+		return Heap.emptyTree;
 	}
 } 
