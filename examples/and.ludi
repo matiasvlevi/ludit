@@ -1,3 +1,6 @@
-# AND file
+# MIT Licence 2022
+# Ludit file v0.2.3 
+# 
+# Author: Matias Vazquez-Levi 
 
 def and = (A  * B)
