@@ -34,9 +34,9 @@ or(and(A, !B), C)
 
 </td>
 <td>
-<p align="center">
-    <img src="https://i.ibb.co/PC04bm8/ludi-table.png" alt="ludi table" height="255"/>
-</p>
+
+<img src="https://i.ibb.co/Fsx3bNd/ludi-table2.png" alt="luditable" height="210"/>
+
 </td>
 </tr>
 </table>
