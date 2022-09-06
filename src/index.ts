@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
-import { Options } from './options'
-import Frontend from './Frontend'
+import { Options } from './CLI/options'
+import CLI from './CLI'
 
-new Frontend(
-	Options.parse(process.argv)
+new CLI(
+	Options.parse(
+		process.argv
+	)
 );
 

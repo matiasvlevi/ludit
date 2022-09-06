@@ -1,10 +1,23 @@
 
+/**
+* Token Class
+*
+*   Serves as a character or keyword with special meaning 
+*/
 export default class Token {
 	literal: string;
 	type: string;
 	priority: number;
 	char: number;
 
+  /**
+  * Token constructor
+  *
+  *   @param literal - The literal expression of this token
+  *   @param type - The type of this token
+  *   @param priority - The priority this token has in an operation (-1, if it should not be considered for running operations, ie a variable)
+  *   @param char - The column the character or keyword starts at
+  */
 	constructor(
 		literal: string,
 		type:string,

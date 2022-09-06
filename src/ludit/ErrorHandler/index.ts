@@ -1,16 +1,10 @@
-import Utils from './Utils'
-import Heap from './Heap'
+import Utils from '../Utils'
+import Heap from '../Heap'
+import { error } from '../types'
 
 const COLOR = '\x1b[91m';
 const RESET = '\x1b[0m';
 const DARK = '\x1b[90m';
-
-export type error = {
-	line: number;
-	char: number;
-	text: string;
-	msg?: string; 
-}
 
 export class ErrorHandler {
 	constructor() {}
@@ -104,7 +98,12 @@ export class ErrorHandler {
 		);
 	}
 
-	static badArgumentSpecification(argCount:number, expected: number, heap: Heap, e: error) {
+	static badArgumentSpecification(
+		argCount:number,
+		expected: number,
+		heap: Heap,
+		e: error
+	) {
 		if (expected > argCount) {
 			ErrorHandler.error(
 				`Missing arguments, expected ${expected} arguments.`,
