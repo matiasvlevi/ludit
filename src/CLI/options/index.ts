@@ -1,4 +1,4 @@
-import { Map } from '../ludit/types'
+import { Map } from '../../ludit/types'
 import { queries, optionAction, optionConfig } from './queries'
 
 export type option = {

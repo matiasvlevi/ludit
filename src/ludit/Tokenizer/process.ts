@@ -2,7 +2,8 @@ import Tokenizer from './index'
 
 import Utils from '../Utils'
 
-import { ErrorHandler, error } from '../ErrorHandler'
+import { error } from '../types'
+import { ErrorHandler } from '../ErrorHandler'
 
 import Heap from '../Heap'
 import TreeNode from '../TreeNode'

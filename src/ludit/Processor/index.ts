@@ -1,4 +1,4 @@
-import TreeNode from './TreeNode'
+import TreeNode from '../TreeNode'
 
 /**
 * compute root TreeNode, the TreeNode will then recursively compute children TreeNodes and Tokens

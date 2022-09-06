@@ -1,19 +1,25 @@
-import { ErrorHandler, error } from './ErrorHandler'
-import { Map } from './types'
+import { ErrorHandler } from '../ErrorHandler'
+import { Map, error, errorCall } from '../types'
 
-import Token from './Token'
-import TreeNode from './TreeNode'
+import Token from '../Token'
+import TreeNode from '../TreeNode'
 
 type HeapSlot = {
 	tree: TreeNode | undefined,
 	profile: string | undefined
 };
 
+/**
+* The heap stores the function definition's root TreeNodes, for later use.
+* it also stores error data and errorCallbacks for the nodejs API
+*
+* This class is used to create a Heap instance
+*/ 
 export default class Heap {
 
 	data: Map<HeapSlot>
 	error: error | undefined;
-	errorCall: (((e:error) => void)|undefined);
+	errorCall: (errorCall|undefined);
 
 	constructor() {
 		this.data = {};
@@ -31,24 +37,37 @@ export default class Heap {
 		if (!this.data[key]) this.data[key] = { tree: undefined, profile: undefined};
 	}
 
-	setProfile(key:string, profile:string) {
+	setProfile(
+		key:string,
+		profile:string
+	) {
 		this.initSlot(key);
 		this.data[key].profile = profile;
 	}
 
-	setTree(key:string, tree: TreeNode) {
+	setTree(
+		key:string,
+		tree: TreeNode
+	) {
 		this.initSlot(key);
 		this.data[key].tree = tree;
 	}
 
-	setValue(key: string, content: TreeNode, profile: string) {
+	setValue(
+		key: string,
+		content: TreeNode,
+		profile: string
+	) {
 		this.data[key] = {
 			tree: content,
 			profile: profile
 		};
 	}
 
-	getProfile(key: string, e:error = {line:0, char:-1, text:''}): string {
+	getProfile(
+		key: string,
+		e:error = { line:0, char:-1, text:'' }
+	): string {
 		if (this.data[key] === undefined) {
 			// Handle not defined
 			ErrorHandler.functionNotDef(this, e);
@@ -58,7 +77,10 @@ export default class Heap {
 		return '';
 	}
 
-	getTree(key: string, e: error= {line:0, char:-1, text:''}): TreeNode {
+	getTree(
+		key: string,
+		e: error = { line:0, char:-1, text:'' }
+	): TreeNode {
 		if (this.data[key] === undefined) {
 			// Handle not defined
 			ErrorHandler.functionNotDef(this, e);

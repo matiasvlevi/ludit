@@ -2,10 +2,12 @@ import Tokenizer from './index'
 
 import Utils from '../Utils'
 
-import { ErrorHandler, error } from '../ErrorHandler'
+import { error } from '../types'
+
+import { ErrorHandler } from '../ErrorHandler'
 
 import Heap from '../Heap'
-import Parser from '../Parser'
+import Assembler from '../Assembler'
 import TreeNode from '../TreeNode'
 import Token from '../Token'
 
@@ -135,7 +137,7 @@ export function handleCall(
         ).split('');
 
         // Create a tree with the new tokens
-        let argTree = Parser.makeTree(heap, arg.tokens, arg.profile, e);
+        let argTree = Assembler.makeTree(heap, arg.tokens, arg.profile, e);
 
         // Make the tree an argument type 
         argTree.type = 'argument';

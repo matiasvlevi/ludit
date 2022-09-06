@@ -1,21 +1,21 @@
-import Utils from './ludit/Utils'
+import Utils from '../ludit/Utils'
 import { writeFileSync } from 'node:fs'
 import { option, argv } from './options'
 import { queries as QUERIES } from './options/queries'
 
-import { Map } from './ludit/types'
-import TreeNode from './ludit/TreeNode'
-import Token from './ludit/Token'
+import { Map, luditLineReturn } from '../ludit/types'
+import TreeNode from '../ludit/TreeNode'
+import Token from '../ludit/Token'
 
 import {
 	Tokenizer,
 	Preparser,
-	Parser,
+	Assembler,
 	Processor,
 	Heap
-} from './ludit/Core'
+} from '../ludit/Core'
 
-export default class Frontend {
+export default class CLI {
 	
 	profile: string;
 	tree: TreeNode;
@@ -71,7 +71,7 @@ export default class Frontend {
 
 		this.profile = profile;
 	
-		this.tree = Parser.makeTree(
+		this.tree = Assembler.makeTree(
 			this.heap, tokens,
 			profile, err
 		);
@@ -91,7 +91,7 @@ export default class Frontend {
 		delete this.options['file'];	
 	
 		// Handle included files
-		if (Preparser.includesAnInclude(file)) {
+		if (Preparser.containsInclude(file)) {
 			file = Preparser.include(file, this.path)
 			includeLineNb = file.length - fileLineNb;
 		}
@@ -113,7 +113,7 @@ export default class Frontend {
 			this.expression = line; // Save raw line
 
 			// Create computation tree
-			this.tree = Parser.makeTree(this.heap, tokens, profile, {
+			this.tree = Assembler.makeTree(this.heap, tokens, profile, {
 				line: currentLine,
 				char: -1,
 				text: file[i]
@@ -141,7 +141,7 @@ export default class Frontend {
 		const input = _input.split('').map(x => +x);
 		const output = +Processor.calculate(this.tree, this.profile, input);
 
-		if (!this.noprint) console.log(`${Frontend.applyValues(
+		if (!this.noprint) console.log(`${CLI.applyValues(
 			this.expression,
 			_input,
 			this.profile
@@ -156,11 +156,11 @@ export default class Frontend {
 	}
 
 	// Calculate a truth table 
-	run() {
+	run(): luditLineReturn {
 		// Run specific function call
 		if (this.profile.length === 0) {
 			this.printSingle();
-			return;
+			return [];
 		};
 
 		const cases = Utils.binaryCases(this.profile.length);
@@ -195,7 +195,7 @@ export default class Frontend {
 			writeFileSync(filename, csv, 'utf-8');
 	}
 
-	main() {
+	main(): luditLineReturn {
 		if (Object.keys(this.options).length === 0) return this.run();
 		for (let query in this.options) {
 			if (
@@ -211,6 +211,7 @@ export default class Frontend {
 				);
 			}
 		}
+		return [];
 	}
 }
 

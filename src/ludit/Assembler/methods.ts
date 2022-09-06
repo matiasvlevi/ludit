@@ -1,10 +1,10 @@
-import { ErrorHandler, error } from '../ErrorHandler'
+import { ErrorHandler } from '../ErrorHandler'
 
 import Heap from '../Heap'
 import TreeNode from '../TreeNode'
 import Token from '../Token'
 
-import { Map } from '../types'
+import { Map, error } from '../types'
 
 /**
 * get highest priority operator in the list of tokens

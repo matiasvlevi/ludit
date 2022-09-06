@@ -1,6 +1,7 @@
-import Parser from './index'
+import Assembler from './index'
 
-import { ErrorHandler, error } from '../ErrorHandler'
+import { error } from '../types'
+import { ErrorHandler } from '../ErrorHandler'
 
 import Heap from '../Heap'
 import Tokenizer from '../Tokenizer'
@@ -25,7 +26,7 @@ export function makeTree(
 ): TreeNode {
 
 	// Get index of the operator to parse
-	let highest = Parser.getPriorityOperator(tokens);
+	let highest = Assembler.getPriorityOperator(tokens);
 	
 	// If variable is alone in operation (ex: "A" or a declared value ex: "xor")
 	// return function tree or token
@@ -84,9 +85,9 @@ export function makeTree(
 				) || profile;
 
 		// Set the arguments to the function's scope
-				let tree = Parser.setFunctionScope(
+				let tree = Assembler.setFunctionScope(
 					rawTree,
-					Parser.getArgs(
+					Assembler.getArgs(
 						heap, tokens,
 						expectedArgs,
 						highest, e
@@ -133,7 +134,7 @@ export function makeTree(
 
 		// Skip to next prioritized operator
 		// continue recursilvely
-				return Parser.makeTree(heap, tokens, profile, e);
+				return Assembler.makeTree(heap, tokens, profile, e);
 			}
 		}
 	}
@@ -266,6 +267,6 @@ if (node.left === undefined) {
 		return node;
 	} else {
 		// continue recursively
-		return Parser.makeTree(heap, tokens, profile, e);
+		return Assembler.makeTree(heap, tokens, profile, e);
 	}
 }

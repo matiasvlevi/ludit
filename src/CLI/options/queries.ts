@@ -1,7 +1,7 @@
-import Frontend from '../Frontend'
-import { Map } from '../ludit/types'
+import CLI from '../index'
+import { Map } from '../../ludit/types'
 
-export type optionAction = (frontend:Frontend, param: string) => void;
+export type optionAction = (cli:CLI, param: string) => void;
 
 export type optionConfig = {
 	action: optionAction;
@@ -13,7 +13,7 @@ export type optionConfig = {
 
 export const queries: Map<optionConfig> = {
 	help: {
-		action:(frontend:Frontend, param:string) => {
+		action:(cli:CLI, param:string) => {
 			for (let key in queries) {
 				
 				console.log(`\n  \x1b[36m--${key}, -${key[0]}\x1b[0m`);
@@ -30,24 +30,24 @@ export const queries: Map<optionConfig> = {
 		requireParam: false
 	},
 	csv: {
-		action:(frontend:Frontend, param: string) => {
-			frontend.save(param);
+		action:(cli:CLI, param: string) => {
+			cli.save(param);
 		},
 		helpmsg: 'save the truth table as a .csv file',
 		example: '"A * B + C" --csv sheet.csv',
 		requireParam: false
 	},
 	select: {
-		action:(frontend: Frontend, param: string) => {
-			frontend.runSingle(param);			
+		action:(cli: CLI, param: string) => {
+			cli.runSingle(param);			
 		},
 		helpmsg: 'select a specific set of inputs to calculate',
 		example: '"A * B + C" --select 101',
 		requireParam: true
 	},
 	file: {
-		action:(frontend: Frontend, param: string) => {
-			frontend.fromFile(param);
+		action:(cli: CLI, param: string) => {
+			cli.fromFile(param);
 		},
 		helpmsg: 'read expression from a source file',
 		example: '--file formula.ludi',

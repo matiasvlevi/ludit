@@ -11,12 +11,15 @@ import Utils from '../Utils'
 
 import { 
   syntax,
-  functionSyntax,
-  keyword,
   operation,
   Map
 } from '../types'
 
+/**
+* The Tokenizer handles parsing raw text lines into meaningfull Tokens 
+*
+* All methods are static this class is used as a Namespace 
+*/
 export default class Tokenizer {
   /*
   * File methods
@@ -31,14 +34,14 @@ export default class Tokenizer {
   /*
   * Keyword or Character maps for tokens
   */
-	static KEYWORD:Map<keyword> = {
+	static KEYWORD:Map<syntax> = {
 		'def':{
 			type:'function',
 			priority: -1
 		}
 	}
 
-	static CONSTANT:Map<keyword> = {
+	static CONSTANT:Map<syntax> = {
 		'0': {
 			type: 'constant',
 			priority: -1
@@ -49,7 +52,7 @@ export default class Tokenizer {
 		}
 	}
 
-	static FUNCTION:Map<functionSyntax> = {
+	static FUNCTION:Map<syntax> = {
   		'=': {
 			type:'operator',
 			priority: 0.5
