@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-import { Options } from './CLI/options'
-import CLI from './CLI'
+import CLI from "./CLI";
+import { Options } from "./CLI/options";
 
 new CLI(
-	Options.parse(
-		process.argv
-	)
+  Options.parse(
+    process.argv,
+  ),
 );
-

@@ -1,12 +1,12 @@
-import Assembler from './index'
+import Assembler from "./index";
 
-import { error } from '../types'
-import { ErrorHandler } from '../ErrorHandler'
+import { ErrorHandler } from "../ErrorHandler";
+import { error } from "../types";
 
-import Heap from '../Heap'
-import Tokenizer from '../Tokenizer'
-import TreeNode from '../TreeNode'
-import Token from '../Token'
+import Heap from "../Heap";
+import Token from "../Token";
+import Tokenizer from "../Tokenizer";
+import TreeNode from "../TreeNode";
 
 /**
  * generate a TreeNode based on the parsed tokens
@@ -19,254 +19,255 @@ import Token from '../Token'
  *   @returns The root TreeNode of the generated tree
  */
 export function makeTree(
-	heap: Heap,
-	tokens: (Token|TreeNode)[],
-	profile:string,
-	e:error
+  heap: Heap,
+  tokens: Array<Token|TreeNode>,
+  profile: string,
+  e: error,
 ): TreeNode {
 
-	// Get index of the operator to parse
-	let highest = Assembler.getPriorityOperator(tokens);
-	
-	// If variable is alone in operation (ex: "A" or a declared value ex: "xor")
-	// return function tree or token
-	if (highest === -1) {	
-		if (tokens[0]) {
-			if (tokens[0].type === 'functionCall') {
-				
-		return heap.getTree(
-		(tokens[0] as Token).literal
-		);
+  // Get index of the operator to parse
+  const highest = Assembler.getPriorityOperator(tokens);
 
-			} else if (tokens[0].type === 'variable') {
+  // If variable is alone in operation (ex: "A" or a declared value ex: "xor")
+  // return function tree or token
+  if (highest === -1) {
+    if (tokens[0]) {
+      if (tokens[0].type === "functionCall") {
 
-		return tokens[0] as TreeNode;		
-	}
+        return heap.getTree(
+          (tokens[0] as Token).literal,
+        );
 
-		} else {
-			// Handle empty line
-		}	
-	}
-	// Initialise iteration node
-	if (tokens[highest] === undefined) {
-		if (tokens[tokens.length-1] !== undefined) {
-			e.char = tokens[tokens.length-1].char;
-		} else {
-			e.char = 0
-		}
-		ErrorHandler.assignmentError(heap, e);
-	}
-			
+      } else if (tokens[0].type === "variable") {
 
-	let node = new TreeNode(
-	tokens[highest] as Token,
-	tokens[highest].char
-);
-	
-	if (tokens[highest].type === 'functionCall') {
-		if (
-			tokens[highest+1] !== undefined &&
-			tokens[highest+1].type === 'argOpen'
-		) {
-			
-	// Get the function's tree
-	let rawTree = heap.getTree(
-		(tokens[highest] as Token).literal
-	);
+        return tokens[0] as TreeNode;
+      }
 
-			if (rawTree === undefined) {
-				// Function not def
-			} else {
-		// If function is defined
+    } else {
+      // Handle empty line
+    }
+  }
+  // Initialise iteration node
+  if (tokens[highest] === undefined) {
+    if (tokens[tokens.length - 1] !== undefined) {
+      e.char = tokens[tokens.length - 1].char;
+    } else {
+      e.char = 0;
+    }
+    ErrorHandler.assignmentError(heap, e);
+  }
 
-		// Get expected Arguments
-				let expectedArgs:string = heap.getProfile(
-					(tokens[highest] as Token).literal
-				) || profile;
+  const node = new TreeNode(
+    tokens[highest] as Token,
+    tokens[highest].char,
+  );
 
-		// Set the arguments to the function's scope
-				let tree = Assembler.setFunctionScope(
-					rawTree,
-					Assembler.getArgs(
-						heap, tokens,
-						expectedArgs,
-						highest, e
-					),
-					expectedArgs
-				);
+  if (tokens[highest].type === "functionCall") {
+    if (
+      tokens[highest + 1] !== undefined &&
+            tokens[highest + 1].type === "argOpen"
+    ) {
 
-		// Count arguments, an remove them from the token array 
-				let argCount = 0;
-				let j = highest+1;
-				while (
-					j < tokens.length && 
-		(
-			tokens[j].type === 'argument' ||
-						tokens[j].type === 'constant' ||
-						tokens[j].type === 'argOpen'  ||
-						tokens[j].type === 'argClose'
-		)
-				) {
-					if (
-						tokens[j].type === 'argument' ||
-						tokens[j].type === 'constant'
-					) { 
-						argCount++
-						e.char = tokens[j].char;
-					};
+      // Get the function's tree
+      const rawTree = heap.getTree(
+        (tokens[highest] as Token).literal,
+      );
 
-					tokens.splice(j, 1);
-				}
+      if (rawTree === undefined) {
+        // Function not def
+      } else {
+        // If function is defined
 
-		// Throw an error if argument count doesn't match
-		// expected argument length
-				if (argCount !== expectedArgs.length) {
-					ErrorHandler.badArgumentSpecification(
-						argCount,
-						expectedArgs.length,
-						heap, e
-					);
-				} 
+        // Get expected Arguments
+        const expectedArgs: string = heap.getProfile(
+          (tokens[highest] as Token).literal,
+        ) || profile;
 
-		// Replace function operator with 
-		// the new function's root TreeNode in the token array
-				tokens.splice(highest, 1, tree);
+        // Set the arguments to the function's scope
+        const tree = Assembler.setFunctionScope(
+          rawTree,
+          Assembler.getArgs(
+            heap, tokens,
+            expectedArgs,
+            highest, e,
+          ),
+          expectedArgs,
+        );
 
-		// Skip to next prioritized operator
-		// continue recursilvely
-				return Assembler.makeTree(heap, tokens, profile, e);
-			}
-		}
-	}
+        // Count arguments, an remove them from the token array
+        let argCount = 0;
+        const j = highest + 1;
+        while (
+          j < tokens.length &&
+        (
+          tokens[j].type === "argument" ||
+                        tokens[j].type === "constant" ||
+                        tokens[j].type === "argOpen"  ||
+                        tokens[j].type === "argClose"
+        )
+        ) {
+          if (
+            tokens[j].type === "argument" ||
+                        tokens[j].type === "constant"
+          ) {
+            argCount++;
+            e.char = tokens[j].char;
+          }
 
-	if (Tokenizer.isAssign(
-	(tokens[highest] as Token).literal
-)) {
-		let j = highest;
-		e.char = tokens[highest].char;
-	
-	// Iterate until it finds a functionName
-		do {
-			j--;
-			if (j < 0 || tokens[j]===undefined) {
-				ErrorHandler.missingVariable(
-					'Missing definition to assign a value to', heap, e
-				);
-			}
-		} while(tokens[j].type !== 'functionName')
+          tokens.splice(j, 1);
+        }
 
-		let functionName = (tokens[j] as Token).literal;
+        // Throw an error if argument count doesn't match
+        // expected argument length
+        if (argCount !== expectedArgs.length) {
+          ErrorHandler.badArgumentSpecification(
+            argCount,
+            expectedArgs.length,
+            heap, e,
+          );
+        }
 
-	// Iterate until it finds a definition
-		j = highest;
-		do {
-			j++;
-			if (j >= tokens.length) {
-				ErrorHandler.missingVariable(
-					'Missing assignment value', heap, e
-				);
-			}
-		} while(
-			tokens[j].type !== 'variable' &&
-			tokens[j].type !== 'constant'
-		) 
+        // Replace function operator with
+        // the new function's root TreeNode in the token array
+        tokens.splice(highest, 1, tree);
 
-	// Add the new defined function to the heap object
-		heap.setTree(functionName, tokens[j] as TreeNode);	
+        // Skip to next prioritized operator
+        // continue recursilvely
+        return Assembler.makeTree(heap, tokens, profile, e);
+      }
+    }
+  }
 
-	// return function's root TreeNode
-		return (tokens[j] as TreeNode);
-	}
+  if (Tokenizer.isAssign(
+    (tokens[highest] as Token).literal,
+  )) {
+    let j = highest;
+    e.char = tokens[highest].char;
 
-// If normal operator
-	let j: number; 
+    // Iterate until it finds a functionName
+    do {
+      j--;
+      if (j < 0 || tokens[j] === undefined) {
+        ErrorHandler.missingVariable(
+          "Missing definition to assign a value to", heap, e,
+        );
+      }
+    } while (tokens[j].type !== "functionName");
 
-	// Look for parameter A (left)
-	let left: Token|TreeNode|undefined;
-	let leftIndex = -1;
-if (node.left === undefined) { 
+    const functionName = (tokens[j] as Token).literal;
 
-		j = highest;
-	// Iterate until it finds left parameter
-		do { 
-			j--
-			if (j < 0) {
-		// Not found, throw an error
-				e.char = tokens[highest].char;
-				ErrorHandler.missingVariable(
-					'Missing operator value',
-					heap, e
-				);
-			}
-		} while (
-			tokens[j].type !== 'variable' &&
-			tokens[j].type !== 'constant' &&
-			tokens[j].type !== 'functionCall'
-		);
+    // Iterate until it finds a definition
+    j = highest;
+    do {
+      j++;
+      if (j >= tokens.length) {
+        ErrorHandler.missingVariable(
+          "Missing assignment value", heap, e,
+        );
+      }
+    } while (
+      tokens[j].type !== "variable" &&
+            tokens[j].type !== "constant"
+    );
 
-	// If function call, look for its tree 
-		if (tokens[j].type === 'functionCall') {
-			// Integral function call
-	if (tokens[j] instanceof Token)
-				left = heap.getTree((tokens[j] as Token).literal);
-		} else {
-	// add the token
-			left = tokens[j];
-		}
-		leftIndex = j;
-	}
+    // Add the new defined function to the heap object
+    heap.setTree(functionName, tokens[j] as TreeNode);
 
-	// Look for parameter B (right)
-	let right: Token|TreeNode|undefined;
-	let rightIndex = -1;
-	if (node.right === undefined) {
-		j = highest;
+    // return function's root TreeNode
+    return (tokens[j] as TreeNode);
+  }
 
-	// Iterate until it finds right parameter
-		do { 
-			j++
-			if (j >= tokens.length) {
-		// Not found, throw an error
-				e.char = tokens[tokens.length-1].char;
-				ErrorHandler.missingVariable(
-					'Missing operator value', heap, e
-				);
-			}
-		} while (
-			tokens[j].type !== 'variable' && 
-			tokens[j].type !== 'constant' &&
-			tokens[j].type !== 'functionCall'
-		) 
+  // If normal operator
+  let j: number;
 
-	// If is function call, find its tree 
-		if (tokens[j].type === 'functionCall') {
-			// Integral function call
-			if (tokens[j] instanceof Token)
-		right = heap.getTree((tokens[j] as Token).literal);
-		} else {
-	// add the token
-			right = tokens[j];
-		}
-		rightIndex = j;
-	}
+  // Look for parameter A (left)
+  let left: Token|TreeNode|undefined;
+  let leftIndex = -1;
+  if (node.left === undefined) {
 
-	// Set each branch
-// with found Tokens or TreeNodes
-	node.left = left;
-	node.right = right;
+    j = highest;
+    // Iterate until it finds left parameter
+    do {
+      j--;
+      if (j < 0) {
+        // Not found, throw an error
+        e.char = tokens[highest].char;
+        ErrorHandler.missingVariable(
+          "Missing operator value",
+          heap, e,
+        );
+      }
+    } while (
+      tokens[j].type !== "variable" &&
+            tokens[j].type !== "constant" &&
+            tokens[j].type !== "functionCall"
+    );
 
-	// Remove used tokens and replace them with the 
-	// Calculation token
-	tokens.splice(leftIndex, 1);
-	tokens.splice(rightIndex-1, 1);
-	tokens.splice(highest-1, 1, node);
+    // If function call, look for its tree
+    if (tokens[j].type === "functionCall") {
+      // Integral function call
+      if (tokens[j] instanceof Token) {
+        left = heap.getTree((tokens[j] as Token).literal);
+      }
+    } else {
+      // add the token
+      left = tokens[j];
+    }
+    leftIndex = j;
+  }
 
-	// If only token left is Calculation,
-	// return the root node
-	if (tokens.length <=1) {
-		return node;
-	} else {
-		// continue recursively
-		return Assembler.makeTree(heap, tokens, profile, e);
-	}
+  // Look for parameter B (right)
+  let right: Token|TreeNode|undefined;
+  let rightIndex = -1;
+  if (node.right === undefined) {
+    j = highest;
+
+    // Iterate until it finds right parameter
+    do {
+      j++;
+      if (j >= tokens.length) {
+        // Not found, throw an error
+        e.char = tokens[tokens.length - 1].char;
+        ErrorHandler.missingVariable(
+          "Missing operator value", heap, e,
+        );
+      }
+    } while (
+      tokens[j].type !== "variable" &&
+            tokens[j].type !== "constant" &&
+            tokens[j].type !== "functionCall"
+    );
+
+    // If is function call, find its tree
+    if (tokens[j].type === "functionCall") {
+      // Integral function call
+      if (tokens[j] instanceof Token) {
+        right = heap.getTree((tokens[j] as Token).literal);
+      }
+    } else {
+      // add the token
+      right = tokens[j];
+    }
+    rightIndex = j;
+  }
+
+  // Set each branch
+  // with found Tokens or TreeNodes
+  node.left = left;
+  node.right = right;
+
+  // Remove used tokens and replace them with the
+  // Calculation token
+  tokens.splice(leftIndex, 1);
+  tokens.splice(rightIndex - 1, 1);
+  tokens.splice(highest - 1, 1, node);
+
+  // If only token left is Calculation,
+  // return the root node
+  if (tokens.length <= 1) {
+    return node;
+  } else {
+    // continue recursively
+    return Assembler.makeTree(heap, tokens, profile, e);
+  }
 }
