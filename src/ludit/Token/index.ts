@@ -2,13 +2,13 @@
 /**
 * Token Class
 *
-*   Serves as a character or keyword with special meaning 
+*   Serves as a character or keyword with special meaning
 */
 export default class Token {
-	literal: string;
-	type: string;
-	priority: number;
-	char: number;
+  public literal: string;
+  public type: string;
+  public priority: number;
+  public char: number;
 
   /**
   * Token constructor
@@ -18,41 +18,41 @@ export default class Token {
   *   @param priority - The priority this token has in an operation (-1, if it should not be considered for running operations, ie a variable)
   *   @param char - The column the character or keyword starts at
   */
-	constructor(
-		literal: string,
-		type:string,
-		priority: number,
-		char: number
-	) {
-		this.type = type;			
-		this.literal = literal;
-		this.priority = priority;
-		this.char = char;
-	}
+  constructor(
+    literal: string,
+    type: string,
+    priority: number,
+    char: number,
+  ) {
+    this.type = type;
+    this.literal = literal;
+    this.priority = priority;
+    this.char = char;
+  }
 
   /**
   * copy a token
   *
   *   @returns an identical copy of the token
   */
-	copy() {
-		return new Token(
-			this.literal,
-			this.type,
-			this.priority,
-			this.char
-		);
-	}
+  public copy() {
+    return new Token(
+      this.literal,
+      this.type,
+      this.priority,
+      this.char,
+    );
+  }
 
   /**
   * calculate a singular token
   *
-  *   @param input - an array of input bits 
+  *   @param input - an array of input bits
   *   @param profile - the expression's profile
-  * 
-  *   @returns the input value 
+  *
+  *   @returns the input value
   */
-	calculate(input: boolean[], profile:string) {
-		return input[0];
-	} 
-};
+  public calculate(input: boolean[], profile: string) {
+    return input[0];
+  }
+}

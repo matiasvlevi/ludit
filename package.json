@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc -p ./src",
     "build-test": "tsc -p ./tsconfig.unit.json",
+    "lint":"eslint ./src --ext .ts --fix",
     "test": "mocha ./test/bin/test --reporter ./test/bin/test/reporter.js",
     "start": "node ./bin/index.js"
   },
@@ -26,7 +27,10 @@
     "@types/chai": "^4.3.3",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.14",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "chai": "^4.3.6",
+    "eslint": "^8.23.0",
     "mocha": "^10.0.0"
   },
   "bin": {

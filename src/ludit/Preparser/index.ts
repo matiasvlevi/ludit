@@ -1,26 +1,26 @@
 import {
-  loadFile,
-  include,
-  filter,
-  handlePrints,
-  handleComments,
-  evalPath,
   checkInclude,
   containsInclude,
-  parseQuotes,
+  evalPath,
+  filter,
   getPath,
+  handleComments,
+  handlePrints,
+  include,
+  loadFile,
+  makeBackPath,
+  parseQuotes,
   resolve,
-  makeBackPath
-} from './methods'
+} from "./methods";
 
-import { Map, error } from '../types'
+import { error, Map } from "../types";
 
 /**
 * Types for keywords like `include`
-*/ 
-type preParserKeyword = {
-	type: string,
-	action: (line: string, e:error) => string[]
+*/
+interface preParserKeyword {
+    type: string;
+    action: (line: string, e: error) => string[];
 }
 
 /**
@@ -28,7 +28,7 @@ type preParserKeyword = {
 * It is the logical equivalent of ++ and C preprocessors which handle `#define` and `#include` keywords
 *
 * All methods are static, this class is used as a namespace
-*/ 
+*/
 export default class Preparser {
 
   public static loadFile = loadFile;
@@ -47,12 +47,12 @@ export default class Preparser {
   /**
   * Preparser keywords
   */
-	static KEYWORD: Map<preParserKeyword> = {
-		'include': {
-			type: 'include',
-			action: (path: string, e: error): string[] => {
-				return Preparser.loadFile(path, e);
-			}
-		}
-	}
+  public static KEYWORD: Map<preParserKeyword> = {
+    include: {
+      type: "include",
+      action: (path: string, e: error): string[] => {
+        return Preparser.loadFile(path, e);
+      },
+    },
+  };
 }
