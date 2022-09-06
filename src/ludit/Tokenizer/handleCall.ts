@@ -1,32 +1,18 @@
-import Tokenizer from "./index";
+import { error, handleCallReturn } from "../types";
+import * as ErrorHandler from "../ErrorHandler";
+import * as Utils from "../Utils";
 
-import Utils from "../Utils";
+import * as Tokenizer from ".";
+import * as Assembler from "../Assembler";
 
-import { error } from "../types";
+import { Token } from "../Token";
+import { TreeNode } from "../TreeNode";
+import { Heap } from "../Heap";
 
-import { ErrorHandler } from "../ErrorHandler";
 
-import Assembler from "../Assembler";
-import Heap from "../Heap";
-import Token from "../Token";
-import TreeNode from "../TreeNode";
-
-/**
-* datatype returned by handleCall
-*
-*   @param defaultParams - wheter or not the function uses its default parameters
-*   @param newLocation - The location after the function call
-*   @param argProfile - The profile of the function in the argument field
-*
-*/
-interface handleCallReturn {
-    defaultParams: boolean;
-    newLocation: number;
-    argProfile: string[];
-}
 
 /**
-*	Tokenizes function calls and their arguments
+ *	Tokenizes function calls and their arguments
 *
 *   @param heap - Object containing defined function data
 *	  @param tokens - List of current tokens

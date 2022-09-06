@@ -1,15 +1,15 @@
-import TreeNode from "../TreeNode";
+import {TreeNode} from "../TreeNode";
 
 /**
-* compute root TreeNode, the TreeNode will then recursively compute children TreeNodes and Tokens
-*
-*   @param tree - The root TreeNode
-*   @param profile - The expression's profile
-*   @param _input - The input bits, represented as numbers
-*
-*   @returns The resulting bit of the computation
-*/
-function calculate(
+  * compute root TreeNode, the TreeNode will then recursively compute children TreeNodes and Tokens
+  *
+  *   @param tree - The root TreeNode
+  *   @param profile - The expression's profile
+  *   @param _input - The input bits, represented as numbers
+  *
+  *   @returns The resulting bit of the computation
+  */
+export function calculate(
   tree: TreeNode,
   profile: string,
   _input: number[],
@@ -24,5 +24,3 @@ function calculate(
       profile,
     );
 }
-
-export default { calculate };

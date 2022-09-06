@@ -1,9 +1,10 @@
+export { writeFileSync } from "node:fs";
 import { Map } from "../types";
 
 /**
 *
 */
-function sortString(profile: string[]): string {
+export function sortString(profile: string[]): string {
   return profile.sort().join("");
 }
 
@@ -16,7 +17,7 @@ function sortString(profile: string[]): string {
 *
 *   @returns the string with replaced segments
 */
-function replaceAll(
+export function replaceAll(
   content: string,
   seg: string,
   rep: string,
@@ -35,7 +36,7 @@ function replaceAll(
 *
 *   @returns the string with no whitespace
 */
-function removeWhiteSpace(content: string): string {
+export function removeWhiteSpace(content: string): string {
   return replaceAll(content, " ", "");
 }
 
@@ -46,7 +47,7 @@ function removeWhiteSpace(content: string): string {
 *
 *   @returns the whitespace string
 */
-function whitespace(length: number): string {
+export function whitespace(length: number): string {
   return new Array(length).fill(" ").join("");
 }
 
@@ -57,7 +58,7 @@ function whitespace(length: number): string {
 *
 *   @returns the string with no duplicate values
 */
-function removeDuplicates(text: string): string {
+export function removeDuplicates(text: string): string {
   let ans = "";
   const obj: Map<boolean> = {};
 
@@ -79,7 +80,7 @@ function removeDuplicates(text: string): string {
 *
 *   @returns all the binary cases
 */
-function binaryCases(n: number): number[][] {
+export function binaryCases(n: number): number[][] {
   const result = [];
   for (let y = 0; y < Math.pow(2, n); y++) {
     const combo = [];
@@ -100,7 +101,7 @@ function binaryCases(n: number): number[][] {
 *
 *   @returns the ascii string
 */
-function getASCII(min: number, max: number): string {
+export function getASCII(min: number, max: number): string {
   let alpha = "";
   for (let i = min; i < max; i++) {
     alpha += String.fromCharCode(i);
@@ -108,13 +109,3 @@ function getASCII(min: number, max: number): string {
 
   return alpha;
 }
-
-export default {
-  replaceAll,
-  binaryCases,
-  getASCII,
-  removeWhiteSpace,
-  whitespace,
-  removeDuplicates,
-  sortString,
-};

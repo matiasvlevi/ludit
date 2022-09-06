@@ -1,22 +1,15 @@
-import Tokenizer from "./index";
+import { error, TokenizerReturn } from "../types";
+import * as ErrorHandler from "../ErrorHandler";
+import * as Utils from "../Utils";
 
-import Utils from "../Utils";
+import * as Tokenizer from ".";
 
-import { ErrorHandler } from "../ErrorHandler";
-import { error } from "../types";
-
-import Heap from "../Heap";
-import Token from "../Token";
-import TreeNode from "../TreeNode";
-
-interface TokenizerReturn {
-    tokens: Array<Token|TreeNode>;
-    profile: string;
-    isDef: boolean;
-}
+import { Token } from "../Token";
+import { TreeNode } from "../TreeNode";
+import { Heap } from "../Heap";
 
 /**
-*	Tokenizes a given expression
+ *	Tokenizes a given expression
 *
 *   @param heap - Object containing defined function data
 *   @param expression - The expression to tokenize
@@ -87,7 +80,7 @@ export function process(
         const keyword = Tokenizer.KEYWORD[word];
 
         if (keyword.type === "function") {
-          // Add the special keyword token
+        // Add the special keyword token
           tokens.push(new Token(
             [...exp].splice(i, 3).join(""),
             keyword.type,
@@ -100,7 +93,7 @@ export function process(
       } else if (word) {
         // Not a special keyword, but word is defined?
         if (Tokenizer.isDef(tokens)) {
-          // If Function is definition
+        // If Function is definition
           lineDef = word;
           tokens.push(new Token(
             word,
@@ -108,8 +101,8 @@ export function process(
             -1, i + startAt,
           ));
         } else {
-          // If Function is called
-          // Push the function's name as a token
+        // If Function is called
+        // Push the function's name as a token
           tokens.push(new Token(
             word,
             "functionCall",

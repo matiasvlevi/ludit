@@ -1,161 +1,96 @@
-import { handleCall } from "./handleCall";
-import {
-  getKeyword,
+/**
+* The Tokenizer Module handles parsing raw text lines into meaningfull Tokens
+*
+*/
+import * as Utils from "../Utils";
+
+/**
+* Methods
+*/
+export { handleCall } from './handleCall'
+export { process } from './process'
+export { 
   isDef,
   isSpecificCall,
   skipFieldCall,
-} from "./methods";
-import { process } from "./process";
+  getKeyword
+} from './methods'
 
-import Utils from "../Utils";
-
-import {
-  Map,
-  operation,
-  syntax,
-} from "../types";
 
 /**
-* The Tokenizer handles parsing raw text lines into meaningfull Tokens
-*
-* All methods are static this class is used as a Namespace
+* Character reference constants
 */
-export default class Tokenizer {
-  /*
-  * File methods
-  */
-  public static process = process;
-  public static handleCall = handleCall;
-  public static isDef = isDef;
-  public static skipFieldCall = skipFieldCall;
-  public static getKeyword = getKeyword;
-  public static isSpecificCall = isSpecificCall;
+export const ALPHA: string           = Utils.getASCII(65, 91);
+export const ALPHA_LOWERCASE: string = ALPHA.toLocaleLowerCase();
+export const NUMERAL: string         = Utils.getASCII(48, 57);
+export const WHITESPACE = " ";
 
-  /*
-  * Keyword or Character maps for tokens
-  */
-  public static KEYWORD: Map<syntax> = {
-    def: {
-      type: "function",
-      priority: -1,
-    },
-  };
+/*
+* Keyword or Character maps for tokens
+*/
 
-  public static CONSTANT: Map<syntax> = {
-    0: {
-      type: "constant",
-      priority: -1,
-    },
-    1: {
-      type: "constant",
-      priority: -1,
-    },
-  };
+export { 
+  KEYWORD,
+  CONSTANT,
+  FUNCTION,
+  SYNTAX,
+  OPERATORS
+} from './keywords'
 
-  public static FUNCTION: Map<syntax> = {
-    "=": {
-      type: "operator",
-      priority: 0.5,
-    },
-  };
 
-  public static SYNTAX: Map<syntax> = {
-    "(": {
-      type: "open",
-      priority: 0,
-    },
-    ")": {
-      type: "close",
-      priority: 0,
-    },
-  };
+import { CONSTANT, SYNTAX, OPERATORS } from "./keywords";
 
-  public static OPERATORS: Map<operation> = {
-    "+": {
-      type: "operator",
-      priority: 1,
-      op: (a: boolean, b: boolean) => (a || b),
-    },
-    "*": {
-      type: "operator",
-      priority: 2,
-      op: (a: boolean, b: boolean) => (a && b),
-    },
-    "!": {
-      type: "operator",
-      priority: 3,
-      op: (a: boolean, b: boolean) => (!b),
-    },
-    "'": {
-      type: "operator",
-      priority: 3,
-      op: (a: boolean, b: boolean) => (!b),
-    },
-  };
-
-  /**
-  * Character reference constants
-  *
-  */
-
-  public static ALPHA: string      = Utils.getASCII(65, 91);
-  public static ALPHA_L: string    = Tokenizer.ALPHA.toLocaleLowerCase();
-  public static NUMERAL: string    = Utils.getASCII(48, 57);
-  public static WHITESPACE = " ";
-
-  /**
+/**
   * Condition methods
   *
   *   @param char - Character to compare to an other
   *
   *   @returns wheter or not the character fits the condition
   */
-
-  public static isVariable(char: string): boolean {
-    return Tokenizer.ALPHA.includes(char);
-  }
-
-  public static isOperator(char: string): boolean {
-    return Tokenizer.OPERATORS[char] !== undefined;
-  }
-
-  public static isReserved(char: string): boolean {
-    return (
-      Tokenizer.isOperator(char) ||
-            Tokenizer.SYNTAX[char] !== undefined
-    );
-  }
-
-  public static isNumeral(char: string): boolean {
-    return Tokenizer.NUMERAL.includes(char);
-  }
-
-  public static isAssign(char: string): boolean {
-    return char === "=";
-  }
-
-  public static isBrackets(char: string): boolean {
-    return Tokenizer.SYNTAX[char] !== undefined;
-  }
-
-  public static isConstant(char: string): boolean {
-    return Tokenizer.CONSTANT[char] !== undefined;
-  }
-
-  public static isWhiteSpace(char: string): boolean {
-    return Tokenizer.WHITESPACE.includes(char);
-  }
-
-  public static isLowerCase(char: string): boolean {
-    return Tokenizer.ALPHA_L.includes(char);
-  }
-
-  public static newScope(char: string): boolean {
-    return char === "(";
-  }
-
-  public static endScope(char: string): boolean {
-    return char === ")";
-  }
-
+export function isVariable(char: string): boolean {
+  return ALPHA.includes(char);
 }
+
+export function isOperator(char: string): boolean {
+  return OPERATORS[char] !== undefined;
+}
+
+export function isReserved(char: string): boolean {
+  return (
+    isOperator(char) ||
+            SYNTAX[char] !== undefined
+  );
+}
+
+export function isNumeral(char: string): boolean {
+  return NUMERAL.includes(char);
+}
+
+export function isAssign(char: string): boolean {
+  return char === "=";
+}
+
+export function isBrackets(char: string): boolean {
+  return SYNTAX[char] !== undefined;
+}
+
+export function isConstant(char: string): boolean {
+  return CONSTANT[char] !== undefined;
+}
+
+export function isWhiteSpace(char: string): boolean {
+  return WHITESPACE.includes(char);
+}
+
+export function isLowerCase(char: string): boolean {
+  return ALPHA_LOWERCASE.includes(char);
+}
+
+export function newScope(char: string): boolean {
+  return char === "(";
+}
+
+export function endScope(char: string): boolean {
+  return char === ")";
+}
+

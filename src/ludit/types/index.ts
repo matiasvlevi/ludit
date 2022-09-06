@@ -1,3 +1,6 @@
+import { Token } from '../Token'
+import { TreeNode } from '../TreeNode'
+
 /**
 * Datatype representing syntax characters or keywords
 *
@@ -30,6 +33,29 @@ export interface operation {
 */
 export interface Map<T> {
     [key: string]: T;
+}
+
+/**
+* datatype returned by handleCall
+*
+*   @param defaultParams - wheter or not the function uses its default parameters
+*   @param newLocation - The location after the function call
+*   @param argProfile - The profile of the function in the argument field
+*
+*/
+export interface handleCallReturn {
+    defaultParams: boolean;
+    newLocation: number;
+    argProfile: string[];
+}
+
+/**
+* Datatype for returning tokens 
+*/
+export interface TokenizerReturn {
+    tokens: Array<Token|TreeNode>;
+    profile: string;
+    isDef: boolean;
 }
 
 /**

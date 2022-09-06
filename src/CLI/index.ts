@@ -1,21 +1,22 @@
-import { writeFileSync } from "node:fs";
-import Utils from "../ludit/Utils";
+import * as Utils from "../ludit/Utils";
+
 import { argv, option } from "./options";
 import { queries as QUERIES } from "./options/queries";
 
-import Token from "../ludit/Token";
-import TreeNode from "../ludit/TreeNode";
+import {Token} from "../ludit/Token";
+import {TreeNode} from "../ludit/TreeNode";
 import { luditLineReturn, Map } from "../ludit/types";
+
+import * as Preparser from "../ludit/Preparser"
 
 import {
   Assembler,
   Heap,
-  Preparser,
   Processor,
   Tokenizer,
 } from "../ludit/Core";
 
-export default class CLI {
+export class CLI {
 
   public static applyValues(expression: string, values: string, profile: string) {
     for (let i = 0; i < profile.length; i++) {
@@ -194,7 +195,7 @@ export default class CLI {
     }
     if (!this.noprint) { process.stdout.write(csv); }
     if (filename !== undefined) {
-      writeFileSync(filename, csv, "utf-8");
+      Utils.writeFileSync(filename, csv, "utf-8");
     }
   }
 

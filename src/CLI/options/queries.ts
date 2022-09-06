@@ -1,5 +1,5 @@
 import { Map } from "../../ludit/types";
-import CLI from "../index";
+import {CLI} from "../index";
 
 export type optionAction = (cli: CLI, param: string) => void;
 

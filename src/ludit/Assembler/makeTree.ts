@@ -1,12 +1,12 @@
-import Assembler from "./index";
-
-import { ErrorHandler } from "../ErrorHandler";
+import * as ErrorHandler from "../ErrorHandler";
 import { error } from "../types";
 
-import Heap from "../Heap";
-import Token from "../Token";
-import Tokenizer from "../Tokenizer";
-import TreeNode from "../TreeNode";
+import * as Tokenizer from "../Tokenizer";
+import * as Assembler from "./index";
+
+import {Token} from "../Token";
+import {TreeNode} from "../TreeNode";
+import {Heap} from "../Heap";
 
 /**
  * generate a TreeNode based on the parsed tokens

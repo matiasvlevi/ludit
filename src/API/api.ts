@@ -1,4 +1,4 @@
-import CLI from "../CLI";
+import {CLI} from "../CLI";
 import { luditReturn } from "../ludit/types";
 
 import {
@@ -12,7 +12,7 @@ import {
 * it serves the same purpose as the CLI class, but it can not load files,
 * it can only read the given multiline expression
 */
-export default class API extends CLI {
+export class API extends CLI {
 
   public multiLine(
     file: string

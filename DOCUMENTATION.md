@@ -157,6 +157,8 @@ Vim syntax highlighting for ludi is provided here
 <br/>
 <br/>
 
+More detailed documentation about the source code of Ludit/Ludi can be found [here](https://raw.githack.com/matiasvlevi/ludit/dev/docs/index.html)
+
 ---
 
 MIT Licence 2022     

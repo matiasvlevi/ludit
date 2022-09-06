@@ -1,9 +1,8 @@
-import { ErrorHandler } from "../ErrorHandler";
+import * as ErrorHandler from "../ErrorHandler";
 
-import Heap from "../Heap";
-import Token from "../Token";
-import TreeNode from "../TreeNode";
-
+import {Heap} from "../Heap";
+import {Token} from "../Token";
+import {TreeNode} from "../TreeNode";
 import { error, Map } from "../types";
 
 /**

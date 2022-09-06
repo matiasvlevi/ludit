@@ -1,8 +1,8 @@
-import { ErrorHandler } from "../ErrorHandler";
+import * as ErrorHandler from "../ErrorHandler";
 import { error, errorCall, Map } from "../types";
 
-import Token from "../Token";
-import TreeNode from "../TreeNode";
+import {Token} from "../Token";
+import {TreeNode} from "../TreeNode";
 
 interface HeapSlot {
     tree: TreeNode | undefined;
@@ -15,7 +15,7 @@ interface HeapSlot {
 *
 * This class is used to create a Heap instance
 */
-export default class Heap {
+export class Heap {
 
   public static emptyTree = new TreeNode(new Token("", "", -1, -1), -1);
 

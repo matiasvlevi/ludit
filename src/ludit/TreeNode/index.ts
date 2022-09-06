@@ -1,8 +1,8 @@
-import Token from "../Token";
-import Tokenizer from "../Tokenizer";
+import {Token} from "../Token";
+import * as Tokenizer from "../Tokenizer";
 import { Map } from "../types";
 
-export default class TreeNode {
+export class TreeNode {
   public value: Token;
   public left: TreeNode | Token | undefined;
   public right: TreeNode | Token | undefined;

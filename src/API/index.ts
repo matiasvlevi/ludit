@@ -1,4 +1,4 @@
-import API from "./api";
+import {API} from "./api";
 
 import { option, Options } from "../CLI/options";
 import { error, errorCall, luditReturn, Map } from "../ludit/types";
@@ -12,7 +12,7 @@ import { error, errorCall, luditReturn, Map } from "../ludit/types";
 *
 *	@returns An array of the output of each line
 */
-module.exports = function ludit(
+export = function ludit(
   expression: string,
   callback: errorCall = (e: error) => (e),
   options: Map<string> = {},

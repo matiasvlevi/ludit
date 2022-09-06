@@ -1,10 +1,9 @@
-
 /**
 * Token Class
 *
 *   Serves as a character or keyword with special meaning
 */
-export default class Token {
+export class Token {
   public literal: string;
   public type: string;
   public priority: number;

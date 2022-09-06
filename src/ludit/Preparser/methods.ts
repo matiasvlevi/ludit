@@ -1,8 +1,8 @@
-import Preparser from "./index";
+import * as Preparser from "./index";
 
 import fs from "node:fs";
 
-import { ErrorHandler } from "../ErrorHandler";
+import * as ErrorHandler from "../ErrorHandler";
 import { error } from "../types";
 
 /**
@@ -69,7 +69,7 @@ export function getPath(fullpath: string): string {
 /**
 * get the content in between double quotes
 *
-* @returns the content
+*   @returns the content
 */
 export function parseQuotes(text: string): string {
   return text.slice(1, text.length - 1);

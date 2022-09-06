@@ -1,7 +1,6 @@
-import Tokenizer from "./index";
-
-import Token from "../Token";
-import TreeNode from "../TreeNode";
+import * as Tokenizer from ".";
+import { Token } from "../Token";
+import { TreeNode } from "../TreeNode";
 
 /**
  * get the entire keyword from the expression array
@@ -89,7 +88,7 @@ export function skipFieldCall(
   exp: string[],
   j: number,
 ): number {
-  // Skip function call if exists
+// Skip function call if exists
   const keyword = Tokenizer.getKeyword(exp, j);
 
   if (keyword.length > 0 && exp[j + keyword.length] === "(") {
