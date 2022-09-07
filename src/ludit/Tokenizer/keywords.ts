@@ -20,18 +20,27 @@ export const ATTRIBUTE_DECLARATION: Map<syntax> = {
 
 export const ATTRIBUTES: Map<attribute> = {
   "r": {
-    action: (app: CLI) => {
+    char: 'r',
+    action: (app: CLI, char:string) => {
       app.attributes.reverse = true;
     }
   },
   "k": {
-    action: (app: CLI) => {
+    char: 'r',
+    action: (app: CLI, char:string) => {
       app.attributes.karnaugh = true;
     }
   },
   "t": {
-    action: (app: CLI) => {
+    char: 'r',
+    action: (app: CLI, char:string) => {
       app.attributes.table = true;
+    }
+  },
+  "numeric": {
+    char: '0',
+    action: (app: CLI, char:string) => {
+      app.attributes.cases = +char;
     }
   }
 }

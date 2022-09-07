@@ -30,9 +30,13 @@ export interface syntax {
 */
 export interface attribute {
   /**
+  * The attribute character
+  */ 
+  char: string
+  /**
   * The action the attribute performs, acting upon the CLI instance
   */ 
-  action: (app:CLI) => void;
+  action: (app:CLI, char:string) => void;
 }
 
 /**
@@ -57,6 +61,14 @@ export interface attributeConfig {
   * this attribute is set with `~r`
   */ 
   reverse: boolean;
+  
+  /**
+  * Specify a number of cases to print
+  *
+  * Usefull for tables meant for 7 segment digis, 
+  * or any other system with binary cases trucated 
+  */ 
+  cases: number;
 }
 
 /**

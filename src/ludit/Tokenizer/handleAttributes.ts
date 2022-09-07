@@ -1,7 +1,7 @@
 import { Heap } from '../Heap'
 
 import { attribute } from '../types'
-import { isAttribute, ATTRIBUTES } from './index'
+import { isAttribute, getAttribute, isNumeral } from './index'
 
 export function handleAttributes(
   heap: Heap,
@@ -11,14 +11,22 @@ export function handleAttributes(
 ):number {
   let attributes: attribute[] = [];
   let i = currentChar+1;
-
+  let numericAttribute = '';
   while(
     isAttribute(exp[i]) &&
     i < exp.length
   ) {
-    attributes.push(ATTRIBUTES[exp[i]]);
+    if (isNumeral(exp[i])) 
+      numericAttribute += exp[i];
+    else { 
+      if (numericAttribute.length > 0) {
+        attributes.push(getAttribute(numericAttribute));
+      }
+      attributes.push(getAttribute(exp[i]));
+    }
     i++; 
   }
+
 
   heap.setAttributes(currentLine, attributes);
   return i;

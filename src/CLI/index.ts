@@ -71,7 +71,8 @@ export class CLI {
   public static DEFAULT_ATTRIBUTE_CONFIG:attributeConfig = {
     reverse: false,
     karnaugh: false,
-    table: true
+    table: true,
+    cases: -1
   }
 
   public initAttributes() {
@@ -185,13 +186,14 @@ export class CLI {
     let attributes: attribute[]|undefined = this.heap.getAttributes(currentLine);
     if (attributes !== undefined) {
       for (let i = 0; i < attributes.length; i++) {
-        attributes[i].action(this);
+        attributes[i].action(this, attributes[i].char);
       } 
     }
 
     const cases = Utils.binaryCases(
       this.profile.length,
-      this.attributes.reverse
+      this.attributes.reverse,
+      this.attributes.cases
     );
     const output: Array<Map<number>> = [];
 

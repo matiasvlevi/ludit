@@ -67,7 +67,16 @@ export function isAttributeDeclaration(char: string) {
 }
 
 export function isAttribute(char: string):boolean {
-  return Object.keys(ATTRIBUTES).includes(char);
+  return Object.keys(ATTRIBUTES).includes(char) ||
+         NUMERAL.includes(char);
+}
+
+export function getAttribute(char:string) {
+  if (isValue(char)) { 
+    let att = ATTRIBUTES['numeric']; 
+    att.char = char;
+    return att;
+  } else return ATTRIBUTES[char];
 }
 
 export function isOperator(char: string): boolean {
@@ -83,6 +92,10 @@ export function isReserved(char: string): boolean {
 
 export function isNumeral(char: string): boolean {
   return NUMERAL.includes(char);
+}
+
+export function isValue(str: string): boolean {
+  return NUMERAL.includes(str[0]);
 }
 
 export function isAssign(char: string): boolean {

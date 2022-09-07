@@ -82,10 +82,16 @@ export function removeDuplicates(text: string): string {
 */
 export function binaryCases(
   n: number,
-  reverse = true
+  reverse = true,
+  max = -1
 ): number[][] {
   const result = [];
-  for (let y = 0; y < Math.pow(2, n); y++) {
+  
+  let length = (max === -1) ?
+    Math.pow(2, n) :
+    Math.min(Math.pow(2, n), max)
+
+  for (let y = 0; y < length; y++) {
     const combo = [];
     for (let x = 0; x < n; x++) {
       combo.push((y >> x) & 1);
