@@ -18,7 +18,8 @@ import { Heap } from "../Heap";
 *	  @param tokens - List of current tokens
 *	  @param exp - the expression as an array
 *	  @param word - the called function's name
-*	  @param i - the current location in the expression
+*	  @param currentChar - the current location in the expression
+*	  @param currentLine - The current line number in the file
 *	  @param e - The error data in case on gets thrown
 *
 *   @returns data about the function call
@@ -29,10 +30,11 @@ export function handleCall(
   exp: string[],
   word: string,
   profile: string[],
-  i: number,
+  currentLine: number,
+  currentChar: number,
   e: error,
 ): handleCallReturn {
-  let start = i + word.length + 1;
+  let start = currentChar + word.length + 1;
   let j = start;
 
   e.char = j;
@@ -97,7 +99,7 @@ export function handleCall(
       tokens.push(new Token(
         argExpression,
         "constant",
-        -1, i,
+        -1, currentChar
       ));
 
       // Increment j and start at j
@@ -108,11 +110,11 @@ export function handleCall(
     }
 
     // Create tokens for the argument field
-    const arg = Tokenizer.process(heap, argExpression, e, start);
+    const arg = Tokenizer.process(heap, argExpression, e, currentLine,start);
 
     if (arg.tokens.length === 0) {
       ErrorHandler.badArgumentSpecification(
-        a, expectedArgs.length, heap, e,
+        a, expectedArgs.length, heap, e
       );
     }
     e.char = j - 1;

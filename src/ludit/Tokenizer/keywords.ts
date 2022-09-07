@@ -1,4 +1,5 @@
-import { Map, syntax, operation } from "../types";
+import { CLI } from '../../CLI'
+import { Map, syntax, operation, attribute } from "../types";
 
 /*
 * Keyword or Character maps for tokens
@@ -7,8 +8,33 @@ export const KEYWORD: Map<syntax> = {
   def: {
     type: "function",
     priority: -1,
-  }
+  } 
 };
+
+export const ATTRIBUTE_DECLARATION: Map<syntax> = {
+  "~": {
+    type: 'attributeKey',
+    priority: -1
+  }
+}
+
+export const ATTRIBUTES: Map<attribute> = {
+  "r": {
+    action: (app: CLI) => {
+      app.attributes.reverse = true;
+    }
+  },
+  "k": {
+    action: (app: CLI) => {
+      app.attributes.karnaugh = true;
+    }
+  },
+  "t": {
+    action: (app: CLI) => {
+      app.attributes.table = true;
+    }
+  }
+}
 
 export const CONSTANT: Map<syntax> = {
   "0": {

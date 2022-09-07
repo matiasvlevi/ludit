@@ -8,7 +8,9 @@ import * as Utils from "../Utils";
 * Methods
 */
 export { handleCall } from './handleCall'
+export { handleAttributes } from './handleAttributes'
 export { process } from './process'
+
 export { 
   isDef,
   isSpecificCall,
@@ -23,7 +25,7 @@ export {
 export const ALPHA: string           = Utils.getASCII(65, 91);
 export const ALPHA_LOWERCASE: string = ALPHA.toLocaleLowerCase();
 export const NUMERAL: string         = Utils.getASCII(48, 57);
-export const WHITESPACE = " ";
+export const WHITESPACE              = " ";
 
 /*
 * Keyword or Character maps for tokens
@@ -34,11 +36,20 @@ export {
   CONSTANT,
   FUNCTION,
   SYNTAX,
-  OPERATORS
+  OPERATORS,
+  ATTRIBUTE_DECLARATION,
+  ATTRIBUTES
 } from './keywords'
 
 
-import { CONSTANT, SYNTAX, OPERATORS } from "./keywords";
+import {
+  CONSTANT,
+
+  ATTRIBUTE_DECLARATION,
+  ATTRIBUTES,
+  SYNTAX,
+  OPERATORS
+} from "./keywords";
 
 /**
   * Condition methods
@@ -49,6 +60,14 @@ import { CONSTANT, SYNTAX, OPERATORS } from "./keywords";
   */
 export function isVariable(char: string): boolean {
   return ALPHA.includes(char);
+}
+
+export function isAttributeDeclaration(char: string) {
+  return Object.keys(ATTRIBUTE_DECLARATION).includes(char);
+}
+
+export function isAttribute(char: string):boolean {
+  return Object.keys(ATTRIBUTES).includes(char);
 }
 
 export function isOperator(char: string): boolean {

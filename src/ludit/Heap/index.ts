@@ -1,5 +1,6 @@
+
 import * as ErrorHandler from "../ErrorHandler";
-import { error, errorCall, Map } from "../types";
+import { error, errorCall, attribute, Map } from "../types";
 
 import {Token} from "../Token";
 import {TreeNode} from "../TreeNode";
@@ -22,12 +23,25 @@ export class Heap {
   public data: Map<HeapSlot>;
   public error: error | undefined;
   public errorCall: (errorCall|undefined);
+  public lineAttributes: Map<attribute[]>;
 
   constructor() {
     this.data = {};
+    this.lineAttributes = {};
     this.error = undefined;
-    this.errorCall = undefined;
+    this.errorCall = undefined; 
   }
+  
+  public setAttributes(key:number, value:attribute[]) {
+    this.lineAttributes[`${key}`] = value;
+  }
+
+  public getAttributes(key:number): attribute[]|undefined {
+    if (this.lineAttributes[`${key}`] === undefined)
+      return;
+
+    return this.lineAttributes[key];
+  } 
 
   public hasError() {
     return this.error !== undefined;

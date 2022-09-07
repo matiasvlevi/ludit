@@ -12,7 +12,7 @@ import { error, errorCall, luditReturn, Map } from "../ludit/types";
 *
 *	@returns An array of the output of each line
 */
-export = function ludit(
+function ludit(
   expression: string,
   callback: errorCall = (e: error) => (e),
   options: Map<string> = {},
@@ -46,4 +46,6 @@ export = function ludit(
 
   // Start the ludit core process and return its output
   return api.multiLine(expression);
-};
+}
+
+export = ludit;

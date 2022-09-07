@@ -10,16 +10,27 @@ syn match Identifier "*"
 syn match Float "+"
 syn match Repeat "!"
 syn match Repeat "'"
+
 syn match String "-.*$"
 syn match String "\".*\""
 
+syn match Function "\l"
+
+" Constants
 syn match Number "0"
 syn match Number "1"
 
-syn match Function "\l"
+
+" Define keyword
 syn match Repeat "\<include\>"
 syn match Repeat "\<def\>"
+
+syn match Statement  /\~\w\+/
+
+" Function definition and calls
+
 syn match Function /\w\+\s*\(=\|(\)/me=e-1,he=e-1 
+syn match Function /\(\w\)\@<=[0-9]/
 
 syn keyword ludiTodo contained AND OR XOR XNOR NOR NAND NOT BUFFER
 syn match ludiComment "#.*$" contains=ludiTodo

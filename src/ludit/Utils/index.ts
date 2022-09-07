@@ -80,7 +80,10 @@ export function removeDuplicates(text: string): string {
 *
 *   @returns all the binary cases
 */
-export function binaryCases(n: number): number[][] {
+export function binaryCases(
+  n: number,
+  reverse = true
+): number[][] {
   const result = [];
   for (let y = 0; y < Math.pow(2, n); y++) {
     const combo = [];
@@ -88,7 +91,9 @@ export function binaryCases(n: number): number[][] {
       combo.push((y >> x) & 1);
     }
 
-    result.push(combo.reverse());
+    result.push(
+      (reverse) ? combo : combo.reverse()
+    );
   }
   return result;
 }

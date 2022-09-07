@@ -1,4 +1,4 @@
-import { error, TokenizerReturn } from "../types";
+import { error, syntax, TokenizerReturn } from "../types";
 import * as ErrorHandler from "../ErrorHandler";
 import * as Utils from "../Utils";
 
@@ -22,6 +22,7 @@ export function process(
   heap: Heap,
   expression: string,
   e: error,
+  currentLine = 0,
   startAt = 0,
 ): TokenizerReturn {
 
@@ -47,7 +48,7 @@ export function process(
         // Add variable if is 'not' operator detected
         if (char === "!" || char === "'") {
           tokens.push(new Token(
-            ".", "variable", -1, i,
+            ".", "variable", -1, i
           ));
         }
 
@@ -71,6 +72,19 @@ export function process(
         "variable",
         -1, i + startAt,
       ));
+    } else if (Tokenizer.isAttributeDeclaration(char)) {
+      const dec:syntax = Tokenizer.ATTRIBUTE_DECLARATION[char];
+
+      if (dec.type === "attributeKey") {
+        let j = Tokenizer.handleAttributes(heap, exp, currentLine, i);
+        
+        // Throw an error if attributeKey is alone
+        if (j === i+1) {
+          e.char = i;
+          ErrorHandler.unexpectedIdentifier(heap, e);
+        }
+        i = j;
+      }
     } else if (Tokenizer.isLowerCase(char)) { // KEYWORD DETECTION
 
       const word = Tokenizer.getKeyword(exp, i);
@@ -117,7 +131,7 @@ export function process(
             defaultParams,
           } = Tokenizer.handleCall(
             heap, tokens, exp,
-            word, profile, i, e,
+            word, profile, currentLine, i, e
           );
           // If not using the default parameters,
           // set the new profile, and change location to after the function

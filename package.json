@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p ./src/",
     "build-test": "tsc -p ./tsconfig.unit.json",
-    "doc": "typedoc ./src --out ./docs --entryPoints ./src/ludit/Core.ts",
+    "doc": "typedoc ./src --out ./docs --entryPoints ./src/ludit/Core.ts ./src/ludit/types/index.ts --entryPointStrategy expand",
     "lint": "eslint ./src --ext .ts --fix",
     "test": "mocha ./test/bin/test --reporter ./test/bin/test/reporter.js",
     "start": "node ./bin/index.js"
@@ -34,6 +34,7 @@
     "eslint": "^8.23.0",
     "mocha": "^10.0.0",
     "typedoc": "^0.23.14",
+    "typedoc-custom-theme-demo": "file:../typedoc-demo",
     "typedoc-theme-hierarchy": "^3.0.0"
   },
   "bin": {

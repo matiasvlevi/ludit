@@ -1,51 +1,124 @@
+import { CLI } from '../../CLI'
 import { Token } from '../Token'
 import { TreeNode } from '../TreeNode'
 
 /**
 * Datatype representing syntax characters or keywords
-*
-*   @param type - The type of the character or keyword
-*   @param priority - The priority of the character or keyword
-*
 */
 export interface syntax {
+    /**
+    * The type of the character or keyword
+    */ 
     type: string;
+    /**
+    * The priority of the character or keyword
+    */
     priority: number;
 }
 
 /**
-* Datatype representing an operation
+* Datatype representing an attribute
 *
-*   @param type - The type of the operation
-*   @param priority - The priority of the expression
-*   @param op - The boolean operation of the operator
+* @remark
+* Attributes can be specified with the `~` keyword 
+*  
+* @example
+* This is an example with the `reverse` attribute
+* ```py
+* A + B * C ~r
+* ```
+*/
+export interface attribute {
+  /**
+  * The action the attribute performs, acting upon the CLI instance
+  */ 
+  action: (app:CLI) => void;
+}
+
+/**
+* Datatype representing the object stored in CLI which records what attributes were set
+*/
+export interface attributeConfig {
+  /**
+  * print a table to the console (default)
+  *
+  * this attribute is set with `~t`
+  */ 
+  table: boolean;
+  /**
+  * print a karnaugh table to the console
+  *
+  * this attribute is set with `~k`
+  */ 
+  karnaugh: boolean;
+  /**
+  * reverse the table labels, ex: `ABCD` becomes `DCBA`
+  *
+  * this attribute is set with `~r`
+  */ 
+  reverse: boolean;
+}
+
+/**
+* Datatype determining how a for loop should operate
+*/ 
+export interface Iterator {
+  /**
+  * The start value of the iterator
+  */
+  start: number
+  /**
+  * When should the iterator run
+  */
+  condition: (j:number) => boolean
+  /**
+  * index change for every iteration 
+  */
+  increment: number
+}
+
+/**
+* Datatype representing an operation keyword
 */
 export interface operation {
+    /**
+    * The type of the operation
+    */ 
     type: string;
+    /**
+    * The priority of the expression
+    */ 
     priority: number;
+    /**
+    * The boolean operation of the operator
+    */ 
     op: (a: boolean, b: boolean) => boolean;
 }
 
 /**
 *   Datatype for storing key-value pairs, kays are always strings
 *
-*   @typeParam T - The type of the map
+*   @typeParam T - Type of value to store in the map
 */
 export interface Map<T> {
     [key: string]: T;
 }
 
 /**
-* datatype returned by handleCall
-*
-*   @param defaultParams - wheter or not the function uses its default parameters
-*   @param newLocation - The location after the function call
-*   @param argProfile - The profile of the function in the argument field
-*
+* Datatype returned by handleCall
 */
 export interface handleCallReturn {
+    /**
+    * wheter or not the function uses its default parameters
+    */ 
     defaultParams: boolean;
+    /**
+    * The location after the function call is iterated over
+    */ 
     newLocation: number;
+    /**
+    * The profile of the function in the argument field
+    */ 
     argProfile: string[];
 }
 
@@ -53,23 +126,39 @@ export interface handleCallReturn {
 * Datatype for returning tokens 
 */
 export interface TokenizerReturn {
+    /**
+    * The token array
+    */ 
     tokens: Array<Token|TreeNode>;
+    /**
+    * The variables used as an alphabetically sorted string
+    */ 
     profile: string;
+    /**
+    * Whether or not the processed line is a function definition
+    */ 
     isDef: boolean;
 }
 
 /**
 * Datatype for storing error data
-*
-*   @param line - The line number of an error
-*   @param char - The column number of an error
-*   @param text - The raw text of expression causing the error
-*   @param msg  - The error message (optional)
 */
 export interface error {
+    /**
+    * The line number of an error
+    */ 
     line: number;
+    /**
+    * The column number of an error
+    */ 
     char: number;
+    /**
+    * The raw text of expression causing the error
+    */ 
     text: string;
+    /**
+    * The error message (optional)
+    */ 
     msg?: string;
 }
 

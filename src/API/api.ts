@@ -31,7 +31,7 @@ export class API extends CLI {
       const { tokens, profile, isDef } = Tokenizer.process(
         this.heap,
         line,
-        { line: currentLine, char: -1, text: document[i]},
+        { line: currentLine, char: -1, text: document[i]}, i
       );
 
       this.profile = profile; // Save profile (Variables used in line or definition)

@@ -5,7 +5,13 @@ import { queries as QUERIES } from "./options/queries";
 
 import {Token} from "../ludit/Token";
 import {TreeNode} from "../ludit/TreeNode";
-import { luditLineReturn, Map } from "../ludit/types";
+import { 
+  luditLineReturn,
+  attributeConfig,
+  attribute,
+  Iterator,
+  Map
+} from "../ludit/types";
 
 import * as Preparser from "../ludit/Preparser"
 
@@ -18,13 +24,6 @@ import {
 
 export class CLI {
 
-  public static applyValues(expression: string, values: string, profile: string) {
-    for (let i = 0; i < profile.length; i++) {
-      expression = Utils.replaceAll(expression, profile[i], values[i]);
-    }
-    return expression;
-  }
-
   public profile: string;
   public tree: TreeNode;
   public options: Map<option>;
@@ -32,6 +31,7 @@ export class CLI {
   public heap: Heap;
   public path: string | undefined;
   public noprint: boolean;
+  public attributes: attributeConfig;
 
   constructor(options: argv, noRun = false) {
     this.noprint = false;
@@ -43,6 +43,8 @@ export class CLI {
       new Token("", "", -1, -1),
     );
 
+    this.attributes = {...CLI.DEFAULT_ATTRIBUTE_CONFIG}
+    
     this.profile = "";
     this.expression = options.argument;
     this.options = options.queries;
@@ -64,6 +66,16 @@ export class CLI {
       this.inline();
 
     } else { this.main(); }
+  }
+
+  public static DEFAULT_ATTRIBUTE_CONFIG:attributeConfig = {
+    reverse: false,
+    karnaugh: false,
+    table: true
+  }
+
+  public initAttributes() {
+    this.attributes = {...CLI.DEFAULT_ATTRIBUTE_CONFIG};
   }
 
   public inline() {
@@ -114,7 +126,7 @@ export class CLI {
       const { tokens, profile, isDef } = Tokenizer.process(
         this.heap,
         line,
-        { line: currentLine, char: -1, text: file[i]},
+        { line: currentLine, char: -1, text: file[i]}, i
       );
 
       this.profile = profile; // Save profile (Variables used in line or definition)
@@ -128,7 +140,7 @@ export class CLI {
       });
 
       // Dont compute and print if is a definition
-      if (!isDef) { this.main(); }
+      if (!isDef) { this.main(i); }
     }
 
   }
@@ -140,42 +152,79 @@ export class CLI {
   // Calculate a single case
   public runSingle(_input: string) {
     const input = _input.split("").map((x) => +x);
-    const output = +Processor.calculate(this.tree, this.profile, input);
+    const output = +Processor.calculate(this.tree, this.profile, input); 
 
-    if (!this.noprint) { console.log(`${CLI.applyValues(
-      this.expression,
-      _input,
-      this.profile,
-    )} = \x1b[33m${output}\x1b[0m`);
+    if (!this.noprint) { 
+      console.log(`${CLI.applyValues(
+        this.expression,
+        _input,
+        this.profile,
+      )} = \x1b[33m${output}\x1b[0m`);
     }
   }
 
   public printSingle() {
-    if (!this.noprint) { console.log(
-      `${this.expression} = ` +
+    if (!this.noprint) { 
+      console.log(
+        `${this.expression} = ` +
             `\x1b[33m${+Processor.calculate(this.tree, this.profile, [])}\x1b[0m`,
-    );
+      );
     }
   }
 
   // Calculate a truth table
-  public run(): luditLineReturn {
+  public run(currentLine = 0): luditLineReturn {
     // Run specific function call
     if (this.profile.length === 0) {
       this.printSingle();
       return [];
     }
 
-    const cases = Utils.binaryCases(this.profile.length);
+    this.initAttributes();
+
+    let attributes: attribute[]|undefined = this.heap.getAttributes(currentLine);
+    if (attributes !== undefined) {
+      for (let i = 0; i < attributes.length; i++) {
+        attributes[i].action(this);
+      } 
+    }
+
+    const cases = Utils.binaryCases(
+      this.profile.length,
+      this.attributes.reverse
+    );
     const output: Array<Map<number>> = [];
+
+    // Iterate forward or backwards
+    let profileIterator:Iterator = { 
+      start: 0,
+      condition: (j)=>(j<this.profile.length),
+      increment: 1
+    }
+    if (this.attributes.reverse) 
+      profileIterator = { 
+        start: this.profile.length-1,
+        condition: (j) => (j>=0),
+        increment: -1
+      }
 
     for (let i = 0; i < cases.length; i++) {
 
       const row: Map<number> = {};
-      for (let j = 0; j < this.profile.length; j++) {
+      for (
+        let j = profileIterator.start;
+        profileIterator.condition(j);
+        j+=profileIterator.increment
+      ) {
         row[this.profile[j]] = cases[i][j];
       }
-      row.out = +Processor.calculate(this.tree, this.profile, cases[i]);
+      
+      row.out = +Processor.calculate(
+        this.tree,
+        this.profile,
+        cases[i]
+      );
+
       output.push(row);
     }
 
@@ -199,8 +248,8 @@ export class CLI {
     }
   }
 
-  public main(): luditLineReturn {
-    if (Object.keys(this.options).length === 0) { return this.run(); }
+  public main(currentLine = 0): luditLineReturn { 
+    if (Object.keys(this.options).length === 0) { return this.run(currentLine); }
     for (const query in this.options) {
       if (
         this.options[query].requireParam &&
@@ -216,5 +265,12 @@ export class CLI {
       }
     }
     return [];
+  }
+
+  public static applyValues(expression: string, values: string, profile: string) {
+    for (let i = 0; i < profile.length; i++) {
+      expression = Utils.replaceAll(expression, profile[i], values[i]);
+    }
+    return expression;
   }
 }

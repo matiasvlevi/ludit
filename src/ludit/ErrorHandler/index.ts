@@ -15,7 +15,7 @@ export const DARK = "\x1b[90m";
   *   @param e - The error data
   *   @param heap - The heap object
   */
-export function error(
+export function throwError(
   msg: string,
   e: (error|undefined) = undefined,
   heap: (Heap|undefined) = undefined,
@@ -28,8 +28,9 @@ export function error(
       if (e) { e.msg = msg; }
       heap.error = e;
       heap.errorCall(e || {text: "", line: 0, char: 0});
+
+      process.exit();
     }
-    process.exit();
   }
 
   if (e) { coord = `at ${e.line}:${e.char} `; }
@@ -57,42 +58,42 @@ export function arrow(char: number) {
 }
 
 export function assignmentError(heap: Heap, e: error) {
-  error(
+  throwError(
     "Expected assignment operator",
     e, heap,
   );
 }
 
 export function functionNotDef(heap: Heap, e: error) {
-  error(
+  throwError(
     "function is not defined",
     e, heap,
   );
 }
 
 export function expectedOpening(heap: Heap, e: error) {
-  error(
+  throwError(
     `Expected opening brackets`,
     e, heap,
   );
 }
 
 export function expectedClosing(heap: Heap, e: error) {
-  error(
+  throwError(
     `Expected closing brackets`,
     e, heap,
   );
 }
 
 export function missingVariable(msg: string, heap: Heap, e: error) {
-  error(
+  throwError(
     msg,
     e, heap,
   );
 }
 
 export function envError(varname: string) {
-  error(
+  throwError(
     `${varname} environement variable not set`,
   );
 }
@@ -104,12 +105,12 @@ export function badArgumentSpecification(
   e: error,
 ) {
   if (expected > argCount) {
-    error(
+    throwError(
       `Missing arguments, expected ${expected} arguments.`,
       e, heap,
     );
   } else if (expected < argCount) {
-    error(
+    throwError(
       `Too many arguments, expected ${expected} arguments.`,
       e, heap,
     );
@@ -117,9 +118,10 @@ export function badArgumentSpecification(
 }
 
 export function unexpectedIdentifier(heap: Heap, e: error) {
-  error(
-    `Unexpected identifier '${e.text[e.char]}' found`,
-    e, heap,
+  let identifier = e.text[e.char] === undefined ? '' : `'${e.text[e.char]}' `;
+  throwError(
+    `Unexpected identifier ${identifier}found`,
+    e, heap
   );
 }
 
@@ -127,7 +129,8 @@ export function includeNotFound(
   includeName: string,
   e: error | undefined,
 ) {
-  error(
+  throwError(
     `include file not found ${includeName}`, e,
   );
 }
+
