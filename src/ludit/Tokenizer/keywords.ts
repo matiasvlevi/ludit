@@ -29,6 +29,7 @@ export const ATTRIBUTES: Map<attribute> = {
     char: 'r',
     action: (app: CLI, char:string) => {
       app.attributes.karnaugh = true;
+      app.attributes.table = false;
     }
   },
   "t": {

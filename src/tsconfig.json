@@ -11,9 +11,5 @@
     "alwaysStrict": true,                             
     "noUnusedLocals": true,                           
     "skipLibCheck": true                                 
-  },
-  "typedocOptions": {
-    "out": "docs",
-    "entryPoints": ["./src/ludit/Tokenizer/index.ts"]
   }
 }

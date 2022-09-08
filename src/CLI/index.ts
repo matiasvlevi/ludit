@@ -1,3 +1,4 @@
+import * as Tabler from './table'
 import * as Utils from "../ludit/Utils";
 
 import { argv, option } from "./options";
@@ -173,6 +174,14 @@ export class CLI {
     }
   }
 
+  public ktable(table: luditLineReturn) {
+    Tabler.ktable<number>(table);
+  }
+
+  public table(table: luditLineReturn) {
+    Tabler.table<number>(table);
+  }
+
   // Calculate a truth table
   public run(currentLine = 0): luditLineReturn {
     // Run specific function call
@@ -190,11 +199,21 @@ export class CLI {
       } 
     }
 
-    const cases = Utils.binaryCases(
+    let cases:number[][] = []; 
+
+    if (this.attributes.table) cases = Utils.binaryCases(
       this.profile.length,
       this.attributes.reverse,
       this.attributes.cases
     );
+    else if (this.attributes.karnaugh) {
+      cases = Utils.grayCode(
+        this.profile.length
+      );
+    }
+
+    cases.forEach((x,i) => console.log(i,x))
+    
     const output: Array<Map<number>> = [];
 
     // Iterate forward or backwards
@@ -230,7 +249,15 @@ export class CLI {
       output.push(row);
     }
 
-    if (!this.noprint) { console.table(output); }
+    if (!this.noprint) { 
+    
+      if (this.attributes.table)
+        this.table(output)
+    
+      if (this.attributes.karnaugh)
+        this.ktable(output)
+    }
+
     return output;
   }
 

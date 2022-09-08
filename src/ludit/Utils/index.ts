@@ -73,6 +73,36 @@ export function removeDuplicates(text: string): string {
   return ans;
 }
 
+export function grayCode(n:number):number[][] {
+  if (n <= 0) return [];
+
+  let ans: string[] = [];
+
+  ans.push("0");
+  ans.push("1");
+
+  for (let i = 2; i < (1<<n); i = i<<1) {
+    for (let j = i-1; j >= 0; j--) {
+      ans.push(ans[j]);
+    }
+
+    for (let j = 0; j < i; j++) {
+      //ans[j].unshift("0");
+      ans[j] = "0" + ans[j];
+    }
+
+    for (let j = i; j < 2*i; j++) {
+      //ans[j].unshift(1);
+      ans[j] = "1" + ans[j];
+    }
+  }
+  let arr = [];
+  for (let i = 0; i < ans.length; i++) {
+    arr.push(ans[i].split('').map(x => +x))
+  }
+  return arr; 
+}
+
 /**
 * Generate binary incrementation based on a length
 *
