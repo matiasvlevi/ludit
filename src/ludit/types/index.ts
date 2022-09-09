@@ -32,11 +32,25 @@ export interface attribute {
   /**
   * The attribute character
   */ 
-  char: string
+  char: string;
+  /**
+  * The attribute's type
+  */ 
+  type: string
   /**
   * The action the attribute performs, acting upon the CLI instance
   */ 
-  action: (app:CLI, char:string) => void;
+  action: (
+    app:CLI,
+    currentLine:number, 
+    char:string
+  ) => void;
+}
+
+
+export interface attributes {
+  format: attribute[];
+  print: attribute[];
 }
 
 /**

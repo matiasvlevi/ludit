@@ -66,6 +66,10 @@ export function isAttributeDeclaration(char: string) {
   return Object.keys(ATTRIBUTE_DECLARATION).includes(char);
 }
 
+export function isValue(str: string): boolean {
+  return NUMERAL.includes(str[0]);
+}
+
 export function isAttribute(char: string):boolean {
   return Object.keys(ATTRIBUTES).includes(char) ||
          NUMERAL.includes(char);
@@ -92,10 +96,6 @@ export function isReserved(char: string): boolean {
 
 export function isNumeral(char: string): boolean {
   return NUMERAL.includes(char);
-}
-
-export function isValue(str: string): boolean {
-  return NUMERAL.includes(str[0]);
 }
 
 export function isAssign(char: string): boolean {

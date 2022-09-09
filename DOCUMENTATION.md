@@ -9,6 +9,7 @@ Ludi is a language meant to express and compute boolean algebra expressions in t
 * [Functions](#Functions)
 * * [Defining](#Defining-Functions)
 * * [Calling](#Calling-Functions)
+* [Attributes](#Attributes)
 * [Includes](#Includes)
 * [Helpful Syntax](#Helpful-Syntax)
 * [Syntax Highlighting](#Use-proper-syntax-highlighting)
@@ -101,6 +102,38 @@ def baz = A + B
 
 foo(baz(E, F) * A, B, C)
 ```
+
+<br/>
+
+## Attributes
+
+
+Attributes are options you can assign to format your CLI output
+You can add them with the `~` identifier
+
+Here is an example
+
+```py
+A * B + C ~r
+```
+
+Here is an example with multiple attributes
+
+```py
+A * B + C ~tr7
+```
+
+Here are all the possible attributes
+
+| Attributes |           Description                                        |
+|----------|--------------------------------------------------------------|
+| **`r`**  | Will reverse the labels in a truth table |
+| **`k`**  | Will print a karnaugh table        |
+| **`t`**  | Will print a truth table (DEFAULT)       |
+| **`ANY NUMBER`**  | Any numeric value will cap the truth table to the number you set   |
+
+<br/>
+
 
 <br/>
 

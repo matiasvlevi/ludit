@@ -21,26 +21,31 @@ export const ATTRIBUTE_DECLARATION: Map<syntax> = {
 export const ATTRIBUTES: Map<attribute> = {
   "r": {
     char: 'r',
-    action: (app: CLI, char:string) => {
+    type: 'format',
+    action: (app: CLI, currentLine:number, char:string) => {
       app.attributes.reverse = true;
     }
   },
   "k": {
-    char: 'r',
-    action: (app: CLI, char:string) => {
+    char: 'k',
+    type: 'print',
+    action: (app: CLI, currentLine:number,  char:string) => {
       app.attributes.karnaugh = true;
-      app.attributes.table = false;
+      app.run(currentLine, true);
     }
   },
   "t": {
-    char: 'r',
-    action: (app: CLI, char:string) => {
+    char: 't',
+    type: 'print',
+    action: (app: CLI, currentLine:number, char:string) => {
       app.attributes.table = true;
+      app.run(currentLine, false);
     }
   },
   "numeric": {
     char: '0',
-    action: (app: CLI, char:string) => {
+    type: 'format',
+    action: (app: CLI, currentLine:number, char:string) => {
       app.attributes.cases = +char;
     }
   }

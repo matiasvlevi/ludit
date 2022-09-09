@@ -9,7 +9,7 @@ import {TreeNode} from "../ludit/TreeNode";
 import { 
   luditLineReturn,
   attributeConfig,
-  attribute,
+  attributes,
   Iterator,
   Map
 } from "../ludit/types";
@@ -76,8 +76,32 @@ export class CLI {
     cases: -1
   }
 
+  public static FALSE_ATTRIBUTE_CONFIG:attributeConfig = {
+    reverse: false,
+    karnaugh: false,
+    table: false,
+    cases: -1
+  }
+
   public initAttributes() {
     this.attributes = {...CLI.DEFAULT_ATTRIBUTE_CONFIG};
+  }
+
+  public resetAttributes() {
+    this.attributes = {...CLI.FALSE_ATTRIBUTE_CONFIG};
+  }
+
+  public addPrintAttribute() {
+    if (
+      !this.attributes.karnaugh &&
+      !this.attributes.table
+    ) this.attributes.table = true;
+  }
+
+  public hasPrintAttribute(attributes:attributes|undefined) {
+    if (attributes === undefined) return false;
+    if (attributes.print.length === 0) return false;  
+    return true;
   }
 
   public inline() {
@@ -182,6 +206,32 @@ export class CLI {
     Tabler.table<number>(table);
   }
 
+  public loadAttributes(currentLine:number) {
+    let attributes: attributes|undefined = this.heap.getAttributes(currentLine);
+    if (attributes !== undefined) {
+
+      for (let i = 0; i < attributes.format.length; i++) {
+        attributes.format[i].action(
+          this,
+          currentLine,
+          attributes.format[i].char
+        );
+      } 
+
+      for (let i = 0; i < attributes.print.length; i++) {
+        attributes.print[i].action(
+          this,
+          currentLine,
+          attributes.print[i].char
+        );
+      } 
+      this.addPrintAttribute();
+    } else {
+      this.initAttributes();
+    }
+    return attributes;
+  }
+
   // Calculate a truth table
   public run(currentLine = 0, isKarnaugh=false): luditLineReturn {
     // Run specific function call
@@ -190,14 +240,6 @@ export class CLI {
       return [];
     }
 
-    this.initAttributes();
-
-    let attributes: attribute[]|undefined = this.heap.getAttributes(currentLine);
-    if (attributes !== undefined) {
-      for (let i = 0; i < attributes.length; i++) {
-        attributes[i].action(this, attributes[i].char);
-      } 
-    }
 
     let cases:number[][] = []; 
     if (!isKarnaugh) cases = Utils.binaryCases(
@@ -219,7 +261,7 @@ export class CLI {
       condition: (j)=>(j<this.profile.length),
       increment: 1
     }
-    if (this.attributes.reverse) 
+    if (this.attributes.reverse && !isKarnaugh) 
       profileIterator = { 
         start: this.profile.length-1,
         condition: (j) => (j>=0),
@@ -250,7 +292,6 @@ export class CLI {
       output.push(row);
     }
 
-
     if (!this.noprint) { 
     
       if (!isKarnaugh)
@@ -278,19 +319,16 @@ export class CLI {
     }
   }
 
-  public main(currentLine = 0): luditLineReturn { 
+  public main(currentLine = 0): luditLineReturn {
+
+    this.resetAttributes();
+
+    let attributes = this.loadAttributes(currentLine);
     if (Object.keys(this.options).length === 0) { 
       let output:luditLineReturn = []; 
-      if (this.attributes.table)
-        output = this.run(currentLine, false)
 
-      if (this.attributes.karnaugh) {
-        if (this.attributes.table) {
-          this.run(currentLine, true)
-        } else {
-          output = this.run(currentLine, true)
-        }
-      }
+      if (!this.hasPrintAttribute(attributes))
+        this.run(currentLine, false);
       
       return output;
     }

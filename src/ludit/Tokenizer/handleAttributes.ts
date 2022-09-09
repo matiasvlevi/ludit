@@ -12,21 +12,21 @@ export function handleAttributes(
   let attributes: attribute[] = [];
   let i = currentChar+1;
   let numericAttribute = '';
+
   while(
     isAttribute(exp[i]) &&
     i < exp.length
   ) {
-    if (isNumeral(exp[i])) 
+    if (isNumeral(exp[i])){
       numericAttribute += exp[i];
-    else { 
-      if (numericAttribute.length > 0) {
-        attributes.push(getAttribute(numericAttribute));
-      }
+    } else { 
       attributes.push(getAttribute(exp[i]));
     }
     i++; 
   }
-
+  if (numericAttribute.length > 0) {
+    attributes.push(getAttribute(numericAttribute));
+  }
 
   heap.setAttributes(currentLine, attributes);
   return i;

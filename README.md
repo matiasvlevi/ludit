@@ -14,6 +14,8 @@
     
 Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.
 
+Ludi allows you to generate truth tables and karnaugh tables.
+
 <br/>
 
 <table align="center">
@@ -33,7 +35,27 @@ or(and(A, !B), C)
 </td>
 <td>
 
-<img src="https://i.ibb.co/Fsx3bNd/ludi-table2.png" alt="luditable" height="210"/>
+<img src="https://i.ibb.co/VJXj67w/table-Demo.png" alt="luditable" height="210"/>
+
+</td>
+</tr>
+<tr>
+<td align="center"> Ludi Code </td> <td align="center"> Output </td>
+</tr>
+<tr>
+<td>
+
+```python
+def and = A * B
+def or  = A + B
+
+or(and(A, !B), C) ~k
+```
+
+</td>
+<td>
+
+<img src="https://i.ibb.co/brfzTfX/karnaugh-Demo.png" alt="luditable" height="210"/>
 
 </td>
 </tr>
