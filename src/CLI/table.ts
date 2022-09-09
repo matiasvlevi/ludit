@@ -1,3 +1,7 @@
+/*
+* This code is a mess, I need to refactor this
+*/ 
+
 import * as Utils from '../ludit/Utils'
 
 interface Map<T> {
@@ -181,7 +185,7 @@ export function ktable<T>(table: objectTable<T>) {
   
   // Top labels
   process.stdout.write('\n')
-  process.stdout.write(space(colProfile.length+1));
+  process.stdout.write(space(rowProfile.length+1));
   process.stdout.write(`\x1b[32m${colProfile.join('')}\x1b[0m`);
   process.stdout.write(space(1));
 

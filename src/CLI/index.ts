@@ -183,7 +183,7 @@ export class CLI {
   }
 
   // Calculate a truth table
-  public run(currentLine = 0): luditLineReturn {
+  public run(currentLine = 0, isKarnaugh=false): luditLineReturn {
     // Run specific function call
     if (this.profile.length === 0) {
       this.printSingle();
@@ -200,13 +200,12 @@ export class CLI {
     }
 
     let cases:number[][] = []; 
-
-    if (this.attributes.table) cases = Utils.binaryCases(
+    if (!isKarnaugh) cases = Utils.binaryCases(
       this.profile.length,
       this.attributes.reverse,
       this.attributes.cases
     );
-    else if (this.attributes.karnaugh) {
+    else if (isKarnaugh) {
       cases = Utils.grayCode(
         this.profile.length
       );
@@ -229,14 +228,18 @@ export class CLI {
 
     for (let i = 0; i < cases.length; i++) {
 
+
       const row: Map<number> = {};
       for (
         let j = profileIterator.start;
         profileIterator.condition(j);
         j+=profileIterator.increment
       ) {
+      
         row[this.profile[j]] = cases[i][j];
+
       }
+
       
       row.out = +Processor.calculate(
         this.tree,
@@ -247,12 +250,12 @@ export class CLI {
       output.push(row);
     }
 
+
     if (!this.noprint) { 
     
-      if (this.attributes.table)
+      if (!isKarnaugh)
         this.table(output)
-    
-      if (this.attributes.karnaugh)
+      else if (isKarnaugh)
         this.ktable(output)
     }
 
@@ -276,7 +279,21 @@ export class CLI {
   }
 
   public main(currentLine = 0): luditLineReturn { 
-    if (Object.keys(this.options).length === 0) { return this.run(currentLine); }
+    if (Object.keys(this.options).length === 0) { 
+      let output:luditLineReturn = []; 
+      if (this.attributes.table)
+        output = this.run(currentLine, false)
+
+      if (this.attributes.karnaugh) {
+        if (this.attributes.table) {
+          this.run(currentLine, true)
+        } else {
+          output = this.run(currentLine, true)
+        }
+      }
+      
+      return output;
+    }
     for (const query in this.options) {
       if (
         this.options[query].requireParam &&
