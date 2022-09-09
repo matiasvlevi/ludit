@@ -20,7 +20,7 @@ Ludi allows you to generate truth tables and karnaugh tables.
 
 <table align="center">
 <tr>
-<td align="center"> Ludi Code </td> <td align="center"> Output </td>
+<td align="center"> Ludi Code </td> <td align="center"> Truth table </td>
 </tr>
 <tr>
 <td>
@@ -40,7 +40,7 @@ or(and(A, !B), C)
 </td>
 </tr>
 <tr>
-<td align="center"> Ludi Code </td> <td align="center"> Output </td>
+<td align="center">  </td> <td align="center"> Karnaugh </td>
 </tr>
 <tr>
 <td>
