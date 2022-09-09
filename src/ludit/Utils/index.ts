@@ -97,9 +97,9 @@ export function grayCode(n:number):number[][] {
     }
   }
   let arr = [];
-  for (let i = 0; i < ans.length; i++) {
+  for (let i = 0; i < ans.length; i++) 
     arr.push(ans[i].split('').map(x => +x))
-  }
+  
   return arr; 
 }
 

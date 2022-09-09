@@ -116,45 +116,53 @@ function hline(
   let line = '';
   let k = -cellStart;
   for (let i = 0; i < n; i++) {
+    let char:string;
     if (i === n-1) {
       // RIGHT SIDE
       //
       if (row >= 0 && row < rowLength-1) {
-        line += CHARS['mid-right']
+        char = 'mid-right'
       } else {
-        line += CHARS['bottom-right']
+        char = 'bottom-right'
       }
 
     } else if (
       k >= cellSize &&
       row < rowLength-1
     ) {
-      line += CHARS['mid-mid']
+      char = 'mid-mid'
       k = 0;
     } else if (k === 0) {
       // LEFT SIDE
       // 
       if (row === rowLength-1) 
-        line += CHARS['bottom-mid']
-      else line += CHARS['mid-mid'] 
+        char = 'bottom-mid'
+      else char = 'mid-mid' 
     } else {
 
       if (k >= cellSize) {
-        line += CHARS['bottom-mid']
+        char = 'bottom-mid'
         k = 0;    
       } else {
         if (i >= cellStart)
-          line += CHARS['bottom']
-        else line += ' ';
+          char = 'bottom'
+        else char = 'tab';
       }
-    } 
+    }
+    line+=CHARS[char];
     k++;
   }
-  return `${line}\n`
+  return `\x1b[90m${line}\x1b[0m\n`
 }
 
 function space(n:number) {
   return new Array(n).fill(' ').join('');
+}
+
+function isOdd(n:number) {
+  if (n === 0) return false;
+
+  return (n % 2);
 }
 
 export function ktable<T>(table: objectTable<T>) {
@@ -179,7 +187,7 @@ export function ktable<T>(table: objectTable<T>) {
 
   for (let i = 0; i < Math.pow(2, colProfile.length); i++) {
     process.stdout.write(space(2));
-    process.stdout.write(colCases[i]);
+    process.stdout.write(`\x1b[92m${colCases[i]}\x1b[0m`);
     process.stdout.write(space(3));
   }
 
@@ -205,30 +213,37 @@ export function ktable<T>(table: objectTable<T>) {
     cellStart
   ));
   let kIndex = 0;
-  let kMax = (rowLength * colLength);
+  let rc = (rowLength * colLength)-2;
+
+  let cc = [];
+  for (let i = (rowLength*2)-1; i > 0; i-=2) {
+    cc.push(i);
+  }
+
   for (let row = 0; row < rowLength; row++) {
-    
     process.stdout.write(' ')
-    process.stdout.write(rowCases[row]);
+    process.stdout.write(`\x1b[92m${rowCases[row]}\x1b[0m`);
     process.stdout.write(space(colProfile.length))
-    process.stdout.write(CHARS['right']);
+    process.stdout.write(`\x1b[90m${CHARS['right']}\x1b[0m`);
 
     for (let col = 0; col < colLength; col++) {
 
       process.stdout.write(space(2) + space(colProfile.length-1));
 
-      process.stdout.write(`${kIndex}`);
+      process.stdout.write(`\x1b[33m${table[kIndex].out}\x1b[0m`);
 
       process.stdout.write(space(2));
-      process.stdout.write(CHARS['right']);
+      process.stdout.write(`\x1b[90m${CHARS['right']}\x1b[0m`);
       
-      kMax--;
-      if ((row*colLength+col) % 2) {
-        kIndex-=kMax
-      } else { 
-        kIndex+=kMax
-      }
+      if (col === colLength-1) {
+        kIndex-=rc;
+      } else if (isOdd(col) ) {
+        kIndex += cc[rowLength-row-1]
+      } else {
+        kIndex += cc[row];
+      } 
     }
+    rc-=2; 
     
     process.stdout.write('\n');
     process.stdout.write(hline(
@@ -239,7 +254,6 @@ export function ktable<T>(table: objectTable<T>) {
     ));  
   }
 
-  console.log(table);
 }
 
 

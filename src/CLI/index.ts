@@ -212,8 +212,6 @@ export class CLI {
       );
     }
 
-    cases.forEach((x,i) => console.log(i,x))
-    
     const output: Array<Map<number>> = [];
 
     // Iterate forward or backwards
@@ -263,7 +261,7 @@ export class CLI {
 
   public save(filename: string) {
     const cases = Utils.binaryCases(this.profile.length);
-    let csv = `${this.profile.split("").join(",")},Out\n`;
+    let csv = `${this.profile.split("").join(",")},out\n`;
     for (let i = 0; i < cases.length; i++) {
       for (let j = 0; j < this.profile.length; j++) {
         csv += `${cases[i][j]},`;
@@ -282,7 +280,7 @@ export class CLI {
     for (const query in this.options) {
       if (
         this.options[query].requireParam &&
-                this.options[query].param === undefined
+        this.options[query].param === undefined
       ) { continue; }
       if (
         this.options[query].param !== undefined
