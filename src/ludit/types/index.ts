@@ -189,6 +189,16 @@ export interface error {
 }
 
 /**
+*
+*
+*/ 
+export type lineType = {
+  line: string,
+  type: string
+}
+
+
+/**
 * Error callback
 */
 export type errorCall = (e: error) => void;

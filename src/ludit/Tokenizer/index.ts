@@ -26,6 +26,8 @@ export const ALPHA: string           = Utils.getASCII(65, 91);
 export const ALPHA_LOWERCASE: string = ALPHA.toLocaleLowerCase();
 export const NUMERAL: string         = Utils.getASCII(48, 57);
 export const WHITESPACE              = " ";
+// Special characters for function names
+export const SPECIAL                 = "_"; 
 
 /*
 * Keyword or Character maps for tokens
@@ -44,7 +46,6 @@ export {
 
 import {
   CONSTANT,
-
   ATTRIBUTE_DECLARATION,
   ATTRIBUTES,
   SYNTAX,
@@ -116,6 +117,10 @@ export function isWhiteSpace(char: string): boolean {
 
 export function isLowerCase(char: string): boolean {
   return ALPHA_LOWERCASE.includes(char);
+}
+
+export function isSpecial(char: string): boolean {
+  return SPECIAL.includes(char);
 }
 
 export function newScope(char: string): boolean {

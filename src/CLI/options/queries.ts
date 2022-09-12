@@ -33,7 +33,8 @@ export const queries: Map<optionConfig> = {
   },
   csv: {
     action: (cli: CLI, param: string) => {
-      cli.save(param);
+      if (cli.options.file === undefined)
+        cli.save(param);
     },
     helpmsg: "save the truth table as a .csv file",
     example: '"A * B + C" --csv sheet.csv',
@@ -49,7 +50,11 @@ export const queries: Map<optionConfig> = {
   },
   file: {
     action: (cli: CLI, param: string) => {
-      cli.fromFile(param);
+      if (cli.options.csv !== undefined) {
+        cli.saveMultiline(param);
+      } else {
+        cli.fromFile(param);
+      }
     },
     helpmsg: "read expression from a source file",
     example: "--file formula.ludi",

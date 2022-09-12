@@ -31,8 +31,6 @@ export {
   evalPath,
   filter,
   getPath,
-  handleComments,
-  handlePrints,
   include,
   loadFile,
   makeBackPath,

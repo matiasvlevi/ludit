@@ -24,8 +24,8 @@ export class API extends CLI {
     for (let i = 0; i < document.length; i++) {
       const currentLine = i + 1 - includeLineNb;
       // Parse commments & prints
-      const line = Preparser.filter(document[i]);
-      if (!line) { continue; } // Skip if empty line
+      const { line, type } = Preparser.filter(document[i]);
+      if (type === 'comment' || type === 'print') { continue; } // Skip if empty line
 
       // Create tokens, profile and determine if line is a definition
       const { tokens, profile, isDef } = Tokenizer.process(

@@ -17,9 +17,12 @@ export function getKeyword(
   let keyword = "";
   let j = i;
   while (
-    (Tokenizer.isLowerCase(exp[j]) ||
-        Tokenizer.isNumeral(exp[j])) &&
-        exp.length > j
+    (   
+      Tokenizer.isLowerCase(exp[j]) ||
+     Tokenizer.isNumeral(exp[j]) ||
+     Tokenizer.isSpecial(exp[j])
+    ) &&
+    exp.length > j
   ) {
     if (
       Tokenizer.isReserved(exp[j])

@@ -1,9 +1,10 @@
+import { replaceAll } from '../Utils'
 import * as Preparser from "./index";
 
 import fs from "node:fs";
 
 import * as ErrorHandler from "../ErrorHandler";
-import { error } from "../types";
+import { error, lineType } from "../types";
 
 /**
 * checkInclude's return
@@ -243,28 +244,12 @@ export function loadFile(
 *
 *   @return The line without comments, if undefined, the entire line is a comment
 */
-export function handleComments(line: string): string | undefined {
-  if (line.includes("#")) {
-    line = line.slice(0, line.indexOf("#"));
+export function handleSubstring(line: string, char:string): string | undefined {
+  if (line.includes(char)) {
+    line = line.slice(0, line.indexOf(char));
     if (line.length === 0) { return; }
   }
   return line;
-}
-
-/**
-* handle print statements
-*
-*   @param line - A file line
-*
-*   @returns whether or not the line was a print statement
-*/
-export function handlePrints(line: string): boolean {
-  if (line[0] === "-") {
-    const title = line.slice(1, line.length);
-    console.log(`\x1b[36m${title}\x1b[0m`);
-    return true;
-  }
-  return false;
 }
 
 /**
@@ -274,8 +259,18 @@ export function handlePrints(line: string): boolean {
 *
 *   @returns the line without any comments or print statements
 */
-export function filter(line: string): string | undefined {
-  const pline = Preparser.handleComments(line);
-  if (!pline) { return; }
-  if (!Preparser.handlePrints(pline)) { return pline; }
+export function filter(line: string): lineType {
+  let pline = handleSubstring(line, '#');
+  if (!pline) { 
+    return { line, type:'comment'};
+  }
+  pline = handleSubstring(pline, '-');
+  
+  if (!pline) { 
+    let content = replaceAll(line, '-', '');
+    console.log(`\x1b[36m${content}\x1b[0m`);
+    return { line: content, type: 'print'};
+  } else {
+    return { line: pline, type: 'code' };
+  }
 }

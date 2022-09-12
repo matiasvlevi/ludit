@@ -64,9 +64,13 @@ export class CLI {
         return;
       }
 
+      // Run inline if cli expression specified
       this.inline();
 
-    } else { this.main(); }
+    } else { 
+      // Run 
+      this.main();
+    }
   }
 
   public static DEFAULT_ATTRIBUTE_CONFIG:attributeConfig = {
@@ -145,8 +149,8 @@ export class CLI {
     for (let i = 0; i < file.length; i++) {
       const currentLine = i + 1 - includeLineNb;
       // Parse commments & prints
-      const line = Preparser.filter(file[i]);
-      if (!line) { continue; } // Skip if empty line
+      const { line, type } = Preparser.filter(file[i]);
+      if (type === 'comment' || type === 'print') { continue; } // Skip if empty line
 
       // Create tokens, profile and determine if line is a definition
       const { tokens, profile, isDef } = Tokenizer.process(
@@ -169,6 +173,72 @@ export class CLI {
       if (!isDef) { this.main(i); }
     }
 
+  }
+
+  // DUPLICATE CODE WITH CLI.prototype.fromFile, REFACTOR!
+  public saveMultiline(filename: string) {
+    // Load file
+    let file = Preparser.loadFile(filename);
+    const fileLineNb = file.length;
+    let includeLineNb = 0;
+
+    this.path = Preparser.getPath(filename);
+
+    // Remove file option so it does not run recursively
+    delete this.options.file;
+
+    let csvFileDest = this.options.csv.param;
+    delete this.options.csv;
+
+    // Handle included files
+    if (Preparser.containsInclude(file)) {
+      file = Preparser.include(file, this.path);
+      includeLineNb = file.length - fileLineNb;
+    }
+
+    let csv:string[] = [];
+
+    for (let i = 0; i < file.length; i++) {
+      const currentLine = i + 1 - includeLineNb;
+      // Parse commments & prints
+      const { line, type } = Preparser.filter(file[i]);
+      console.log ({line, type})
+      if (type === 'comment') { continue; } // Skip if empty line
+      if (type === 'print') {
+        csv.push(`${line}`);
+        continue;
+      }
+
+
+      // Create tokens, profile and determine if line is a definition
+      const { tokens, profile, isDef } = Tokenizer.process(
+        this.heap,
+        line,
+        { line: currentLine, char: -1, text: file[i]}, i
+      );
+
+      this.profile = profile; // Save profile (Variables used in line or definition)
+      this.expression = line; // Save raw line
+
+      // Create computation tree
+      this.tree = Assembler.makeTree(this.heap, tokens, profile, {
+        line: currentLine,
+        char: -1,
+        text: file[i],
+      });
+
+      // Dont compute and print if is a definition
+      if (!isDef) {
+        csv.push(this.save());
+      }
+    }
+
+    // Write all tables
+    Utils.writeFileSync(
+      csvFileDest || 'table.csv',
+      csv.join('\n'),
+      'utf-8'
+    );
   }
 
   public setNoPrint(state: boolean) {
@@ -303,7 +373,7 @@ export class CLI {
     return output;
   }
 
-  public save(filename: string) {
+  public save(filename?: string | undefined): string {
     const cases = Utils.binaryCases(this.profile.length);
     let csv = `${this.profile.split("").join(",")},out\n`;
     for (let i = 0; i < cases.length; i++) {
@@ -316,7 +386,9 @@ export class CLI {
     if (!this.noprint) { process.stdout.write(csv); }
     if (filename !== undefined) {
       Utils.writeFileSync(filename, csv, "utf-8");
-    }
+      
+    } 
+    return csv
   }
 
   public main(currentLine = 0): luditLineReturn {
@@ -332,6 +404,8 @@ export class CLI {
       
       return output;
     }
+
+    // Run options
     for (const query in this.options) {
       if (
         this.options[query].requireParam &&
