@@ -202,7 +202,6 @@ export class CLI {
       const currentLine = i + 1 - includeLineNb;
       // Parse commments & prints
       const { line, type } = Preparser.filter(file[i]);
-      console.log ({line, type})
       if (type === 'comment') { continue; } // Skip if empty line
       if (type === 'print') {
         csv.push(`${line}`);
@@ -375,13 +374,14 @@ export class CLI {
 
   public save(filename?: string | undefined): string {
     const cases = Utils.binaryCases(this.profile.length);
-    let csv = `${this.profile.split("").join(",")},out\n`;
+    let csv = ',';
+    csv += `${this.profile.split("").join(",")},out\n,`;
     for (let i = 0; i < cases.length; i++) {
       for (let j = 0; j < this.profile.length; j++) {
         csv += `${cases[i][j]},`;
       }
       csv += +Processor.calculate(this.tree, this.profile, cases[i]);
-      csv += "\n";
+      csv += "\n,";
     }
     if (!this.noprint) { process.stdout.write(csv); }
     if (filename !== undefined) {
