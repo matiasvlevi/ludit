@@ -22,6 +22,7 @@ syn match Number "1"
 
 
 " Define keyword
+syn match Repeat "\<profile\>"
 syn match Repeat "\<include\>"
 syn match Repeat "\<def\>"
 

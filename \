@@ -147,12 +147,6 @@ export class CLI {
       includeLineNb = file.length - fileLineNb;
     }
 
-    
-    let { newfile, profile } = Preparser.getGlobalProfile(file)
-    file = newfile;
-    this.globalProfile = profile; 
-
-   
     for (let i = 0; i < file.length; i++) {
       const currentLine = i + 1 - includeLineNb;
       // Parse commments & prints
@@ -316,17 +310,16 @@ export class CLI {
       return [];
     }
 
-    let profile = (this.globalProfile) ? this.globalProfile : this.profile;
 
     let cases:number[][] = []; 
     if (!isKarnaugh) cases = Utils.binaryCases(
-      profile.length,
+      this.profile.length,
       this.attributes.reverse,
       this.attributes.cases
     );
     else if (isKarnaugh) {
       cases = Utils.grayCode(
-        profile.length
+        this.profile.length
       );
     }
 
@@ -335,12 +328,12 @@ export class CLI {
     // Iterate forward or backwards
     let profileIterator:Iterator = { 
       start: 0,
-      condition: (j)=>(j<profile.length),
+      condition: (j)=>(j<this.profile.length),
       increment: 1
     }
     if (this.attributes.reverse && !isKarnaugh) 
       profileIterator = { 
-        start: profile.length-1,
+        start: this.profile.length-1,
         condition: (j) => (j>=0),
         increment: -1
       }
@@ -355,14 +348,14 @@ export class CLI {
         j+=profileIterator.increment
       ) {
       
-        row[profile[j]] = cases[i][j];
+        row[this.profile[j]] = cases[i][j];
 
       }
 
       
       row.out = +Processor.calculate(
         this.tree,
-        profile,
+        this.profile,
         cases[i]
       );
 

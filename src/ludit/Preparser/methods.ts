@@ -179,6 +179,24 @@ export function checkInclude(
 }
 
 /**
+*
+*/
+export function getGlobalProfile(file:string[]): any { 
+  for (let i = 0; i < file.length; i++) {
+    if (file[i].includes('profile')) {
+      let line = file[i].split(' ');
+
+      let profile = parseQuotes(line[1]) 
+      file.splice(i, 1);
+      console.log(profile)
+      return { profile, newfile:file };
+    }
+  }
+  return {profile:undefined, newfile:file}
+}
+
+
+/**
 * convert a specified path to a path fs can understand
 * can do global paths, local paths and library paths
 *

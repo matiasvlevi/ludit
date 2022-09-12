@@ -28,6 +28,7 @@ export const KEYWORD: Map<preParserKeyword> = {
 export {
   checkInclude,
   containsInclude,
+  getGlobalProfile,
   evalPath,
   filter,
   getPath,

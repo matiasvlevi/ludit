@@ -8,7 +8,7 @@ export const KEYWORD: Map<syntax> = {
   def: {
     type: "function",
     priority: -1,
-  } 
+  }
 };
 
 export const ATTRIBUTE_DECLARATION: Map<syntax> = {
