@@ -172,7 +172,7 @@ function isOdd(n:number) {
 export function ktable<T>(table: objectTable<T>) {
   
   let rowProfile = Object.keys(table[0]);
-  rowProfile.pop(); // Remove output
+  rowProfile.pop(); // Remove output 
 
   let colProfile = rowProfile.splice(0, Math.floor(rowProfile.length/2))
   let colCases = Utils.grayCode(

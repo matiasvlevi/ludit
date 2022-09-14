@@ -338,7 +338,7 @@ export class CLI {
       condition: (j)=>(j<profile.length),
       increment: 1
     }
-    if (this.attributes.reverse && !isKarnaugh) 
+    if (this.attributes.reverse )//&& !isKarnaugh) 
       profileIterator = { 
         start: profile.length-1,
         condition: (j) => (j>=0),

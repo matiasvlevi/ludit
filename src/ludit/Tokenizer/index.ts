@@ -24,7 +24,7 @@ export {
 */
 export const ALPHA: string           = Utils.getASCII(65, 91);
 export const ALPHA_LOWERCASE: string = ALPHA.toLocaleLowerCase();
-export const NUMERAL: string         = Utils.getASCII(48, 57);
+export const NUMERAL: string         = Utils.getASCII(48, 58);
 export const WHITESPACE              = " ";
 // Special characters for function names
 export const SPECIAL                 = "_"; 
