@@ -169,12 +169,20 @@ function isOdd(n:number) {
   return (n % 2);
 }
 
-export function ktable<T>(table: objectTable<T>) {
+export function ktable<T>(table: objectTable<T>, reverse = false) {
   
   let rowProfile = Object.keys(table[0]);
   rowProfile.pop(); // Remove output 
 
-  let colProfile = rowProfile.splice(0, Math.floor(rowProfile.length/2))
+  let colProfile ;
+  if (reverse) {
+    colProfile = [...rowProfile];
+    rowProfile = colProfile.splice(0, Math.floor(colProfile.length/2))
+  } else {
+    colProfile = rowProfile.splice(0, Math.floor(rowProfile.length/2))
+  }
+  console.log(colProfile, rowProfile)
+
   let colCases = Utils.grayCode(
     colProfile.length,
   ).map(x => x.join(''));
@@ -216,12 +224,17 @@ export function ktable<T>(table: objectTable<T>) {
     cellSize,
     cellStart
   ));
+
   let kIndex = 0;
   let rc = (rowLength * colLength)-2;
 
+  
+
   let cc = [];
-  for (let i = (rowLength*2)-1; i > 0; i-=2) {
-    cc.push(i);
+  if (!reverse) {
+    for (let i = (rowLength*2)-1; i > 0; i-=2) {
+      cc.push(i);
+    }
   }
 
   for (let row = 0; row < rowLength; row++) {
@@ -230,24 +243,37 @@ export function ktable<T>(table: objectTable<T>) {
     process.stdout.write(space(colProfile.length))
     process.stdout.write(`\x1b[90m${CHARS['right']}\x1b[0m`);
 
-    for (let col = 0; col < colLength; col++) {
 
+    for (let col = 0; col < colLength; col++) {
       process.stdout.write(space(2) + space(colProfile.length-1));
 
       process.stdout.write(`\x1b[33m${table[kIndex].out}\x1b[0m`);
+      //process.stdout.write(`${kIndex}`)
 
       process.stdout.write(space(2));
       process.stdout.write(`\x1b[90m${CHARS['right']}\x1b[0m`);
-      
-      if (col === colLength-1) {
-        kIndex-=rc;
-      } else if (isOdd(col) ) {
-        kIndex += cc[rowLength-row-1]
+      if (reverse) {
+        if (isOdd(row)) kIndex--;
+        else kIndex++;
       } else {
-        kIndex += cc[row];
-      } 
+        if (col === colLength-1) {
+          kIndex-=rc;
+        } else if (isOdd(col) ) {
+          kIndex += cc[rowLength-row-1]
+        } else {
+          kIndex += cc[row];
+        } 
+      }
     }
-    rc-=2; 
+     
+    if (reverse) {
+      if (isOdd(row)) {
+        kIndex += colLength+1;
+      } else {
+        kIndex += colLength-1
+      }
+    }
+    else rc-=2; 
     
     process.stdout.write('\n');
     process.stdout.write(hline(

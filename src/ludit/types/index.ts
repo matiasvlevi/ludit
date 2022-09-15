@@ -189,14 +189,47 @@ export interface error {
 }
 
 /**
-*
-*
+* Data type for preparser line types
 */ 
-export type lineType = {
+export interface lineType {
+  /**
+  * The raw content of the line
+  */ 
   line: string,
+  /**
+  * The type of the line can be either `comment`, `print`, `code`
+  */
   type: string
 }
 
+/**
+* checkInclude's return
+*/
+export interface checkIncludeReturn {
+  /**
+  * The contents of the included file
+  */
+  include: string[];
+  /**
+  * The path of the included file, 
+  * so its own includes can be paths relative to this file
+  */ 
+  newPath: string;
+}
+
+/**
+* A heap data component
+*/ 
+export interface HeapSlot {
+    /**
+    * The root TreeNode instance of a function definition
+    */ 
+    tree: TreeNode | undefined;
+    /**
+    * The profile of a function definition
+    */ 
+    profile: string | undefined;
+}
 
 /**
 * Error callback

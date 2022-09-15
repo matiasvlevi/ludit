@@ -2,14 +2,16 @@ export { writeFileSync } from "node:fs";
 import { Map } from "../types";
 
 /**
-*
+* Sort a string alphabetically
 */
 export function sortString(profile: string[]): string {
   return profile.sort().join("");
 }
 
 /**
-* replaceAll occurences of a character in a string
+* replaceAll occurences of a character in a string.
+*
+* @remark Some versions of nodejs don't provide `String.prototype.replaceAll` this is why this function exists
 *
 *   @param content - the input string
 *   @param seg - the string segment to replace
@@ -73,6 +75,11 @@ export function removeDuplicates(text: string): string {
   return ans;
 }
 
+/**
+* Generate gray code sequence
+*
+*   @param n - The length of the gray code sequence
+*/ 
 export function grayCode(n:number):number[][] {
   if (n <= 0) return [];
 

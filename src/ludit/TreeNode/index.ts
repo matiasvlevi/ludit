@@ -2,15 +2,62 @@ import {Token} from "../Token";
 import * as Tokenizer from "../Tokenizer";
 import { Map } from "../types";
 
+/**
+* Represents a tree node in an operation tree
+*
+* Branches can hold either another tree node or a Token.
+* A full Operation Tree can be referenced only by its root node
+*/ 
 export class TreeNode {
+
+  /**
+  * The root of the tree node,
+  * This value is often an operator Token
+  */ 
   public value: Token;
+
+  /**
+  * The left branch of this tree node
+  */ 
   public left: TreeNode | Token | undefined;
+
+  /**
+  * The right branch of this tree node
+  */
   public right: TreeNode | Token | undefined;
+
+  /**
+  * The type of this tree node, this property is 
+  * present for the purpose of making a TreeNode instance 
+  * usable as a single Token which can then act as a value once computed
+  */ 
   public type: string;
+
+  /**
+  * The priotity of the tree node, this property is 
+  * present for the purpose of making a TreeNode instance 
+  * usable as a single Token which can then act as a value once computed 
+  */ 
   public priority: number;
+
+  /**
+  * The result of a tree computation
+  */ 
   public result: boolean | undefined;
+
+  /**
+  * The column number of the expression, for error messages 
+  */ 
   public char: number;
 
+  /**
+  * create a TreeNode
+  * 
+  *   @param value - The root token of this TreeNode
+  *   @param char - The column number of this TreeNode for error messages
+  *   @param left - The left branch of this TreeNode
+  *   @param right - The right branch of this TreeNode
+  */ 
   constructor(
     value: Token,
     char: number,

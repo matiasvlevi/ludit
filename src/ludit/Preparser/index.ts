@@ -23,6 +23,16 @@ export const KEYWORD: Map<preParserKeyword> = {
       return loadFile(path, e);
     },
   },
+  /**
+  * Unused keyword, profile is hardcoded
+  */ 
+  profile: {
+    type:'profile',
+    action: (path: string, e: error):string[] => {
+        
+      return []; 
+    }
+  }
 };
 
 export {

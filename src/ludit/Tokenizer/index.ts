@@ -1,10 +1,9 @@
 /**
 * The Tokenizer Module handles parsing raw text lines into meaningfull Tokens
-*
 */
 import * as Utils from "../Utils";
 
-/**
+/*
 * Methods
 */
 export { handleCall } from './handleCall'
@@ -19,7 +18,7 @@ export {
 } from './methods'
 
 
-/**
+/*
 * Character reference constants
 */
 export const ALPHA: string           = Utils.getASCII(65, 91);

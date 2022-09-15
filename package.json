@@ -1,12 +1,12 @@
 {
   "name": "ludit",
-  "version": "0.2.3b",
+  "version": "0.3.0",
   "description": "Ludit is an interpreter for Ludi, a language meant to express and compute boolean algebra in the CLI.",
   "main": "./bin/API/index.js",
   "scripts": {
     "build": "tsc -p ./src/",
     "build-test": "tsc -p ./tsconfig.unit.json",
-    "doc": "typedoc ./src --out ./docs --entryPoints ./src/ludit/Core.ts ./src/ludit/types/index.ts --entryPointStrategy expand",
+    "doc": "typedoc ./src --out ./docs --entryPoints ./src/ludit/Core.ts ./src/ludit/Frontend.ts ./src/API/index.ts ./src/ludit/types/index.ts --entryPointStrategy expand",
     "lint": "eslint ./src --ext .ts --fix",
     "test": "mocha ./test/bin/test --reporter ./test/bin/test/reporter.js",
     "start": "node ./bin/index.js"

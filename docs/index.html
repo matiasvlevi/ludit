@@ -31,6 +31,7 @@
 <li><a href="#Calling-Functions">Calling</a></li>
 </ul>
 </li>
+<li><a href="#Attributes">Attributes</a></li>
 <li><a href="#Includes">Includes</a></li>
 <li><a href="#Helpful-Syntax">Helpful Syntax</a></li>
 <li><a href="#Use-proper-syntax-highlighting">Syntax Highlighting</a></li>
@@ -118,6 +119,48 @@
 <br/>
 
 
+<a href="#attributes" id="attributes" style="color: inherit; text-decoration: none;">
+  <h2>Attributes</h2>
+</a>
+<p>Attributes are options you can assign to format your CLI output
+You can add them with the <code>~</code> identifier</p>
+<p>Here is an example</p>
+<pre><code class="language-py"><span class="hl-0">A * B + C ~r</span>
+</code></pre>
+<p>Here is an example with multiple attributes</p>
+<pre><code class="language-py"><span class="hl-0">A * B + C ~tr7</span>
+</code></pre>
+<p>Here are all the possible attributes</p>
+<table>
+<thead>
+<tr>
+<th>Attributes</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><code>r</code></strong></td>
+<td>Will reverse the labels in a truth table</td>
+</tr>
+<tr>
+<td><strong><code>k</code></strong></td>
+<td>Will print a karnaugh table</td>
+</tr>
+<tr>
+<td><strong><code>t</code></strong></td>
+<td>Will print a truth table (DEFAULT)</td>
+</tr>
+<tr>
+<td><strong><code>ANY NUMBER</code></strong></td>
+<td>Any numeric value will cap the truth table to the number you set</td>
+</tr>
+</tbody></table>
+<br/>
+
+
+<br/>
+
+
 <a href="#includes" id="includes" style="color: inherit; text-decoration: none;">
   <h2>Includes</h2>
 </a>
@@ -182,36 +225,51 @@ This is useful to add titles to tables or calculations</p>
 <li><span class="js-category-title category__title" data-id="root-src">
 <div class="category__folder" data-id="root-src"></div>src</span>
 <ul class="js-category-list category" data-id="root-src">
+<li><span class="js-category-title category__title" data-id="root-src-API">
+<div class="category__folder" data-id="root-src-API"></div>API</span>
+<ul class="js-category-list category" data-id="root-src-API">
+<li><a class="category__link js-category-link category__link--ts" href="modules/API.html" data-id="/modules/API.html">index.ts</a>
+<ul>
+<li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link js-category-link" href="functions/API.export_.html" data-id="/functions/API.export_.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>export=</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-ludit">
 <div class="category__folder" data-id="root-src-ludit"></div>ludit</span>
 <ul class="js-category-list category" data-id="root-src-ludit">
 <li><span class="js-category-title category__title" data-id="root-src-ludit-types">
 <div class="category__folder" data-id="root-src-ludit-types"></div>types</span>
 <ul class="js-category-list category" data-id="root-src-ludit-types">
-<li><a class="category__link js-category-link category__link--ts" href="modules/types.html" data-id="/modules/types.html">index.ts</a>
+<li><a class="category__link js-category-link category__link--ts" href="modules/ludit_types.html" data-id="/modules/ludit_types.html">index.ts</a>
 <ul>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.Iterator.html" data-id="/interfaces/types.Iterator.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Iterator</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.Map.html" data-id="/interfaces/types.Map.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Map</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.TokenizerReturn.html" data-id="/interfaces/types.TokenizerReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>TokenizerReturn</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.attribute.html" data-id="/interfaces/types.attribute.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>attribute</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.attributeConfig.html" data-id="/interfaces/types.attributeConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>attributeConfig</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.error.html" data-id="/interfaces/types.error.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>error</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.handleCallReturn.html" data-id="/interfaces/types.handleCallReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>handleCallReturn</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.operation.html" data-id="/interfaces/types.operation.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>operation</a></li>
-<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/types.syntax.html" data-id="/interfaces/types.syntax.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>syntax</a></li>
-<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/types.errorCall.html" data-id="/types/types.errorCall.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>errorCall</a></li>
-<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/types.luditLineReturn.html" data-id="/types/types.luditLineReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>luditLineReturn</a></li>
-<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/types.luditReturn.html" data-id="/types/types.luditReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>luditReturn</a></li></ul></li></ul></li>
-<li><a class="category__link js-category-link category__link--ts" href="modules/Core.html" data-id="/modules/Core.html">Core.ts</a>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.HeapSlot.html" data-id="/interfaces/ludit_types.HeapSlot.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>HeapSlot</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.Iterator.html" data-id="/interfaces/ludit_types.Iterator.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Iterator</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.Map.html" data-id="/interfaces/ludit_types.Map.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Map</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.TokenizerReturn.html" data-id="/interfaces/ludit_types.TokenizerReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>TokenizerReturn</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.attribute.html" data-id="/interfaces/ludit_types.attribute.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>attribute</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.attributeConfig.html" data-id="/interfaces/ludit_types.attributeConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>attributeConfig</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.attributes.html" data-id="/interfaces/ludit_types.attributes.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>attributes</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.checkIncludeReturn.html" data-id="/interfaces/ludit_types.checkIncludeReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>checkIncludeReturn</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.error.html" data-id="/interfaces/ludit_types.error.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>error</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.handleCallReturn.html" data-id="/interfaces/ludit_types.handleCallReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>handleCallReturn</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.lineType.html" data-id="/interfaces/ludit_types.lineType.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>lineType</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.operation.html" data-id="/interfaces/ludit_types.operation.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>operation</a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link js-category-link" href="interfaces/ludit_types.syntax.html" data-id="/interfaces/ludit_types.syntax.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>syntax</a></li>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/ludit_types.errorCall.html" data-id="/types/ludit_types.errorCall.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>errorCall</a></li>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/ludit_types.luditLineReturn.html" data-id="/types/ludit_types.luditLineReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>luditLineReturn</a></li>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link js-category-link" href="types/ludit_types.luditReturn.html" data-id="/types/ludit_types.luditReturn.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>luditReturn</a></li></ul></li></ul></li>
+<li><a class="category__link js-category-link category__link--ts" href="modules/ludit_Core.html" data-id="/modules/ludit_Core.html">Core.ts</a>
 <ul>
-<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/Core.Assembler.html" data-id="/modules/Core.Assembler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg>Assembler</a></li>
-<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/Core.Preparser.html" data-id="/modules/Core.Preparser.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Preparser</a></li>
-<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/Core.Processor.html" data-id="/modules/Core.Processor.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Processor</a></li>
-<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/Core.Tokenizer.html" data-id="/modules/Core.Tokenizer.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Tokenizer</a></li>
-<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/Core.Utils.html" data-id="/modules/Core.Utils.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Utils</a></li>
-<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/Core.Heap.html" data-id="/classes/Core.Heap.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Heap</a></li>
-<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/Core.Token.html" data-id="/classes/Core.Token.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Token</a></li>
-<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/Core.TreeNode.html" data-id="/classes/Core.TreeNode.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>TreeNode</a></li></ul></li></ul></li></ul></li></ul></div></div></div></div>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.Assembler.html" data-id="/modules/ludit_Core.Assembler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg>Assembler</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.ErrorHandler.html" data-id="/modules/ludit_Core.ErrorHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>ErrorHandler</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.Preparser.html" data-id="/modules/ludit_Core.Preparser.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Preparser</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.Processor.html" data-id="/modules/ludit_Core.Processor.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Processor</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.Tokenizer.html" data-id="/modules/ludit_Core.Tokenizer.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Tokenizer</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link js-category-link" href="modules/ludit_Core.Utils.html" data-id="/modules/ludit_Core.Utils.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg>Utils</a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/ludit_Core.Heap.html" data-id="/classes/ludit_Core.Heap.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Heap</a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/ludit_Core.Token.html" data-id="/classes/ludit_Core.Token.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Token</a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/ludit_Core.TreeNode.html" data-id="/classes/ludit_Core.TreeNode.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>TreeNode</a></li></ul></li>
+<li><a class="category__link js-category-link category__link--ts" href="modules/ludit_Frontend.html" data-id="/modules/ludit_Frontend.html">Frontend.ts</a>
+<ul>
+<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/ludit_Frontend.API.html" data-id="/classes/ludit_Frontend.API.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>API</a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link js-category-link" href="classes/ludit_Frontend.CLI.html" data-id="/classes/ludit_Frontend.CLI.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>CLI</a></li></ul></li></ul></li></ul></li></ul></div></div></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="assets/main.js"></script><script src="assets/custom.js"></script></body></html>

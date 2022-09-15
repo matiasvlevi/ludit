@@ -9,15 +9,15 @@ import {TreeNode} from "../TreeNode";
 import {Heap} from "../Heap";
 
 /**
- * generate a TreeNode based on the parsed tokens
- *
- *   @param heap - The heap object
- *   @param tokens - The parsed tokens
- *   @param profile - The expression's profile
- *   @param e - The error data in case of an error
- *
- *   @returns The root TreeNode of the generated tree
- */
+* generate a TreeNode based on the parsed tokens
+*
+*   @param heap - The heap object
+*   @param tokens - The parsed tokens
+*   @param profile - The expression's profile
+*   @param e - The error data in case of an error
+*
+*   @returns The root TreeNode of the generated tree
+*/
 export function makeTree(
   heap: Heap,
   tokens: Array<Token|TreeNode>,

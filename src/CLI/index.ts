@@ -23,17 +23,57 @@ import {
   Tokenizer,
 } from "../ludit/Core";
 
+/**
+* The Command Line frontend, 
+* uses other ludit modules to parse & compute expressions
+*/ 
 export class CLI {
 
+  /**
+  * The current line's profile 
+  */
   public profile: string;
-  public tree: TreeNode;
-  public options: Map<option>;
-  public expression: string;
-  public heap: Heap;
-  public path: string | undefined;
-  public noprint: boolean;
-  public attributes: attributeConfig;
+
+  /**
+  * The global profile if specified,
+  * Will force every expression to adopt this profile
+  */ 
   public globalProfile: string | undefined;
+
+  /**
+  * The root TreeNode of the current Line
+  */ 
+  public tree: TreeNode;
+
+  /**
+  * The parsed cli options
+  */ 
+  public options: Map<option>;
+
+  /**
+  * The current line's raw expression
+  */ 
+  public expression: string;
+
+  /**
+  * The program's Heap instance
+  */ 
+  public heap: Heap;
+
+  /**
+  * The path of the running file
+  */ 
+  public path: string | undefined;
+
+  /**
+  * Whether to print the tables or not
+  */ 
+  public noprint: boolean;
+
+  /**
+  * The current line's attribute config 
+  */ 
+  public attributes: attributeConfig;
 
   constructor(options: argv, noRun = false) {
     this.noprint = false;
@@ -275,7 +315,7 @@ export class CLI {
   }
 
   public ktable(table: luditLineReturn) {
-    Tabler.ktable<number>(table);
+    Tabler.ktable<number>(table, this.attributes.reverse);
   }
 
   public table(table: luditLineReturn) {

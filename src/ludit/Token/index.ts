@@ -4,9 +4,31 @@
 *   Serves as a character or keyword with special meaning
 */
 export class Token {
+  
+  /**
+  * The raw content of a token
+  */ 
   public literal: string;
+
+  /**
+  * The type of this token
+  * can be either 
+  * `operator`, `variable`, `argOpen`, `argClose`, `function`, `functionCall`
+  */ 
   public type: string;
+
+  /**
+  * The priority of the token.
+  *
+  * value is `-1` if should not be taken into account in operator calls
+  * Variable Tokens are arguments to operators, thus, 
+  * they do not have a priority, their operators have.
+  */ 
   public priority: number;
+
+  /**
+  * The column number of the character for error messages
+  */ 
   public char: number;
 
   /**

@@ -1,4 +1,4 @@
-import {API} from "./api";
+import { API } from "./api";
 
 import { option, Options } from "../CLI/options";
 import { error, errorCall, luditReturn, Map } from "../ludit/types";

@@ -9,12 +9,12 @@ export const RESET = "\x1b[0m";
 export const DARK = "\x1b[90m";
 
 /**
-  * generic error message
-  *
-  *   @param msg - The error message
-  *   @param e - The error data
-  *   @param heap - The heap object
-  */
+* generic error message
+*
+*   @param msg - The error message
+*   @param e - The error data
+*   @param heap - The heap object
+*/
 export function throwError(
   msg: string,
   e: (error|undefined) = undefined,
@@ -51,40 +51,79 @@ export function throwError(
   process.exit();
 }
 
-export function arrow(char: number) {
+/**
+* Create a string with an arrow at a column location
+*
+*   @param arrow - The column number 
+*
+*   @returns A string with an arrow at the specified column location
+*/ 
+export function arrow(char: number): string {
   let space = " ";
   for (let i = 0; i < char; i++) { space += " "; }
   return `${COLOR}${space}^${RESET}`;
 }
 
-export function assignmentError(heap: Heap, e: error) {
+/**
+* Throw assignment error
+*
+*   @param heap - The current Heap instance   
+*   @param e - The error data
+*/ 
+export function assignmentError(heap: Heap, e: error): void {
   throwError(
     "Expected assignment operator",
     e, heap,
   );
 }
 
-export function functionNotDef(heap: Heap, e: error) {
+
+/**
+* Throw an undefined function error
+*
+*   @param heap - The current Heap instance   
+*   @param e - The error data
+*/ 
+export function functionNotDef(heap: Heap, e: error): void {
   throwError(
     "function is not defined",
     e, heap,
   );
 }
 
-export function expectedOpening(heap: Heap, e: error) {
+/**
+* Throw an expected opening brackets error
+*
+*   @param heap - The current Heap instance   
+*   @param e - The error data
+*/ 
+export function expectedOpening(heap: Heap, e: error): void {
   throwError(
     `Expected opening brackets`,
     e, heap,
   );
 }
 
-export function expectedClosing(heap: Heap, e: error) {
+/**
+* Throw an expected closing brackets error
+*
+*   @param heap - The current Heap instance   
+*   @param e - The error data
+*/ 
+export function expectedClosing(heap: Heap, e: error): void {
   throwError(
     `Expected closing brackets`,
     e, heap,
   );
 }
 
+/**
+* Throw a missing variable to an operator error
+*
+*   @param msg - The error message to display
+*   @param heap - The current Heap instance   
+*   @param e - The error data
+*/ 
 export function missingVariable(msg: string, heap: Heap, e: error) {
   throwError(
     msg,
@@ -92,12 +131,25 @@ export function missingVariable(msg: string, heap: Heap, e: error) {
   );
 }
 
+/**
+* Throw an environement variable error
+*
+*   @param varname - Undefined environement variable's name
+*/ 
 export function envError(varname: string) {
   throwError(
     `${varname} environement variable not set`,
   );
 }
 
+/**
+* Throw a bad argument specification error
+*
+*   @param argCount - The given arguments count in a function call
+*   @param expected - The expected arguments count in a function call
+*   @param heap - The current Heap instance
+*   @param e - The error data
+*/
 export function badArgumentSpecification(
   argCount: number,
   expected: number,
@@ -117,6 +169,12 @@ export function badArgumentSpecification(
   }
 }
 
+/**
+* Throw an unexpected identifier error
+*
+*   @param heap - The current Heap instance
+*   @param e - The error data
+*/
 export function unexpectedIdentifier(heap: Heap, e: error) {
   let identifier = e.text[e.char] === undefined ? '' : `'${e.text[e.char]}' `;
   throwError(
@@ -125,6 +183,12 @@ export function unexpectedIdentifier(heap: Heap, e: error) {
   );
 }
 
+/**
+* Throw an include not found error
+*
+*   @param includeName - The included file's name  
+*   @param e - The error data
+*/
 export function includeNotFound(
   includeName: string,
   e: error | undefined,

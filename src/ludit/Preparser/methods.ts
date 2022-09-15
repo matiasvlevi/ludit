@@ -4,18 +4,7 @@ import * as Preparser from "./index";
 import fs from "node:fs";
 
 import * as ErrorHandler from "../ErrorHandler";
-import { error, lineType } from "../types";
-
-/**
-* checkInclude's return
-*
-*   @param include - The contents of the included file
-*   @param newPath - The path of the included file, so its own includes can be paths relative to this file
-*/
-interface checkIncludeReturn {
-  include: string[];
-  newPath: string;
-}
+import { error, lineType, checkIncludeReturn } from "../types";
 
 /**
 * create a path going back n directories
