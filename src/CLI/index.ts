@@ -1,3 +1,5 @@
+// TODO: Doc comments
+
 import * as Tabler from './table'
 import * as Utils from "../ludit/Utils";
 
@@ -75,6 +77,11 @@ export class CLI {
   */ 
   public attributes: attributeConfig;
 
+  /**
+  * Total lines of included files
+  */
+  public includeLineNb: number;
+
   constructor(options: argv, noRun = false) {
     this.noprint = false;
     this.heap = new Heap();
@@ -85,6 +92,7 @@ export class CLI {
       new Token("", "", -1, -1),
     );
 
+    this.includeLineNb = 0;
     this.attributes = {...CLI.DEFAULT_ATTRIBUTE_CONFIG}
     this.globalProfile = undefined; 
     this.profile = "";
@@ -192,11 +200,18 @@ export class CLI {
 
   }
 
+  public setGlobalProfile(profile:string) {
+    this.globalProfile = profile;
+  }
+
+  public setLineNb(totalLines:number, rawFileLength:number) {
+    this.includeLineNb = totalLines - rawFileLength;
+  }
+
   // DUPLICATE CODE WITH CLI.prototype.fromFile, REFACTOR!
   public process(filename: string) {
     // Load file
     let file = Preparser.loadFile(filename);
-    const fileLineNb = file.length;
     let includeLineNb = 0;
 
     this.path = Preparser.getPath(filename);
@@ -205,11 +220,8 @@ export class CLI {
     delete this.options.file;
     if (this.options.csv) this.noprint = true;
 
-    // Handle included files
-    if (Preparser.containsInclude(file)) {
-      file = Preparser.include(file, this.path);
-      includeLineNb = file.length - fileLineNb;
-    }
+
+    file = Preparser.handleKeywords(file, this);
 
     let csv:string[] = [];
   
@@ -232,9 +244,13 @@ export class CLI {
         currentLine,
         i
       );
+
+      // Print if no definition & dont print csv exports
+      if (this.options.csv) this.noprint = true;
+      else this.noprint = isDef
       
       if (this.options.csv) {
-        let output = this.getCsvRow(isDef);
+        let output = this.getCsvRow(isDef, i);
         if (output.length > 0) csv.push(output);
       } else {
         this.main(i);
@@ -252,7 +268,10 @@ export class CLI {
     }
   }
 
-  public getCsvRow(isDef: boolean) {
+  public getCsvRow(isDef: boolean, currentLine: number) {
+    this.resetAttributes();
+    this.loadAttributes(currentLine);
+    
     // Dont compute and print if is a definition
     if (!isDef) {
       return this.save();
@@ -368,18 +387,7 @@ export class CLI {
 
     const output: Array<Map<number>> = [];
 
-    // Iterate forward or backwards
-    let profileIterator:Iterator = { 
-      start: 0,
-      condition: (j)=>(j<profile.length),
-      increment: 1
-    }
-    if (this.attributes.reverse)
-      profileIterator = { 
-        start: profile.length-1,
-        condition: (j) => (j>=0),
-        increment: -1
-      }
+    let profileIterator = this.getProfileIterator(profile.length);
 
     for (let i = 0; i < cases.length; i++) {
 
@@ -390,9 +398,7 @@ export class CLI {
         profileIterator.condition(j);
         j+=profileIterator.increment
       ) {
-      
         row[profile[j]] = cases[i][j];
-
       }
 
       
@@ -416,15 +422,44 @@ export class CLI {
     return output;
   }
 
+  public getProfileIterator(profileLength: number): Iterator {
+    // Iterate forward or backwards
+    if (this.attributes.reverse) {
+      return { 
+        start: profileLength-1,
+        condition: (j) => (j>=0),
+        increment: -1
+      }
+    } else {
+      return { 
+        start: 0,
+        condition: (j)=>(j<profileLength),
+        increment: 1
+      }
+    } 
+  }
+
   public save(filename?: string | undefined): string {
     const cases = Utils.binaryCases(this.profile.length);
+    
+    let profile = this.globalProfile || this.profile;
+    if (this.attributes.reverse) 
+      profile = profile.split('').reverse().join('');
+    
+    let profileIterator = this.getProfileIterator(profile.length);
+
     let csv = ',';
-    csv += `${this.profile.split("").join(",")},out\n,`;
+    csv += `${profile.split("").join(",")},out\n,`;
     for (let i = 0; i < cases.length; i++) {
-      for (let j = 0; j < this.profile.length; j++) {
+      for (
+        let j = profileIterator.start;
+        profileIterator.condition(j);
+        j+=profileIterator.increment
+      ) {
         csv += `${cases[i][j]},`;
       }
-      csv += +Processor.calculate(this.tree, this.profile, cases[i]);
+
+      csv += +Processor.calculate(this.tree, profile, cases[i]);
       csv += "\n,";
     }
     if (!this.noprint) { process.stdout.write(csv); }
@@ -438,8 +473,8 @@ export class CLI {
   public main(currentLine = 0): luditLineReturn {
 
     this.resetAttributes();
-
     let attributes = this.loadAttributes(currentLine);
+
     if (Object.keys(this.options).length === 0) { 
       let output:luditLineReturn = []; 
 

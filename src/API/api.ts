@@ -14,6 +14,7 @@ import {
 */
 export class API extends CLI {
 
+  // Duplicate code TODO: REFACTOR
   public multiLine(
     file: string
   ): luditReturn {

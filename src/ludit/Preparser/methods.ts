@@ -5,6 +5,7 @@ import fs from "node:fs";
 
 import * as ErrorHandler from "../ErrorHandler";
 import { error, lineType, checkIncludeReturn } from "../types";
+import { CLI } from '../Frontend';
 
 /**
 * create a path going back n directories
@@ -113,6 +114,26 @@ export function include(
   return includes;
 }
 
+export function handleKeywords(file:string[], cli: CLI): string[] {
+  let newFile:string[] = [];
+
+  for (let i = 0; i < file.length; i++) {
+    let words = file[i].split(' ');
+
+    if (Preparser.KEYWORD[words[0]]) {
+
+      newFile = newFile.concat(
+        Preparser.KEYWORD[words[0]].action(cli, { file, lineNb:i })
+      );
+      
+      file = newFile;
+      newFile = [];
+    }
+  }
+  return file;
+}
+
+
 /**
 * Check whether or a file contains an include keyword
 *
@@ -150,6 +171,7 @@ export function checkInclude(
 
   const words = line.split(" ");
   if (words[0].includes("#")) { return { include: [], newPath: path }; } // ignore comments
+
   if (Preparser.KEYWORD[words[0]] !== undefined) {
     const includepath =
             Preparser.evalPath(Preparser.parseQuotes(words[1]), path);
@@ -157,7 +179,7 @@ export function checkInclude(
     path = Preparser.getPath(includepath);
 
     return {
-      include: Preparser.KEYWORD[words[0]].action(
+      include: loadFile(
         `${includepath}.ludi`,
         errorInfo,
       ),
@@ -177,7 +199,6 @@ export function getGlobalProfile(file:string[]): any {
 
       let profile = parseQuotes(line[1]) 
       file.splice(i, 1);
-      console.log(profile)
       return { profile, newfile:file };
     }
   }
