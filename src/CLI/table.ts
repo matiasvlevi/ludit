@@ -181,7 +181,7 @@ export function ktable<T>(table: objectTable<T>, reverse = false) {
   } else {
     colProfile = rowProfile.splice(0, Math.floor(rowProfile.length/2))
   }
-  console.log(colProfile, rowProfile)
+  // console.log(colProfile, rowProfile)
 
   let colCases = Utils.grayCode(
     colProfile.length,
@@ -236,6 +236,10 @@ export function ktable<T>(table: objectTable<T>, reverse = false) {
       cc.push(i);
     }
   }
+  let reverseIndex = 0;
+  console.log(table);
+
+  table.forEach((c,i) => console.log(i, c))
 
   for (let row = 0; row < rowLength; row++) {
     process.stdout.write(' ')
@@ -253,8 +257,8 @@ export function ktable<T>(table: objectTable<T>, reverse = false) {
       process.stdout.write(space(2));
       process.stdout.write(`\x1b[90m${CHARS['right']}\x1b[0m`);
       if (reverse) {
-        if (isOdd(row)) kIndex--;
-        else kIndex++;
+        if (isOdd(row)) reverseIndex--;
+        else reverseIndex++;
       } else {
         if (col === colLength-1) {
           kIndex-=rc;
@@ -267,13 +271,9 @@ export function ktable<T>(table: objectTable<T>, reverse = false) {
     }
      
     if (reverse) {
-      if (isOdd(row)) {
-        kIndex += colLength+1;
-      } else {
-        kIndex += colLength-1
-      }
-    }
-    else rc-=2; 
+      reverseIndex += colLength-1; 
+      kIndex = (rowLength * colLength) - reverseIndex;
+    } else rc-=2; 
     
     process.stdout.write('\n');
     process.stdout.write(hline(

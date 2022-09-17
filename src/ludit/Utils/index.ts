@@ -103,6 +103,7 @@ export function grayCode(n:number):number[][] {
       ans[j] = "1" + ans[j];
     }
   }
+
   let arr = [];
   for (let i = 0; i < ans.length; i++) 
     arr.push(ans[i].split('').map(x => +x))
