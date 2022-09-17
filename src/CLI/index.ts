@@ -440,16 +440,23 @@ export class CLI {
   }
 
   public save(filename?: string | undefined): string {
-    const cases = Utils.binaryCases(this.profile.length);
     
     let profile = this.globalProfile || this.profile;
-    if (this.attributes.reverse) 
-      profile = profile.split('').reverse().join('');
+
+    const cases = Utils.binaryCases(
+      profile.length,
+      this.attributes.reverse,
+      this.attributes.cases
+    );
     
     let profileIterator = this.getProfileIterator(profile.length);
 
     let csv = ',';
-    csv += `${profile.split("").join(",")},out\n,`;
+    if (this.attributes.reverse) 
+      csv += `${profile.split("").reverse().join(",")},out\n,`;
+    else 
+      csv += `${profile.split("").join(",")},out\n,`
+    
     for (let i = 0; i < cases.length; i++) {
       for (
         let j = profileIterator.start;
