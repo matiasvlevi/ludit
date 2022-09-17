@@ -170,60 +170,30 @@ export class CLI {
     this.main();
   }
 
-  public fromFile(filename: string) {
-    // Load file
-    let file = Preparser.loadFile(filename);
-    const fileLineNb = file.length;
-    let includeLineNb = 0;
-
-    this.path = Preparser.getPath(filename);
-
-    // Remove file option so it does not run recursively
-    delete this.options.file;
-
-    // Handle included files
-    if (Preparser.containsInclude(file)) {
-      file = Preparser.include(file, this.path);
-      includeLineNb = file.length - fileLineNb;
-    }
-
+  public filterFile(line:string) {
+    const preparseOutput = Preparser.filter(line, !this.noprint);
     
-    let { newfile, profile } = Preparser.getGlobalProfile(file)
-    file = newfile;
-    this.globalProfile = profile; 
+    if (preparseOutput.line.length === 0) return {
+      skip: true,
+      line: ''
+    } 
 
-   
-    for (let i = 0; i < file.length; i++) {
-      const currentLine = i + 1 - includeLineNb;
-      // Parse commments & prints
-      const { line, type } = Preparser.filter(file[i]);
-      if (type === 'comment' || type === 'print') { continue; } // Skip if empty line
-
-      // Create tokens, profile and determine if line is a definition
-      const { tokens, profile, isDef } = Tokenizer.process(
-        this.heap,
-        line,
-        { line: currentLine, char: -1, text: file[i]}, i
-      );
-
-      this.profile = profile; // Save profile (Variables used in line or definition)
-      this.expression = line; // Save raw line
-
-      // Create computation tree
-      this.tree = Assembler.makeTree(this.heap, tokens, profile, {
-        line: currentLine,
-        char: -1,
-        text: file[i],
-      });
-
-      // Dont compute and print if is a definition
-      if (!isDef) { this.main(i); }
+    if (preparseOutput.type === 'comment')  
+      return { skip: false, line: preparseOutput.line }; 
+    
+    if (preparseOutput.type === 'print') {
+      if (this.options.csv)
+        return { skip: true, line: preparseOutput.line }; // CONTINUE IN THE PARENT LOOP
+      else
+        return { skip: true, line: '' }; // CONTINUE IN THE PARENT LOOP
     }
+
+    return {skip: false, line: preparseOutput.line};
 
   }
 
   // DUPLICATE CODE WITH CLI.prototype.fromFile, REFACTOR!
-  public saveMultiline(filename: string) {
+  public process(filename: string) {
     // Load file
     let file = Preparser.loadFile(filename);
     const fileLineNb = file.length;
@@ -233,9 +203,7 @@ export class CLI {
 
     // Remove file option so it does not run recursively
     delete this.options.file;
-
-    let csvFileDest = this.options.csv.param;
-    delete this.options.csv;
+    if (this.options.csv) this.noprint = true;
 
     // Handle included files
     if (Preparser.containsInclude(file)) {
@@ -244,47 +212,75 @@ export class CLI {
     }
 
     let csv:string[] = [];
-
+  
     for (let i = 0; i < file.length; i++) {
       const currentLine = i + 1 - includeLineNb;
-      // Parse commments & prints
-      const { line, type } = Preparser.filter(file[i]);
-      if (type === 'comment') { continue; } // Skip if empty line
-      if (type === 'print') {
-        csv.push(`${line}`);
+
+      // Remove comments and prints
+      const { line, skip } = this.filterFile(file[i]);
+
+      // Line is empty, skip iteration
+      if (skip) {
+        csv.push(line);
         continue;
       }
 
-
-      // Create tokens, profile and determine if line is a definition
-      const { tokens, profile, isDef } = Tokenizer.process(
-        this.heap,
+      // Process ludit code, and determine whether or not line is a definition
+      const isDef = this.processLudit(      
+        file[i],
         line,
-        { line: currentLine, char: -1, text: file[i]}, i
+        currentLine,
+        i
       );
-
-      this.profile = profile; // Save profile (Variables used in line or definition)
-      this.expression = line; // Save raw line
-
-      // Create computation tree
-      this.tree = Assembler.makeTree(this.heap, tokens, profile, {
-        line: currentLine,
-        char: -1,
-        text: file[i],
-      });
-
-      // Dont compute and print if is a definition
-      if (!isDef) {
-        csv.push(this.save());
+      
+      if (this.options.csv) {
+        let output = this.getCsvRow(isDef);
+        if (output.length > 0) csv.push(output);
+      } else {
+        this.main(i);
       }
     }
 
     // Write all tables
-    Utils.writeFileSync(
-      csvFileDest || 'table.csv',
-      csv.join('\n'),
-      'utf-8'
+    if (this.options.csv) {
+      Utils.writeFileSync(
+        this.options.csv.param || 'table.csv',
+        csv.join('\n'),
+        'utf-8'
+      );
+      delete this.options.csv;
+    }
+  }
+
+  public getCsvRow(isDef: boolean) {
+    // Dont compute and print if is a definition
+    if (!isDef) {
+      return this.save();
+    } else {
+      return '';
+    }
+  }
+
+  public processLudit(fileLine:string, preparsedLine:string, currentLine: number, rawLineNb:number): boolean {
+    // Create tokens, profile and determine if line is a definition
+    const { tokens, profile, isDef } = Tokenizer.process(
+      this.heap,
+      preparsedLine,
+      { line: currentLine, char: -1, text: fileLine},  
+      rawLineNb
     );
+
+    this.profile = profile; // Save profile (Variables used in line or definition)
+    this.expression = preparsedLine; // Save raw line
+
+    // Create computation tree
+    this.tree = Assembler.makeTree(this.heap, tokens, profile, {
+      line: currentLine,
+      char: -1,
+      text: fileLine,
+    });
+
+    return isDef;
   }
 
   public setNoPrint(state: boolean) {
@@ -349,7 +345,7 @@ export class CLI {
   }
 
   // Calculate a truth table
-  public run(currentLine = 0, isKarnaugh=false): luditLineReturn {
+  public run(isKarnaugh=false): luditLineReturn {
     // Run specific function call
     if (this.profile.length === 0) {
       this.printSingle();
@@ -378,7 +374,7 @@ export class CLI {
       condition: (j)=>(j<profile.length),
       increment: 1
     }
-    if (this.attributes.reverse )//&& !isKarnaugh) 
+    if (this.attributes.reverse)
       profileIterator = { 
         start: profile.length-1,
         condition: (j) => (j>=0),
@@ -448,7 +444,7 @@ export class CLI {
       let output:luditLineReturn = []; 
 
       if (!this.hasPrintAttribute(attributes))
-        this.run(currentLine, false);
+        this.run(false);
       
       return output;
     }
@@ -458,7 +454,8 @@ export class CLI {
       if (
         this.options[query].requireParam &&
         this.options[query].param === undefined
-      ) { continue; }
+      ) continue;
+
       if (
         this.options[query].param !== undefined
       ) {
@@ -468,6 +465,7 @@ export class CLI {
         );
       }
     }
+
     return [];
   }
 

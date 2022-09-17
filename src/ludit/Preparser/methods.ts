@@ -254,7 +254,7 @@ export function loadFile(
 export function handleSubstring(line: string, char:string): string | undefined {
   if (line.includes(char)) {
     line = line.slice(0, line.indexOf(char));
-    if (line.length === 0) { return; }
+    if (line.length === 0) { return; } 
   }
   return line;
 }
@@ -266,16 +266,16 @@ export function handleSubstring(line: string, char:string): string | undefined {
 *
 *   @returns the line without any comments or print statements
 */
-export function filter(line: string): lineType {
+export function filter(line: string, printEnabled = true): lineType {
   let pline = handleSubstring(line, '#');
   if (!pline) { 
-    return { line, type:'comment'};
+    return { line: pline || '', type:'comment'};
   }
   pline = handleSubstring(pline, '-');
   
   if (!pline) { 
     let content = replaceAll(line, '-', '');
-    console.log(`\x1b[36m${content}\x1b[0m`);
+    if (printEnabled) console.log(`\x1b[36m${content}\x1b[0m`);
     return { line: content, type: 'print'};
   } else {
     return { line: pline, type: 'code' };

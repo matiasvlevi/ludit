@@ -50,11 +50,7 @@ export const queries: Map<optionConfig> = {
   },
   file: {
     action: (cli: CLI, param: string) => {
-      if (cli.options.csv !== undefined) {
-        cli.saveMultiline(param);
-      } else {
-        cli.fromFile(param);
-      }
+      cli.process(param);
     },
     helpmsg: "read expression from a source file",
     example: "--file formula.ludi",

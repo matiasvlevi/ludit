@@ -31,7 +31,7 @@ export const ATTRIBUTES: Map<attribute> = {
     type: 'print',
     action: (app: CLI, currentLine:number,  char:string) => {
       app.attributes.karnaugh = true;
-      app.run(currentLine, true);
+      app.run(true);
     }
   },
   "t": {
@@ -39,7 +39,7 @@ export const ATTRIBUTES: Map<attribute> = {
     type: 'print',
     action: (app: CLI, currentLine:number, char:string) => {
       app.attributes.table = true;
-      app.run(currentLine, false);
+      app.run(false);
     }
   },
   "numeric": {
