@@ -114,6 +114,13 @@ export function include(
   return includes;
 }
 
+/**
+* Handle preparser keyword actions and return the resulting file
+* 
+*   @param file - The raw file lines
+*   @param cli - The cli instance, no api instance since the preparser won't run in api mode
+*
+*/ 
 export function handleKeywords(file:string[], cli: CLI): string[] {
   let newFile:string[] = [];
 
@@ -190,7 +197,7 @@ export function checkInclude(
 }
 
 /**
-*
+* TODO: Remove this function
 */
 export function getGlobalProfile(file:string[]): any { 
   for (let i = 0; i < file.length; i++) {

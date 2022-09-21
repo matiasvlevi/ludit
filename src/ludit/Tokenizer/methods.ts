@@ -91,7 +91,7 @@ export function skipFieldCall(
   exp: string[],
   j: number,
 ): number {
-// Skip function call if exists
+  // Skip function call if exists
   const keyword = Tokenizer.getKeyword(exp, j);
 
   if (keyword.length > 0 && exp[j + keyword.length] === "(") {
