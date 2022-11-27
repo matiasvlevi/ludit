@@ -63,7 +63,9 @@ The definition won't print to the console, but the call will.
 
 ### Calling Functions
 
-There are two way of calling functions. There are **Integral** and **Concrete** function calls 
+There are two ways of calling functions.
+
+**Integral** and **Concrete** function calls 
 
 **Integral** calls will print a truth table to the console
 
@@ -83,7 +85,6 @@ foo(D, E, F)
 ```py
 foo(1, 0, 1)
 ```
-
 
 <br/>
 
@@ -107,8 +108,8 @@ foo(baz(E, F) * A, B, C)
 
 ## Attributes
 
-
 Attributes are options you can assign to format your CLI output
+
 You can add them with the `~` identifier
 
 Here is an example
@@ -123,23 +124,25 @@ Here is an example with multiple attributes
 A * B + C ~tr7
 ```
 
-Here are all the possible attributes
+<br/>
 
-| Attributes |           Description                                        |
+### Possible attributes
+
+| Attribute|           Description                                       |
 |----------|--------------------------------------------------------------|
 | **`r`**  | Will reverse the labels in a truth table |
 | **`k`**  | Will print a karnaugh table        |
 | **`t`**  | Will print a truth table (DEFAULT)       |
 | **`ANY NUMBER`**  | Any numeric value will cap the truth table to the number you set   |
 
-<br/>
 
+<br/>
 
 <br/>
 
 ## Includes
 
-Ludi allows you to include files
+Ludi features source file includes
 
 
 You can include files with a local path
@@ -164,18 +167,20 @@ include "std"
 
 ## Helpful Syntax
 
-You can write comments by prefixing `#`
+Write comments by prefixing `#`
 
 ```py
 # Ludi is dope as hell yow
 ```
 
-You can print text by prefixing it with `-`
-This is useful to add titles to tables or calculations
+Print text by prefixing it with `-`
+This is useful to add titles to tables or calculations, these will output in exported `csv` files
 
 ```go
 - Hello world
 ```
+
+<br/>
 
 <br/>
 
@@ -188,6 +193,7 @@ Vim syntax highlighting for ludi is provided here
 ```
 
 <br/>
+
 <br/>
 
 More detailed documentation about the source code of Ludit/Ludi can be found [here](https://raw.githack.com/matiasvlevi/ludit/dev/docs/index.html)
