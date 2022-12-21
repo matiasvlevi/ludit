@@ -65,10 +65,11 @@ or(and(A, !B), C) ~k
 
 
 # Install
-
 ```
 npm i -g ludit
 ```
+(build from source for latest check `package.json`)
+
 
 ##### Install the standard lib (Optional)
 
