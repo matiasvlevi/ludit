@@ -1,5 +1,0 @@
-# MIT Licence 2022
-# Ludit standart lib file v0.0.3 
-# 
-# Author: Matias Vazquez-Levi 
-def xor = (A * 'B) + ('A * B)

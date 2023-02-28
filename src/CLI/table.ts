@@ -237,9 +237,6 @@ export function ktable<T>(table: objectTable<T>, reverse = false) {
     }
   }
   let reverseIndex = 0;
-  console.log(table);
-
-  table.forEach((c,i) => console.log(i, c))
 
   for (let row = 0; row < rowLength; row++) {
     process.stdout.write(' ')
